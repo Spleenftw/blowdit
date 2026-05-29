@@ -449,8 +449,7 @@ img.nav-svg-icon {
    HOME SEARCH (relocated under the hero)
    ======================================== */
 .home-search {
-	max-width: 720px;
-	margin: 0 auto var(--space-xl);
+	margin: 0 0 var(--space-md);
 }
 
 .home-search .plugin,
@@ -468,6 +467,7 @@ img.nav-svg-icon {
 .home-search .plugin-content,
 .home-search form {
 	display: flex;
+	width: 100%;
 	gap: var(--space-sm);
 	align-items: stretch;
 	margin: 0;
@@ -519,6 +519,10 @@ img.nav-svg-icon {
 .post-list-item {
 	padding: var(--space-lg) 0;
 	border-bottom: 1px solid var(--border-subtle);
+}
+
+.post-list-item:first-child {
+	padding-top: 0;
 }
 
 .post-list-item:last-child {
