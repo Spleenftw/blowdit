@@ -59,7 +59,7 @@
       <!-- Tags and Category -->
       <?php $tagsList = $page->tags(true); $categoryKey = $page->categoryKey(); ?>
       <?php if (!empty($tagsList) || $categoryKey) : ?>
-        <div class="post-taxonomy mt-2">
+        <div class="post-taxonomy">
           <?php if ($categoryKey) : ?>
             <a class="taxonomy-badge" href="<?php echo $page->categoryPermalink(); ?>">
               <i class="bi bi-folder2"></i><?php echo $page->category(); ?>

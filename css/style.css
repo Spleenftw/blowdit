@@ -453,7 +453,8 @@ img.nav-svg-icon {
 	margin: 0 auto var(--space-xl);
 }
 
-.home-search .plugin {
+.home-search .plugin,
+.home-search .plugin-content {
 	border: none;
 	padding: 0;
 	margin: 0;
@@ -472,15 +473,32 @@ img.nav-svg-icon {
 	margin: 0;
 }
 
+/* Force the theme palette over the plugin's own / Bootstrap defaults */
+.home-search input,
 .home-search .form-control {
 	flex: 1 1 auto;
-	margin: 0;
+	margin: 0 !important;
+	background-color: var(--bg-surface) !important;
+	color: var(--text-primary) !important;
+	border: 1px solid var(--border-color) !important;
+	border-radius: var(--radius-sm) !important;
 }
 
-.home-search button {
-	flex-shrink: 0;
-	margin-top: 0 !important;
+.home-search input::placeholder,
+.home-search .form-control::placeholder {
+	color: var(--text-muted) !important;
+}
+
+.home-search button,
+.home-search .btn {
+	flex: 0 0 auto;
+	width: auto !important;          /* cancel Bootstrap's btn-block */
+	margin: 0 !important;
 	white-space: nowrap;
+	background-color: var(--accent) !important;
+	border: 1px solid var(--accent) !important;
+	color: var(--accent-contrast) !important;
+	border-radius: var(--radius-sm) !important;
 }
 
 @media (max-width: 575.98px) {
@@ -488,13 +506,18 @@ img.nav-svg-icon {
 	.home-search form {
 		flex-direction: column;
 	}
+
+	.home-search button,
+	.home-search .btn {
+		width: 100% !important;
+	}
 }
 
 /* ========================================
    POST LIST (titles only)
    ======================================== */
 .post-list-item {
-	padding: var(--space-md) 0;
+	padding: var(--space-lg) 0;
 	border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -502,18 +525,11 @@ img.nav-svg-icon {
 	border-bottom: none;
 }
 
-.post-list-head {
-	display: flex;
-	justify-content: space-between;
-	align-items: baseline;
-	gap: var(--space-md);
-	flex-wrap: wrap;
-}
-
+/* Stacked: title, then date right beneath it */
 .post-list-title {
-	font-size: 1.3rem;
+	font-size: 1.4rem;
 	font-weight: 600;
-	margin: 0;
+	margin: 0 0 0.2rem;
 	color: var(--text-primary);
 	transition: color 0.2s ease;
 }
@@ -523,10 +539,13 @@ img.nav-svg-icon {
 }
 
 .post-list-date {
+	display: block;
 	color: var(--text-muted);
 	font-size: var(--font-size-sm);
-	white-space: nowrap;
-	flex-shrink: 0;
+}
+
+.post-list-item .post-taxonomy {
+	margin-top: var(--space-sm);
 }
 
 /* ========================================
