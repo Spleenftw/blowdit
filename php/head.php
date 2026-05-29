@@ -23,7 +23,7 @@
 <?php echo Theme::metaTags('description'); ?>
 
 <!-- Include Favicon -->
-<?php echo Theme::favicon('img/spleenftw.jpeg'); ?>
+<?php echo Theme::favicon('img/favicon.png'); ?>
 
 <!-- Inter typeface (Blowfish-like typography) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
