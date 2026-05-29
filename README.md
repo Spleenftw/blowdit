@@ -21,7 +21,7 @@ A clean, minimal theme for [Bludit](https://www.bludit.com) inspired by the
 1. Download or clone this repository into your Bludit `bl-themes` directory:
 
    ```
-   bl-themes/blowdit/
+   /usr/share/nginx/html/bl-themes/
    ```
 
 2. In the Bludit admin panel go to **Settings → Themes** and activate **Blowdit**.
