@@ -28,8 +28,6 @@ A clean, minimal theme for [Bludit](https://www.bludit.com) inspired by the
 2. In the Bludit admin panel go to **Settings → Themes** and activate **Blowdit**.
 
 3. Add your assets to `blowdit/img/`:
-   - The social-network SVG icons (`github.svg`, `mastodon.svg`, …) named after each
-     Bludit social-network key.
    - Your avatar as `spleenftw.jpeg` — used for the homepage profile hero **and** the favicon.
      To use a different filename, change it in [php/head.php](php/head.php) (favicon) and
      [php/home.php](php/home.php) (`$profileImage`).
