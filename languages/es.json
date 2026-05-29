@@ -1,0 +1,8 @@
+{
+	"theme-data":
+	{
+		"name": "Blowdit",
+		"description": "Un tema para Bludit inspirado en el tema Blowfish de Hugo. Barra lateral derecha, tiempo de lectura, conmutador de modo claro/oscuro y barra de navegación con iconos sociales y páginas estáticas."
+	},
+	"Toggle theme": "Cambiar tema"
+}
