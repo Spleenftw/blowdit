@@ -17,23 +17,59 @@
 		// (Popeye-style) while keeping the other plugins in the right sidebar.
 		// Mirrors Bludit's own Theme::plugins() loop, but captures the output.
 		global $plugins;
-		$sidebarSearchHtml = '';
-		$sidebarOtherHtml  = '';
+		$sidebarSearchHtml = '';   // search box, rendered under the hero on the homepage
+		$sidebarItems = array();   // every sidebar plugin, to be sorted into a fixed order
+		$sidebarIndex = 0;
 		if (isset($plugins['siteSidebar'])) {
 			foreach ($plugins['siteSidebar'] as $plugin) {
 				$out = $plugin->siteSidebar();
-				if (strpos($out, 'plugin-search') !== false) {
+
+				$isSearch = (strpos($out, 'plugin-search') !== false);
+				$isNav    = (strpos($out, 'plugin-navigation') !== false || strpos($out, 'plugin-pages') !== false);
+
+				// Fixed sidebar order (lower = higher up). Unknown plugins such as
+				// the Hit Counter default to 90, i.e. pinned to the bottom.
+				$priority = 90;
+				if (strpos($out, 'plugin-about') !== false)          $priority = 10; // Blog / About
+				elseif ($isSearch)                                   $priority = 20; // Search
+				elseif ($isNav)                                      $priority = 30; // Navigation
+				elseif (strpos($out, 'plugin-categories') !== false) $priority = 40; // Category
+
+				if ($isSearch) {
 					$sidebarSearchHtml .= $out;
-				} else {
-					// Mark the navigation / pages plugin so its list can be
-					// shuffled client-side (see the script near the body end).
-					if (strpos($out, 'plugin-navigation') !== false || strpos($out, 'plugin-pages') !== false) {
-						$out = '<div class="js-random-nav">' . $out . '</div>';
-					}
-					$sidebarOtherHtml .= $out;
 				}
+				// Mark the navigation / pages plugin so its list can be shuffled
+				// client-side (see the script near the body end).
+				if ($isNav) {
+					$out = '<div class="js-random-nav">' . $out . '</div>';
+				}
+
+				$sidebarItems[] = array(
+					'priority' => $priority,
+					'index'    => $sidebarIndex++,
+					'search'   => $isSearch,
+					'html'     => $out,
+				);
 			}
 		}
+
+		// Stable sort by priority, then original order (PHP < 8 usort isn't stable).
+		usort($sidebarItems, function ($a, $b) {
+			if ($a['priority'] === $b['priority']) {
+				return $a['index'] - $b['index'];
+			}
+			return $a['priority'] - $b['priority'];
+		});
+
+		$sidebarFullHtml     = '';   // all plugins, ordered (used off the homepage)
+		$sidebarNoSearchHtml = '';   // same, minus search (used on the homepage)
+		foreach ($sidebarItems as $item) {
+			$sidebarFullHtml .= $item['html'];
+			if (!$item['search']) {
+				$sidebarNoSearchHtml .= $item['html'];
+			}
+		}
+
 		// The hero (and the relocated search) only appear on the blog front page.
 		$heroVisible = ($WHERE_AM_I === 'home' && Paginator::currentPage() == 1);
 	?>

@@ -18,13 +18,14 @@
 	<?php endif ?>
 
 	<?php
-		// On the homepage front page the search box is shown under the hero,
-		// so only render the remaining sidebar plugins here. Everywhere else
-		// the sidebar shows the full set (search included).
+		// Plugins are rendered in a fixed order (see index.php):
+		//   Blog/About > Search > Navigation > Category > … > Hit Counter (bottom)
+		// On the homepage front page the search box is shown under the hero, so
+		// it is omitted from the sidebar there.
 		if ($heroVisible) {
-			echo $sidebarOtherHtml;
+			echo $sidebarNoSearchHtml;
 		} else {
-			echo $sidebarSearchHtml . $sidebarOtherHtml;
+			echo $sidebarFullHtml;
 		}
 	?>
 </aside>

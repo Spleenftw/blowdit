@@ -36,8 +36,12 @@
 <!-- Include CSS Bootstrap ICONS file from Bludit Core -->
 <?php echo Theme::cssBootstrapIcons(); ?>
 
-<!-- Include CSS Styles from this theme -->
-<?php echo Theme::css('css/style.css'); ?>
+<!-- Include CSS Styles from this theme (cache-busted by file mtime) -->
+<?php
+	$styleVersion = @filemtime(THEME_DIR_CSS . 'style.css');
+	$styleHref = DOMAIN_THEME . 'css/style.css' . ($styleVersion ? '?v=' . $styleVersion : '');
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $styleHref; ?>">
 
 <!-- Load Bludit Plugins: Site head -->
 <?php Theme::plugins('siteHead'); ?>
