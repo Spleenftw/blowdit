@@ -369,6 +369,16 @@ pre {
 	border-left: 3px solid var(--accent);
 	padding: var(--space-md);
 	overflow-x: auto;
+	/* max-width + min-width:0 on flex ancestors is required for overflow-x:auto
+	   to actually scroll rather than expand or clip the flex column. */
+	max-width: 100%;
+	white-space: pre;
+}
+
+/* Bootstrap flex columns default to min-width:auto, which lets them grow past
+   their grid width and breaks overflow-x:auto on pre/code blocks inside them. */
+.row > [class*="col-"] {
+	min-width: 0;
 }
 
 code {
