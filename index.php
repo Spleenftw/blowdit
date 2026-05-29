@@ -11,6 +11,28 @@
 	<!-- Navbar -->
 	<?php include(THEME_DIR_PHP.'navbar.php'); ?>
 
+	<?php
+		// Split the siteSidebar plugins into "search" and "everything else".
+		// This lets us relocate the search box under the hero on the homepage
+		// (Popeye-style) while keeping the other plugins in the right sidebar.
+		// Mirrors Bludit's own Theme::plugins() loop, but captures the output.
+		global $plugins;
+		$sidebarSearchHtml = '';
+		$sidebarOtherHtml  = '';
+		if (isset($plugins['siteSidebar'])) {
+			foreach ($plugins['siteSidebar'] as $plugin) {
+				$out = $plugin->siteSidebar();
+				if (strpos($out, 'plugin-search') !== false) {
+					$sidebarSearchHtml .= $out;
+				} else {
+					$sidebarOtherHtml .= $out;
+				}
+			}
+		}
+		// The hero (and the relocated search) only appear on the blog front page.
+		$heroVisible = ($WHERE_AM_I === 'home' && Paginator::currentPage() == 1);
+	?>
+
 	<!-- Content -->
 	<div class="container">
 		<div class="row">

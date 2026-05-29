@@ -446,7 +446,91 @@ img.nav-svg-icon {
 }
 
 /* ========================================
-   POST CARDS (home listing)
+   HOME SEARCH (relocated under the hero)
+   ======================================== */
+.home-search {
+	max-width: 720px;
+	margin: 0 auto var(--space-xl);
+}
+
+.home-search .plugin {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+/* Hide the "Search" label — Popeye-style bare search bar */
+.home-search .plugin-label {
+	display: none;
+}
+
+.home-search .plugin-content,
+.home-search form {
+	display: flex;
+	gap: var(--space-sm);
+	align-items: stretch;
+	margin: 0;
+}
+
+.home-search .form-control {
+	flex: 1 1 auto;
+	margin: 0;
+}
+
+.home-search button {
+	flex-shrink: 0;
+	margin-top: 0 !important;
+	white-space: nowrap;
+}
+
+@media (max-width: 575.98px) {
+	.home-search .plugin-content,
+	.home-search form {
+		flex-direction: column;
+	}
+}
+
+/* ========================================
+   POST LIST (titles only)
+   ======================================== */
+.post-list-item {
+	padding: var(--space-md) 0;
+	border-bottom: 1px solid var(--border-subtle);
+}
+
+.post-list-item:last-child {
+	border-bottom: none;
+}
+
+.post-list-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: var(--space-md);
+	flex-wrap: wrap;
+}
+
+.post-list-title {
+	font-size: 1.3rem;
+	font-weight: 600;
+	margin: 0;
+	color: var(--text-primary);
+	transition: color 0.2s ease;
+}
+
+.post-list-head a:hover .post-list-title {
+	color: var(--text-secondary);
+}
+
+.post-list-date {
+	color: var(--text-muted);
+	font-size: var(--font-size-sm);
+	white-space: nowrap;
+	flex-shrink: 0;
+}
+
+/* ========================================
+   POST CARDS (single page / post)
    ======================================== */
 .card-modern {
 	background: transparent;

@@ -26,6 +26,13 @@
       </div>
     <?php endif ?>
   </header>
+
+  <!-- Search box, relocated from the sidebar (Popeye-style) -->
+  <?php if (!empty($sidebarSearchHtml)) : ?>
+    <div class="home-search">
+      <?php echo $sidebarSearchHtml; ?>
+    </div>
+  <?php endif ?>
 <?php endif ?>
 
 <?php if (empty($content)) : ?>
@@ -34,65 +41,42 @@
   </div>
 <?php endif ?>
 
-<?php foreach ($content as $page) : ?>
-  <!-- Post -->
-  <article class="card card-modern my-5">
+<!-- Post list (titles only) -->
+<div class="post-list">
+  <?php foreach ($content as $page) : ?>
+    <article class="post-list-item">
 
-    <!-- Load Bludit Plugins: Page Begin -->
-    <?php Theme::plugins('pageBegin'); ?>
+      <!-- Load Bludit Plugins: Page Begin -->
+      <?php Theme::plugins('pageBegin'); ?>
 
-    <!-- Cover image -->
-    <?php if ($page->coverImage()) : ?>
-      <a href="<?php echo $page->permalink(); ?>" class="cover-image-wrapper d-block">
-        <img class="card-img-top" alt="<?php echo $page->title(); ?>" src="<?php echo $page->coverImage(); ?>" />
-      </a>
-    <?php endif ?>
-
-    <div class="card-body">
-      <!-- Title -->
-      <a href="<?php echo $page->permalink(); ?>">
-        <h2 class="title"><?php echo $page->title(); ?></h2>
-      </a>
-
-      <!-- Creation date and reading time -->
-      <div class="metadata mb-4">
-        <span><i class="bi bi-calendar3"></i><?php echo $page->date(); ?></span>
-        <span><i class="bi bi-clock-history"></i><?php echo $L->get('Reading time') . ': ' . $page->readingTime(); ?></span>
-      </div>
-
-      <!-- Breaked content -->
-      <?php echo $page->contentBreak(); ?>
-
-      <!-- "Read more" button -->
-      <?php if ($page->readMore()) : ?>
-        <a class="btn-primary-gradient mt-3" href="<?php echo $page->permalink(); ?>">
-          <?php echo $L->get('Read more'); ?>
-          <i class="bi bi-arrow-right"></i>
+      <div class="post-list-head">
+        <a href="<?php echo $page->permalink(); ?>">
+          <h2 class="post-list-title"><?php echo $page->title(); ?></h2>
         </a>
-      <?php endif ?>
+        <span class="post-list-date"><?php echo $page->date(); ?></span>
+      </div>
 
       <!-- Tags and Category -->
       <?php $tagsList = $page->tags(true); $categoryKey = $page->categoryKey(); ?>
       <?php if (!empty($tagsList) || $categoryKey) : ?>
-      <div class="post-taxonomy mt-4">
-        <?php if ($categoryKey) : ?>
-          <a class="taxonomy-badge" href="<?php echo $page->categoryPermalink(); ?>">
-            <i class="bi bi-folder2"></i><?php echo $page->category(); ?>
-          </a>
-        <?php endif ?>
-        <?php foreach ($tagsList as $tagKey => $tagName) : ?>
-          <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><i class="bi bi-tag"></i><?php echo $tagName; ?></a>
-        <?php endforeach ?>
-      </div>
+        <div class="post-taxonomy mt-2">
+          <?php if ($categoryKey) : ?>
+            <a class="taxonomy-badge" href="<?php echo $page->categoryPermalink(); ?>">
+              <i class="bi bi-folder2"></i><?php echo $page->category(); ?>
+            </a>
+          <?php endif ?>
+          <?php foreach ($tagsList as $tagKey => $tagName) : ?>
+            <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><i class="bi bi-tag"></i><?php echo $tagName; ?></a>
+          <?php endforeach ?>
+        </div>
       <?php endif ?>
 
-    </div>
+      <!-- Load Bludit Plugins: Page End -->
+      <?php Theme::plugins('pageEnd'); ?>
 
-    <!-- Load Bludit Plugins: Page End -->
-    <?php Theme::plugins('pageEnd'); ?>
-
-  </article>
-<?php endforeach ?>
+    </article>
+  <?php endforeach ?>
+</div>
 
 <!-- Pagination -->
 <?php if (Paginator::numberOfPages() > 1) : ?>

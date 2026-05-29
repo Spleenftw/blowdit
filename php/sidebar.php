@@ -17,5 +17,14 @@
 		</div>
 	<?php endif ?>
 
-	<?php Theme::plugins('siteSidebar') ?>
+	<?php
+		// On the homepage front page the search box is shown under the hero,
+		// so only render the remaining sidebar plugins here. Everywhere else
+		// the sidebar shows the full set (search included).
+		if ($heroVisible) {
+			echo $sidebarOtherHtml;
+		} else {
+			echo $sidebarSearchHtml . $sidebarOtherHtml;
+		}
+	?>
 </aside>
