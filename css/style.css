@@ -393,23 +393,27 @@ pre code {
 	border: none;
 }
 
-/* Always-visible scrollbar on code blocks */
+/* Always-visible scrollbar on code blocks.
+   -webkit-appearance: none disables macOS overlay/auto-hide behaviour;
+   a non-transparent track ensures the slot is always painted. */
 pre {
-	scrollbar-width: thin;                        /* Firefox */
-	scrollbar-color: var(--border-color) transparent;
+	scrollbar-width: thin;
+	scrollbar-color: var(--text-muted) var(--bg-subtle);
 }
 pre::-webkit-scrollbar {
-	height: 6px;
+	-webkit-appearance: none;
+	height: 8px;
 }
 pre::-webkit-scrollbar-track {
-	background: transparent;
+	background: var(--bg-subtle);
+	border-radius: 0 0 var(--radius-sm) var(--radius-sm);
 }
 pre::-webkit-scrollbar-thumb {
-	background: var(--border-color);
-	border-radius: 3px;
+	background: var(--text-muted);
+	border-radius: 4px;
 }
 pre::-webkit-scrollbar-thumb:hover {
-	background: var(--text-muted);
+	background: var(--text-secondary);
 }
 
 /* ========================================
@@ -1007,7 +1011,8 @@ img.nav-svg-icon {
 	color: var(--accent-contrast);
 }
 
-/* Search plugin */
+/* Search plugin — target input directly in case the plugin omits form-control */
+.plugin.plugin-search input,
 .plugin.plugin-search .form-control {
 	border: 1px solid var(--border-color) !important;
 	border-radius: var(--radius-sm) !important;
@@ -1015,24 +1020,21 @@ img.nav-svg-icon {
 	background: var(--bg-surface) !important;
 	background-color: var(--bg-surface) !important;
 	color: var(--text-primary) !important;
+	width: 100%;
 }
 
-/* Higher-specificity fallback to beat plugin-bundled CSS */
-.sidebar-container .plugin.plugin-search .form-control {
-	background: var(--bg-surface) !important;
-	background-color: var(--bg-surface) !important;
-	color: var(--text-primary) !important;
-	border-color: var(--border-color) !important;
-}
-
+.plugin.plugin-search input::placeholder,
 .plugin.plugin-search .form-control::placeholder {
 	color: var(--text-muted) !important;
 }
 
+.plugin.plugin-search input:focus,
 .plugin.plugin-search .form-control:focus {
 	border-color: var(--accent) !important;
 	box-shadow: 0 0 0 3px rgba(127, 127, 127, 0.18) !important;
 	outline: none !important;
+	background: var(--bg-surface) !important;
+	background-color: var(--bg-surface) !important;
 }
 
 .plugin.plugin-search button,
