@@ -24,6 +24,8 @@
 			root.setAttribute('data-theme', stored);
 			root.style.colorScheme = (stored === 'light') ? 'light' : 'dark';
 			root.style.backgroundColor = bg[stored];
+			// Persist to a cookie so PHP can pre-colour the next page server-side.
+			document.cookie = 'blowdit-theme=' + stored + '; path=/; max-age=31536000; SameSite=Lax';
 		} catch (e) {}
 	})();
 </script>

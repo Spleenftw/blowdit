@@ -1,5 +1,22 @@
+<?php
+	// Read the theme from a cookie so the root element can be rendered
+	// pre-coloured. This paints the page in the theme colour from the first
+	// byte of every response, eliminating the white flash between navigations.
+	$blowditThemeBg = array(
+		'light'      => '#ffffff',
+		'dark'       => '#171717',
+		'nord'       => '#2e3440',
+		'dracula'    => '#282a36',
+		'catppuccin' => '#1e1e2e',
+	);
+	$blowditTheme = (isset($_COOKIE['blowdit-theme']) && isset($blowditThemeBg[$_COOKIE['blowdit-theme']]))
+		? $_COOKIE['blowdit-theme']
+		: 'light';
+	$blowditBg     = $blowditThemeBg[$blowditTheme];
+	$blowditScheme = ($blowditTheme === 'light') ? 'light' : 'dark';
+?>
 <!DOCTYPE html>
-<html lang="<?php echo Theme::lang() ?>">
+<html lang="<?php echo Theme::lang() ?>" data-theme="<?php echo $blowditTheme ?>" style="background-color: <?php echo $blowditBg ?>; color-scheme: <?php echo $blowditScheme ?>;">
 <head>
 <?php include(THEME_DIR_PHP.'head.php'); ?>
 </head>
@@ -140,8 +157,10 @@
 			function apply(theme) {
 				root.setAttribute('data-theme', theme);
 				try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) {}
-				// Keep the inline html background/color-scheme in sync (set early
-				// in head.php to prevent a white flash between page loads).
+				// Persist to a cookie so PHP pre-colours the next page server-side
+				// (prevents the white flash between navigations).
+				document.cookie = 'blowdit-theme=' + theme + '; path=/; max-age=31536000; SameSite=Lax';
+				// Keep the inline html background/color-scheme in sync.
 				var bg = window.BLOWDIT_THEME_BG || {};
 				if (bg[theme]) { root.style.backgroundColor = bg[theme]; }
 				root.style.colorScheme = (theme === 'light') ? 'light' : 'dark';
