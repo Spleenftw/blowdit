@@ -1,0 +1,10 @@
+{
+  "author": "spleenftw",
+  "email": "",
+  "website": "https://github.com/Spleenftw/blowdit",
+  "version": "1.0.0",
+  "releaseDate": "2026-05-29",
+  "license": "MIT",
+  "compatible": "3.9",
+  "notes": "A Bludit theme inspired by the Blowfish Hugo theme. Features dark mode, card-based post listing, responsive navigation, and clean typography."
+}
