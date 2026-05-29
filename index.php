@@ -119,12 +119,13 @@
 	<script>
 		(function () {
 			var STORAGE_KEY = 'blowdit-theme';
-			var THEMES = ['light', 'dark', 'nord', 'dracula'];
+			var THEMES = ['light', 'dark', 'nord', 'dracula', 'catppuccin'];
 			var ICONS = {
-				light:   'bi-brightness-high',
-				dark:    'bi-moon-stars',
-				nord:    'bi-snow',
-				dracula: 'bi-droplet'
+				light:      'bi-brightness-high',
+				dark:       'bi-moon-stars',
+				nord:       'bi-snow',
+				dracula:    'bi-droplet',
+				catppuccin: 'bi-cup-hot'
 			};
 			var root = document.documentElement;
 			var btn = document.getElementById('theme-toggle');

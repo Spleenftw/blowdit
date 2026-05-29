@@ -7,7 +7,7 @@ A clean, minimal theme for [Bludit](https://www.bludit.com) inspired by the
 
 ## Features
 
-- 🎨 **Four color themes** — the navbar button cycles **Light → Dark → Nord → Dracula**, remembering the visitor's choice (falls back to the OS preference).
+- 🎨 **Five color themes** — the navbar button cycles **Light → Dark → Nord → Dracula → Catppuccin**, remembering the visitor's choice (falls back to the OS preference).
 - 🧱 **Monochrome base design** — restrained grayscale palette with crisp typography (Inter).
 - 👤 **Profile hero** — circular avatar, site title, slogan and social links on the homepage.
 - 📚 **Right sidebar** — drop any Bludit sidebar plugin into it (categories, tags, search…).
@@ -56,8 +56,8 @@ blowdit/
 ## Themes
 
 Each theme is just a set of CSS custom properties. Light lives in `:root`; the
-others override it under `[data-theme="dark"]`, `[data-theme="nord"]` and
-`[data-theme="dracula"]`. The attribute is set on `<html>` before paint (in
+others override it under `[data-theme="dark"]`, `[data-theme="nord"]`,
+`[data-theme="dracula"]` and `[data-theme="catppuccin"]`. The attribute is set on `<html>` before paint (in
 `php/head.php`) to avoid a flash, and the navbar button cycles through them,
 persisting the choice to `localStorage`.
 

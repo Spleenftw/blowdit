@@ -174,6 +174,42 @@
 	--social-icon-filter: brightness(0) invert(1);
 }
 
+/* ----------------------------------------
+   THEME TOKENS — Catppuccin Mocha
+   ---------------------------------------- */
+[data-theme="catppuccin"] {
+	color-scheme: dark;
+
+	--accent: #cba6f7;
+	--accent-hover: #d7bdf9;
+	--accent-contrast: #1e1e2e;
+
+	--bg-body: #1e1e2e;
+	--bg-surface: #313244;
+	--bg-subtle: #45475a;
+	--bg-hover: #585b70;
+
+	--text-primary: #cdd6f4;
+	--text-secondary: #bac2de;
+	--text-muted: #a6adc8;
+
+	--border-color: #45475a;
+	--border-subtle: #313244;
+
+	--chrome-bg: #313244;
+	--chrome-text: rgba(205, 214, 244, 0.9);
+	--chrome-text-hover: #cdd6f4;
+
+	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+	--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+	--shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.45);
+
+	--code-bg: #181825;
+	--code-text: #cdd6f4;
+
+	--social-icon-filter: brightness(0) invert(1);
+}
+
 /* ========================================
    BASE
    ======================================== */
