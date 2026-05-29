@@ -61,6 +61,9 @@
 	--font-size-sm: 0.875rem;
 	--font-size-xs: 0.78rem;
 	--line-height-base: 1.7;
+
+	/* Filter applied to the dark social SVG glyphs (none on light themes) */
+	--social-icon-filter: none;
 }
 
 /* ----------------------------------------
@@ -85,7 +88,7 @@
 	--border-color: #333333;
 	--border-subtle: #2a2a2a;
 
-	--chrome-bg: #0f0f0f;
+	--chrome-bg: #1f1f1f;
 	--chrome-text: rgba(255, 255, 255, 0.88);
 	--chrome-text-hover: #ffffff;
 
@@ -95,6 +98,80 @@
 
 	--code-bg: #262626;
 	--code-text: #ededed;
+
+	--social-icon-filter: brightness(0) invert(1);
+}
+
+/* ----------------------------------------
+   THEME TOKENS — Nord (arctic)
+   ---------------------------------------- */
+[data-theme="nord"] {
+	color-scheme: dark;
+
+	--accent: #88c0d0;
+	--accent-hover: #8fbcbb;
+	--accent-contrast: #2e3440;
+
+	--bg-body: #2e3440;
+	--bg-surface: #3b4252;
+	--bg-subtle: #434c5e;
+	--bg-hover: #4c566a;
+
+	--text-primary: #eceff4;
+	--text-secondary: #d8dee9;
+	--text-muted: #8b95a8;
+
+	--border-color: #434c5e;
+	--border-subtle: #3b4252;
+
+	--chrome-bg: #3b4252;
+	--chrome-text: rgba(236, 239, 244, 0.9);
+	--chrome-text-hover: #eceff4;
+
+	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+	--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+	--shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.4);
+
+	--code-bg: #3b4252;
+	--code-text: #eceff4;
+
+	--social-icon-filter: brightness(0) invert(1);
+}
+
+/* ----------------------------------------
+   THEME TOKENS — Dracula
+   ---------------------------------------- */
+[data-theme="dracula"] {
+	color-scheme: dark;
+
+	--accent: #bd93f9;
+	--accent-hover: #caa6fa;
+	--accent-contrast: #282a36;
+
+	--bg-body: #282a36;
+	--bg-surface: #343746;
+	--bg-subtle: #44475a;
+	--bg-hover: #44475a;
+
+	--text-primary: #f8f8f2;
+	--text-secondary: #c4c6d6;
+	--text-muted: #6272a4;
+
+	--border-color: #44475a;
+	--border-subtle: #383b4a;
+
+	--chrome-bg: #343746;
+	--chrome-text: rgba(248, 248, 242, 0.9);
+	--chrome-text-hover: #f8f8f2;
+
+	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+	--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+	--shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.45);
+
+	--code-bg: #21222c;
+	--code-text: #f8f8f2;
+
+	--social-icon-filter: brightness(0) invert(1);
 }
 
 /* ========================================
@@ -430,23 +507,14 @@ img.nav-svg-icon {
 .profile-social-icon {
 	width: 1.4rem;
 	height: 1.4rem;
-	opacity: 0.6;
+	opacity: 0.65;
+	filter: var(--social-icon-filter);
 	transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .profile-social a:hover .profile-social-icon {
 	opacity: 1;
 	transform: translateY(-2px);
-}
-
-/* Dark mode: invert the dark SVG glyphs to light */
-[data-theme="dark"] .profile-social-icon {
-	filter: brightness(0) invert(1);
-	opacity: 0.7;
-}
-
-[data-theme="dark"] .profile-social a:hover .profile-social-icon {
-	opacity: 1;
 }
 
 @media (max-width: 767.98px) {

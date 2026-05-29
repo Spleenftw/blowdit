@@ -7,10 +7,11 @@ A clean, minimal theme for [Bludit](https://www.bludit.com) inspired by the
 
 ## Features
 
-- 🌗 **Light / dark mode toggle** — remembers the visitor's choice and falls back to the OS preference.
-- 🧱 **Monochrome design** — restrained grayscale palette with crisp typography (Inter).
+- 🎨 **Four color themes** — the navbar button cycles **Light → Dark → Nord → Dracula**, remembering the visitor's choice (falls back to the OS preference).
+- 🧱 **Monochrome base design** — restrained grayscale palette with crisp typography (Inter).
 - 👤 **Profile hero** — circular avatar, site title, slogan and social links on the homepage.
 - 📚 **Right sidebar** — drop any Bludit sidebar plugin into it (categories, tags, search…).
+- 🔀 **Randomized navigation** — the Navigation/Pages plugin list is shuffled on each load.
 - ⏱️ **Reading time & dates** shown on the post list and single posts.
 - 🔗 **Social icons** in the navbar and hero, using SVG files in `img/` (GitHub, Mastodon, Bluesky, LinkedIn, and more).
 - 🏷️ **Tags & categories** rendered as pill badges.
@@ -52,15 +53,24 @@ blowdit/
 └── languages/         Translations
 ```
 
-## Dark mode
+## Themes
 
-The colour scheme is driven by CSS custom properties. Light mode lives in
-`:root`; dark mode overrides them under `[data-theme="dark"]`. The attribute is
-set on `<html>` before paint (in `php/head.php`) to avoid a flash, and the
-toggle button in the navbar persists the choice to `localStorage`.
+Each theme is just a set of CSS custom properties. Light lives in `:root`; the
+others override it under `[data-theme="dark"]`, `[data-theme="nord"]` and
+`[data-theme="dracula"]`. The attribute is set on `<html>` before paint (in
+`php/head.php`) to avoid a flash, and the navbar button cycles through them,
+persisting the choice to `localStorage`.
 
-To tweak the palette, edit the variables at the top of
-[css/style.css](css/style.css).
+To tweak a palette or add your own theme, edit/duplicate the variable blocks at
+the top of [css/style.css](css/style.css) and add the theme name to the
+`THEMES` array in the toggle script in [index.php](index.php).
+
+## Randomized navigation
+
+If the **Navigation** (or **Pages**) plugin is in the sidebar, its list is
+shuffled on every page load by a small script in [index.php](index.php). The
+plugin's output is wrapped in `.js-random-nav`; if your plugin uses a different
+CSS class, adjust the detection in `index.php` accordingly.
 
 ## License
 
