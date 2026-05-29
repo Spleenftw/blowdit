@@ -1025,6 +1025,7 @@ img.nav-svg-icon {
 .plugin.plugin-search button,
 .plugin.plugin-search .btn {
 	background: var(--accent) !important;
+	background-color: var(--accent) !important;
 	border: 1px solid var(--accent) !important;
 	color: var(--accent-contrast) !important;
 	padding: 0.55rem 1.2rem;
@@ -1034,9 +1035,20 @@ img.nav-svg-icon {
 	margin-top: var(--space-sm);
 }
 
+/* Higher-specificity rule for the sidebar context so we beat any plugin-bundled
+   CSS that gets loaded after style.css and re-sets the button colour. */
+.sidebar-container .plugin.plugin-search button,
+.sidebar-container .plugin.plugin-search .btn {
+	background: var(--accent) !important;
+	background-color: var(--accent) !important;
+	border-color: var(--accent) !important;
+	color: var(--accent-contrast) !important;
+}
+
 .plugin.plugin-search button:hover,
 .plugin.plugin-search .btn:hover {
 	background: var(--accent-hover) !important;
+	background-color: var(--accent-hover) !important;
 	border-color: var(--accent-hover) !important;
 	transform: translateY(-2px);
 }
