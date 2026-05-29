@@ -217,6 +217,8 @@ html {
 	position: relative;
 	min-height: 100%;
 	scroll-behavior: smooth;
+	background-color: var(--bg-body);
+	transition: background-color 0.25s ease;
 }
 
 body {

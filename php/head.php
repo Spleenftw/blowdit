@@ -2,17 +2,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="generator" content="Bludit">
 
-<!-- Set the colour theme as early as possible to avoid a flash -->
+<!-- Set the colour theme as early as possible to avoid a white flash.
+     Sets data-theme AND paints the html background/color-scheme inline, so the
+     very first frame (before style.css loads) already uses the theme colour. -->
 <script>
+	window.BLOWDIT_THEME_BG = {
+		light:      '#ffffff',
+		dark:       '#171717',
+		nord:       '#2e3440',
+		dracula:    '#282a36',
+		catppuccin: '#1e1e2e'
+	};
 	(function () {
 		try {
+			var bg = window.BLOWDIT_THEME_BG;
 			var stored = localStorage.getItem('blowdit-theme');
-			var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-			var theme = stored || (prefersDark ? 'dark' : 'light');
-			document.documentElement.setAttribute('data-theme', theme);
-		} catch (e) {
-			document.documentElement.setAttribute('data-theme', 'light');
-		}
+			if (!bg[stored]) {
+				stored = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			}
+			var root = document.documentElement;
+			root.setAttribute('data-theme', stored);
+			root.style.colorScheme = (stored === 'light') ? 'light' : 'dark';
+			root.style.backgroundColor = bg[stored];
+		} catch (e) {}
 	})();
 </script>
 

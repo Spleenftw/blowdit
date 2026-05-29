@@ -140,6 +140,11 @@
 			function apply(theme) {
 				root.setAttribute('data-theme', theme);
 				try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) {}
+				// Keep the inline html background/color-scheme in sync (set early
+				// in head.php to prevent a white flash between page loads).
+				var bg = window.BLOWDIT_THEME_BG || {};
+				if (bg[theme]) { root.style.backgroundColor = bg[theme]; }
+				root.style.colorScheme = (theme === 'light') ? 'light' : 'dark';
 				syncIcon(theme);
 			}
 
