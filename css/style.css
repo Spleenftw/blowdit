@@ -1009,17 +1009,30 @@ img.nav-svg-icon {
 
 /* Search plugin */
 .plugin.plugin-search .form-control {
-	border: 1px solid var(--border-color);
-	border-radius: var(--radius-sm);
-	padding: 0.6rem 0.9rem;
-	background: var(--bg-body);
-	color: var(--text-primary);
+	border: 1px solid var(--border-color) !important;
+	border-radius: var(--radius-sm) !important;
+	padding: 0.6rem 0.9rem !important;
+	background: var(--bg-surface) !important;
+	background-color: var(--bg-surface) !important;
+	color: var(--text-primary) !important;
+}
+
+/* Higher-specificity fallback to beat plugin-bundled CSS */
+.sidebar-container .plugin.plugin-search .form-control {
+	background: var(--bg-surface) !important;
+	background-color: var(--bg-surface) !important;
+	color: var(--text-primary) !important;
+	border-color: var(--border-color) !important;
+}
+
+.plugin.plugin-search .form-control::placeholder {
+	color: var(--text-muted) !important;
 }
 
 .plugin.plugin-search .form-control:focus {
-	border-color: var(--accent);
-	box-shadow: 0 0 0 3px rgba(127, 127, 127, 0.18);
-	outline: none;
+	border-color: var(--accent) !important;
+	box-shadow: 0 0 0 3px rgba(127, 127, 127, 0.18) !important;
+	outline: none !important;
 }
 
 .plugin.plugin-search button,
