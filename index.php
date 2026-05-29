@@ -112,8 +112,9 @@
 			?>
 			</div>
 
-			<!-- Right Sidebar -->
-			<div class="col-md-3 offset-md-1">
+			<!-- Right Sidebar (align-self-start: card fits its content, doesn't
+			     stretch to match the main column's height) -->
+			<div class="col-md-3 offset-md-1 align-self-start">
 			<?php include(THEME_DIR_PHP.'sidebar.php'); ?>
 			</div>
 

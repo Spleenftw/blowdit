@@ -834,8 +834,6 @@ img.nav-svg-icon {
 	border-radius: var(--radius-lg);
 	padding: var(--space-lg);
 	font-size: 0.9rem;
-	position: sticky;
-	top: 72px;
 }
 
 /* Compact profile card inside the sidebar (article view) */
