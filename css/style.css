@@ -109,7 +109,9 @@ html {
 body {
 	font-family: var(--font-sans);
 	padding-top: 56px;
-	margin-bottom: 64px;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 	background-color: var(--bg-body);
 	color: var(--text-primary);
 	font-size: var(--font-size-base);
@@ -117,6 +119,13 @@ body {
 	transition: background-color 0.25s ease, color 0.25s ease;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
+}
+
+/* Main content grows so the footer is pushed to the bottom (sticky footer) */
+body > .container {
+	flex: 1 0 auto;
+	width: 100%;
+	padding-bottom: var(--space-xl);
 }
 
 img {
@@ -381,8 +390,8 @@ img.nav-svg-icon {
    PROFILE HERO (Blowfish-style homepage)
    ======================================== */
 .profile {
-	padding: var(--space-xl) 0 var(--space-lg);
-	margin-bottom: var(--space-lg);
+	padding: var(--space-lg) 0 var(--space-md);
+	margin-bottom: var(--space-md);
 	border-bottom: 1px solid var(--border-color);
 }
 
@@ -728,8 +737,8 @@ img.nav-svg-icon {
 
 /* Compact profile card inside the sidebar (article view) */
 .sidebar-profile {
-	padding-bottom: var(--space-lg);
-	margin-bottom: var(--space-lg);
+	padding-bottom: var(--space-md);
+	margin-bottom: var(--space-md);
 	border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -870,8 +879,7 @@ img.nav-svg-icon {
    FOOTER
    ======================================== */
 footer.footer-modern {
-	position: absolute;
-	bottom: 0;
+	flex-shrink: 0;
 	width: 100%;
 	min-height: 64px;
 	line-height: 1.6;
