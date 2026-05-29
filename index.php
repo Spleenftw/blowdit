@@ -106,8 +106,9 @@
 
 			<?php if ($hasHeadings): ?>
 
-			<!-- Left ToC Sidebar — visible on md+ only; hidden on mobile -->
-			<div class="col-md-3 d-none d-md-block align-self-start">
+			<!-- Left ToC Sidebar — visible on md+ only; hidden on mobile.
+			     No align-self-start so the column stretches to article height, enabling sticky. -->
+			<div class="col-md-3 d-none d-md-block">
 			<?php include(THEME_DIR_PHP.'toc.php'); ?>
 			</div>
 

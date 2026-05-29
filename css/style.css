@@ -1033,8 +1033,9 @@ footer.footer-modern a:hover {
 .toc-sidebar {
 	margin-top: var(--space-xl);
 	position: sticky;
-	top: var(--space-lg);
-	max-height: calc(100vh - var(--space-xl));
+	/* 56px = fixed navbar height; extra gap so the ToC doesn't hug it */
+	top: calc(56px + var(--space-sm));
+	max-height: calc(100vh - 56px - var(--space-md));
 	overflow-y: auto;
 	font-size: var(--font-size-sm);
 }
