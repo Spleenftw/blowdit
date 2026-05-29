@@ -761,8 +761,8 @@ img.nav-svg-icon {
 }
 
 .plugin {
-	padding-bottom: var(--space-lg);
-	margin-bottom: var(--space-lg);
+	padding-bottom: var(--space-md);
+	margin-bottom: var(--space-md);
 	border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -778,7 +778,7 @@ img.nav-svg-icon {
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
 	color: var(--text-muted);
-	margin-bottom: var(--space-md);
+	margin-bottom: var(--space-sm);
 }
 
 .plugin ul {
@@ -788,7 +788,7 @@ img.nav-svg-icon {
 }
 
 .plugin ul li {
-	padding: 0.3rem 0;
+	padding: 0.15rem 0;
 }
 
 .plugin ul li a {
@@ -847,10 +847,11 @@ img.nav-svg-icon {
 	outline: none;
 }
 
-.plugin.plugin-search button {
-	background: var(--accent);
-	border: none;
-	color: var(--accent-contrast);
+.plugin.plugin-search button,
+.plugin.plugin-search .btn {
+	background: var(--accent) !important;
+	border: 1px solid var(--accent) !important;
+	color: var(--accent-contrast) !important;
 	padding: 0.55rem 1.2rem;
 	border-radius: var(--radius-sm);
 	font-weight: 600;
@@ -858,8 +859,10 @@ img.nav-svg-icon {
 	margin-top: var(--space-sm);
 }
 
-.plugin.plugin-search button:hover {
-	background: var(--accent-hover);
+.plugin.plugin-search button:hover,
+.plugin.plugin-search .btn:hover {
+	background: var(--accent-hover) !important;
+	border-color: var(--accent-hover) !important;
 	transform: translateY(-2px);
 }
 
