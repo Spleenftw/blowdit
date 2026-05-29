@@ -101,7 +101,7 @@
 	?>
 
 	<!-- Content -->
-	<div class="container">
+	<div class="<?php echo $hasHeadings ? 'container-wide' : 'container'; ?>">
 		<div class="row">
 
 			<?php if ($hasHeadings): ?>

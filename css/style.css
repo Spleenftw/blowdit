@@ -235,10 +235,21 @@ body {
 }
 
 /* Main content grows so the footer is pushed to the bottom (sticky footer) */
-body > .container {
+body > .container,
+body > .container-wide {
 	flex: 1 0 auto;
 	width: 100%;
 	padding-bottom: var(--space-xl);
+}
+
+/* Wider container used on article pages that have a ToC sidebar.
+   Same gutter behaviour as Bootstrap's .container but with more breathing room. */
+.container-wide {
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: auto;
+	max-width: 1400px;
 }
 
 img {
