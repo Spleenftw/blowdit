@@ -1028,6 +1028,64 @@ footer.footer-modern a:hover {
 }
 
 /* ========================================
+   TABLE OF CONTENTS (left sidebar, article view)
+   ======================================== */
+.toc-sidebar {
+	margin-top: var(--space-xl);
+	position: sticky;
+	top: var(--space-lg);
+	max-height: calc(100vh - var(--space-xl));
+	overflow-y: auto;
+	font-size: var(--font-size-sm);
+}
+
+.toc-title {
+	font-size: var(--font-size-xs);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--text-muted);
+	margin-bottom: 0.75rem;
+}
+
+.toc-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.toc-item {
+	padding: 0.15rem 0;
+}
+
+.toc-h3 {
+	padding-left: 0.75rem;
+}
+
+.toc-h4 {
+	padding-left: 1.5rem;
+}
+
+.toc-link {
+	color: var(--text-muted);
+	text-decoration: none;
+	line-height: 1.5;
+	display: block;
+	transition: color 0.15s ease;
+}
+
+.toc-link:hover {
+	color: var(--text-primary);
+	text-decoration: none;
+}
+
+.toc-link.active {
+	color: var(--accent);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+/* ========================================
    RESPONSIVE
    ======================================== */
 @media (max-width: 767.98px) {

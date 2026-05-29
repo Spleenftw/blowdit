@@ -65,6 +65,7 @@
 					'priority' => $priority,
 					'index'    => $sidebarIndex++,
 					'search'   => $isSearch,
+					'nav'      => $isNav,
 					'html'     => $out,
 				);
 			}
@@ -78,32 +79,48 @@
 			return $a['priority'] - $b['priority'];
 		});
 
-		$sidebarFullHtml     = '';   // all plugins, ordered (used off the homepage)
-		$sidebarNoSearchHtml = '';   // same, minus search (used on the homepage)
+		$sidebarFullHtml     = '';   // all plugins, ordered (used on article/page views)
+		$sidebarNoSearchHtml = '';   // same, minus search (kept for potential future use)
+		$sidebarHomeHtml     = '';   // about + categories + hit counter only (homepage, no nav/search)
 		foreach ($sidebarItems as $item) {
 			$sidebarFullHtml .= $item['html'];
 			if (!$item['search']) {
 				$sidebarNoSearchHtml .= $item['html'];
 			}
+			if (!$item['search'] && !$item['nav']) {
+				$sidebarHomeHtml .= $item['html'];
+			}
 		}
 
 		// The hero (and the relocated search) only appear on the blog front page.
-		$heroVisible = ($WHERE_AM_I === 'home' && Paginator::currentPage() == 1);
+		$heroVisible   = ($WHERE_AM_I === 'home' && Paginator::currentPage() == 1);
+		// True when viewing a single non-static article.
+		$isArticlePage = ($WHERE_AM_I === 'page' && isset($page) && !$page->isStatic() && !$url->notFound());
+		// Show 3-column layout (left ToC + content + right sidebar) only when the article has headings.
+		$hasHeadings   = $isArticlePage && (bool) preg_match('/<h[234]/i', $page->content());
 	?>
 
 	<!-- Content -->
 	<div class="container">
 		<div class="row">
 
-			<!-- Blog Posts -->
+			<?php if ($hasHeadings): ?>
+
+			<!-- Left ToC Sidebar — visible on md+ only; hidden on mobile -->
+			<div class="col-md-3 d-none d-md-block align-self-start">
+			<?php include(THEME_DIR_PHP.'toc.php'); ?>
+			</div>
+
+			<!-- Article Content (narrower when ToC is present) -->
+			<div class="col-md-6">
+			<?php include(THEME_DIR_PHP.'page.php'); ?>
+			</div>
+
+			<?php else: ?>
+
+			<!-- Blog Posts / Page (full width when no ToC) -->
 			<div class="col-md-8">
 			<?php
-				// Bludit content are pages.
-				// Ordered by date, these pages behave like posts.
-				//
-				// $WHERE_AM_I detects where the visitor is:
-				//   "page" -> viewing a single page/post
-				//   "home" -> viewing the front page
 				if ($WHERE_AM_I == 'page') {
 					include(THEME_DIR_PHP.'page.php');
 				} else {
@@ -112,9 +129,11 @@
 			?>
 			</div>
 
+			<?php endif ?>
+
 			<!-- Right Sidebar (align-self-start: card fits its content, doesn't
 			     stretch to match the main column's height) -->
-			<div class="col-md-3 offset-md-1 align-self-start">
+			<div class="<?php echo $hasHeadings ? 'col-md-3' : 'col-md-3 offset-md-1'; ?> align-self-start">
 			<?php include(THEME_DIR_PHP.'sidebar.php'); ?>
 			</div>
 
@@ -210,6 +229,74 @@
 				});
 				shuffle(items).forEach(function (li) { ul.appendChild(li); });
 			});
+		})();
+	</script>
+
+	<!-- Table of Contents: generate links from article headings + scroll-spy -->
+	<script>
+		(function () {
+			var tocNav = document.getElementById('toc-nav');
+			if (!tocNav) return;
+
+			var content = document.querySelector('.content');
+			if (!content) return;
+
+			var headings = content.querySelectorAll('h2, h3, h4');
+			if (headings.length === 0) return;
+
+			// Ensure every heading has a stable anchor ID
+			var usedIds = {};
+			Array.prototype.forEach.call(headings, function (h) {
+				if (!h.id) {
+					var base = h.textContent.trim().toLowerCase()
+						.replace(/[^a-z0-9\s-]/g, '')
+						.replace(/\s+/g, '-')
+						.replace(/^-+|-+$/g, '') || 'heading';
+					var id = base, n = 2;
+					while (usedIds[id]) { id = base + '-' + (n++); }
+					usedIds[id] = true;
+					h.id = id;
+				} else {
+					usedIds[h.id] = true;
+				}
+			});
+
+			// Build the list
+			var ul = document.createElement('ul');
+			ul.className = 'toc-list';
+			Array.prototype.forEach.call(headings, function (h) {
+				var li = document.createElement('li');
+				li.className = 'toc-item toc-' + h.tagName.toLowerCase();
+				var a = document.createElement('a');
+				a.href = '#' + h.id;
+				a.textContent = h.textContent;
+				a.className = 'toc-link';
+				li.appendChild(a);
+				ul.appendChild(li);
+			});
+			tocNav.appendChild(ul);
+
+			// Scroll-spy: highlight the last heading that has scrolled past the top
+			var headingArr = Array.prototype.slice.call(headings);
+
+			function updateActive() {
+				var scrollY = window.scrollY || window.pageYOffset;
+				var threshold = scrollY + 120; // offset for navbar height
+				var active = null;
+				headingArr.forEach(function (h) {
+					var top = h.getBoundingClientRect().top + scrollY;
+					if (top <= threshold) active = h;
+				});
+				var links = tocNav.querySelectorAll('.toc-link');
+				Array.prototype.forEach.call(links, function (a) { a.classList.remove('active'); });
+				if (active) {
+					var link = tocNav.querySelector('a[href="#' + active.id + '"]');
+					if (link) link.classList.add('active');
+				}
+			}
+
+			window.addEventListener('scroll', updateActive, { passive: true });
+			updateActive();
 		})();
 	</script>
 

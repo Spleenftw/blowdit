@@ -20,10 +20,10 @@
 	<?php
 		// Plugins are rendered in a fixed order (see index.php):
 		//   Blog/About > Search > Navigation > Category > … > Hit Counter (bottom)
-		// On the homepage front page the search box is shown under the hero, so
-		// it is omitted from the sidebar there.
-		if ($heroVisible) {
-			echo $sidebarNoSearchHtml;
+		// On the homepage the navigation is redundant (posts are already listed),
+		// and the search box lives under the hero, so show only about/categories/counters.
+		if ($WHERE_AM_I === 'home') {
+			echo $sidebarHomeHtml;
 		} else {
 			echo $sidebarFullHtml;
 		}
