@@ -33,11 +33,18 @@
 					</li>
 				<?php endforeach; ?>
 
-				<!-- Light / Dark mode toggle -->
-				<li class="nav-item ml-md-2 mt-2 mt-md-0">
-					<button type="button" id="theme-toggle" class="theme-toggle" aria-label="<?php echo $L->get('Toggle theme') ?>" title="<?php echo $L->get('Toggle theme') ?>">
+				<!-- Theme picker -->
+				<li class="nav-item ml-md-2 mt-2 mt-md-0 theme-picker-wrap">
+					<button type="button" id="theme-toggle" class="theme-toggle" aria-label="<?php echo $L->get('Toggle theme') ?>" title="<?php echo $L->get('Toggle theme') ?>" aria-haspopup="true" aria-expanded="false">
 						<i class="bi bi-moon-stars" aria-hidden="true"></i>
 					</button>
+					<div id="theme-picker" class="theme-picker" role="menu">
+						<button class="swatch" data-pick="light"      title="Light"      style="--sb:#ffffff;--sa:#1f1f1f"><span class="swatch-dot"></span><span class="swatch-label">Light</span></button>
+						<button class="swatch" data-pick="dark"       title="Dark"       style="--sb:#171717;--sa:#e5e5e5"><span class="swatch-dot"></span><span class="swatch-label">Dark</span></button>
+						<button class="swatch" data-pick="nord"       title="Nord"       style="--sb:#2e3440;--sa:#88c0d0"><span class="swatch-dot"></span><span class="swatch-label">Nord</span></button>
+						<button class="swatch" data-pick="dracula"    title="Dracula"    style="--sb:#282a36;--sa:#bd93f9"><span class="swatch-dot"></span><span class="swatch-label">Dracula</span></button>
+						<button class="swatch" data-pick="catppuccin" title="Catppuccin" style="--sb:#1e1e2e;--sa:#cba6f7"><span class="swatch-dot"></span><span class="swatch-label">Cat</span></button>
+					</div>
 				</li>
 
 			</ul>

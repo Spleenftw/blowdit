@@ -157,7 +157,7 @@
 		echo Theme::jsBootstrap();
 	?>
 
-	<!-- Theme rotation: light -> dark -> nord -> dracula -->
+	<!-- Theme picker -->
 	<script>
 		(function () {
 			var STORAGE_KEY = 'blowdit-theme';
@@ -169,8 +169,9 @@
 				dracula:    'bi-droplet',
 				catppuccin: 'bi-cup'
 			};
-			var root = document.documentElement;
-			var btn = document.getElementById('theme-toggle');
+			var root   = document.documentElement;
+			var btn    = document.getElementById('theme-toggle');
+			var picker = document.getElementById('theme-picker');
 
 			function syncIcon(theme) {
 				if (!btn) return;
@@ -179,38 +180,72 @@
 				icon.className = 'bi ' + (ICONS[theme] || 'bi-circle-half');
 			}
 
+			function syncSwatches(theme) {
+				if (!picker) return;
+				Array.prototype.forEach.call(picker.querySelectorAll('.swatch'), function (s) {
+					s.classList.toggle('is-active', s.getAttribute('data-pick') === theme);
+				});
+			}
+
 			function apply(theme) {
 				root.setAttribute('data-theme', theme);
 				try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) {}
-				// Persist to a cookie so PHP pre-colours the next page server-side
-				// (prevents the white flash between navigations).
 				document.cookie = 'blowdit-theme=' + theme + '; path=/; max-age=31536000; SameSite=Lax';
-				// Keep the inline html background/color-scheme in sync.
 				var bg = window.BLOWDIT_THEME_BG || {};
 				if (bg[theme]) { root.style.backgroundColor = bg[theme]; }
 				root.style.colorScheme = (theme === 'light') ? 'light' : 'dark';
 				syncIcon(theme);
+				syncSwatches(theme);
 			}
 
-			// Reflect the theme set by the inline head script.
-			var current = root.getAttribute('data-theme') || 'light';
-			if (THEMES.indexOf(current) === -1) current = 'light';
-			syncIcon(current);
+			function openPicker() {
+				if (!picker) return;
+				picker.classList.add('is-open');
+				if (btn) btn.setAttribute('aria-expanded', 'true');
+			}
 
-			if (btn) {
-				btn.addEventListener('click', function () {
-					var cur = root.getAttribute('data-theme') || 'light';
-					var i = THEMES.indexOf(cur);
-					apply(THEMES[(i + 1) % THEMES.length]);
+			function closePicker() {
+				if (!picker) return;
+				picker.classList.remove('is-open');
+				if (btn) btn.setAttribute('aria-expanded', 'false');
+			}
+
+			// Swatch clicks
+			if (picker) {
+				Array.prototype.forEach.call(picker.querySelectorAll('.swatch'), function (s) {
+					s.addEventListener('click', function () {
+						apply(s.getAttribute('data-pick'));
+						closePicker();
+					});
 				});
 			}
 
-			// Follow the OS preference unless the visitor chose explicitly.
+			// Toggle button: open / close picker
+			if (btn) {
+				btn.addEventListener('click', function (e) {
+					e.stopPropagation();
+					picker && picker.classList.contains('is-open') ? closePicker() : openPicker();
+				});
+			}
+
+			// Close on outside click
+			document.addEventListener('click', function (e) {
+				if (!picker || !picker.classList.contains('is-open')) return;
+				if (btn && btn.contains(e.target)) return;
+				if (picker.contains(e.target)) return;
+				closePicker();
+			});
+
+			// Initialise icons + active swatch
+			var current = root.getAttribute('data-theme') || 'light';
+			if (THEMES.indexOf(current) === -1) current = 'light';
+			syncIcon(current);
+			syncSwatches(current);
+
+			// Follow OS preference unless the visitor chose explicitly
 			if (window.matchMedia) {
 				window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-					try {
-						if (localStorage.getItem(STORAGE_KEY)) return;
-					} catch (err) {}
+					try { if (localStorage.getItem(STORAGE_KEY)) return; } catch (err) {}
 					apply(e.matches ? 'dark' : 'light');
 				});
 			}
