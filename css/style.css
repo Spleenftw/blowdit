@@ -252,6 +252,12 @@ body > .container-wide {
 	max-width: 1400px;
 }
 
+/* Align the navbar's inner container with the wider article layout so the
+   brand lines up with the ToC and the nav items line up with the right sidebar. */
+body.has-toc .navbar .container {
+	max-width: 1400px;
+}
+
 img {
 	max-width: 100%;
 	height: auto;

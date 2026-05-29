@@ -14,13 +14,18 @@
 		: 'light';
 	$blowditBg     = $blowditThemeBg[$blowditTheme];
 	$blowditScheme = ($blowditTheme === 'light') ? 'light' : 'dark';
+
+	// Pre-compute before <body> so we can stamp the has-toc class on it,
+	// which lets CSS align the navbar container with the wider article container.
+	$blowditIsArticle  = ($WHERE_AM_I === 'page' && isset($page) && !$page->isStatic() && !$url->notFound());
+	$blowditHasHeadings = $blowditIsArticle && (bool) preg_match('/<h[234]/i', $page->content());
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo Theme::lang() ?>" data-theme="<?php echo $blowditTheme ?>" style="background-color: <?php echo $blowditBg ?>; color-scheme: <?php echo $blowditScheme ?>;">
 <head>
 <?php include(THEME_DIR_PHP.'head.php'); ?>
 </head>
-<body>
+<body<?php echo $blowditHasHeadings ? ' class="has-toc"' : ''; ?>>
 
 	<!-- Load Bludit Plugins: Site Body Begin -->
 	<?php Theme::plugins('siteBodyBegin'); ?>
@@ -94,10 +99,9 @@
 
 		// The hero (and the relocated search) only appear on the blog front page.
 		$heroVisible   = ($WHERE_AM_I === 'home' && Paginator::currentPage() == 1);
-		// True when viewing a single non-static article.
-		$isArticlePage = ($WHERE_AM_I === 'page' && isset($page) && !$page->isStatic() && !$url->notFound());
-		// Show 3-column layout (left ToC + content + right sidebar) only when the article has headings.
-		$hasHeadings   = $isArticlePage && (bool) preg_match('/<h[234]/i', $page->content());
+		// Reuse the values pre-computed before <body> (avoids calling $page->content() twice).
+		$isArticlePage = $blowditIsArticle;
+		$hasHeadings   = $blowditHasHeadings;
 	?>
 
 	<!-- Content -->
