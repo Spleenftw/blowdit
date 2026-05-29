@@ -674,6 +674,10 @@ img.nav-svg-icon {
 /* ========================================
    POST LIST (titles only)
    ======================================== */
+.post-list {
+	margin-top: var(--space-xl);
+}
+
 .post-list-item {
 	padding: var(--space-lg) 0;
 	border-bottom: 1px solid var(--border-subtle);
