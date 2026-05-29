@@ -125,7 +125,7 @@
 				dark:       'bi-moon-stars',
 				nord:       'bi-snow',
 				dracula:    'bi-droplet',
-				catppuccin: 'bi-cup-hot'
+				catppuccin: 'bi-cup'
 			};
 			var root = document.documentElement;
 			var btn = document.getElementById('theme-toggle');
