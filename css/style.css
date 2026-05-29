@@ -841,8 +841,8 @@ img.nav-svg-icon {
 
 /* Compact profile card inside the sidebar (article view) */
 .sidebar-profile {
-	padding-bottom: var(--space-md);
-	margin-bottom: var(--space-md);
+	padding-bottom: 1.2rem;
+	margin-bottom: 1.2rem;
 	border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -874,8 +874,8 @@ img.nav-svg-icon {
 }
 
 .plugin {
-	padding-bottom: var(--space-md);
-	margin-bottom: var(--space-md);
+	padding-bottom: 1.2rem;
+	margin-bottom: 1.2rem;
 	border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -889,8 +889,8 @@ img.nav-svg-icon {
    .plugin:last-child even when it isn't last — restore its divider/spacing. */
 .js-random-nav .plugin {
 	border-bottom: 1px solid var(--border-subtle);
-	margin-bottom: var(--space-md);
-	padding-bottom: var(--space-md);
+	margin-bottom: 1.2rem;
+	padding-bottom: 1.2rem;
 }
 
 /* …unless the wrapped navigation really is the last item in the sidebar. */
