@@ -849,6 +849,21 @@ img.nav-svg-icon {
 	padding-bottom: 0;
 }
 
+/* The navigation plugin is wrapped in .js-random-nav, so it matches
+   .plugin:last-child even when it isn't last — restore its divider/spacing. */
+.js-random-nav .plugin {
+	border-bottom: 1px solid var(--border-subtle);
+	margin-bottom: var(--space-md);
+	padding-bottom: var(--space-md);
+}
+
+/* …unless the wrapped navigation really is the last item in the sidebar. */
+.sidebar-container > .js-random-nav:last-child .plugin {
+	border-bottom: none;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
 .plugin-label {
 	font-size: var(--font-size-xs);
 	font-weight: 700;
