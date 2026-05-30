@@ -1253,16 +1253,12 @@ footer.footer-modern a:hover {
 	border-radius: var(--radius-md);
 	overflow: hidden;
 	border: 1px solid var(--border-color);
-	background: var(--bg-subtle);
-}
-
-.carousel-track {
-	position: relative;
+	background: #000;
 }
 
 .carousel-slide {
 	display: none;
-	position: relative; /* anchor for caption overlay */
+	position: relative;
 }
 
 .carousel-slide.is-active {
@@ -1276,32 +1272,39 @@ footer.footer-modern a:hover {
 	cursor: zoom-in;
 }
 
-/* Caption overlays the bottom of the image — not a separate bar */
+/* Caption: hidden by default, fades in on hover */
 .carousel-caption {
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	margin: 0;
-	padding: 0.35rem 1rem;
-	background: rgba(0, 0, 0, 0.52);
-	color: #ffffff;
-	font-size: var(--font-size-sm);
+	padding: 0.3rem 1rem;
+	background: rgba(0, 0, 0, 0.6);
+	color: rgba(255, 255, 255, 0.9);
+	font-size: 0.75rem;
 	text-align: center;
+	opacity: 0;
+	transition: opacity 0.2s ease;
 }
 
+.carousel-slide:hover .carousel-caption {
+	opacity: 1;
+}
+
+/* Arrows */
 .carousel-arrow {
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
 	z-index: 10;
-	background: rgba(0, 0, 0, 0.45);
+	background: rgba(0, 0, 0, 0.4);
 	color: #ffffff;
 	border: none;
-	width: 38px;
-	height: 38px;
+	width: 36px;
+	height: 36px;
 	border-radius: 50%;
-	font-size: 1.6rem;
+	font-size: 1.5rem;
 	line-height: 1;
 	display: flex;
 	align-items: center;
@@ -1314,22 +1317,26 @@ footer.footer-modern a:hover {
 .carousel-prev { left: 10px; }
 .carousel-next { right: 10px; }
 
-/* Dots sit in a slim strip below the image */
+/* Dots: overlaid at the bottom of the image, no separate strip */
 .carousel-dots {
+	position: absolute;
+	bottom: 10px;
+	left: 0;
+	right: 0;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 6px;
-	padding: 7px 0;
-	background: var(--bg-subtle);
+	pointer-events: none;
+	z-index: 5;
 }
 
 .carousel-dot {
-	width: 8px;
-	height: 8px;
+	pointer-events: auto;
+	width: 6px;
+	height: 6px;
 	border-radius: 50%;
-	/* white semi-transparent — readable on every theme */
-	background: rgba(255, 255, 255, 0.35);
+	background: rgba(255, 255, 255, 0.45);
 	border: none;
 	padding: 0;
 	cursor: pointer;
@@ -1337,8 +1344,8 @@ footer.footer-modern a:hover {
 }
 
 .carousel-dot.is-active {
-	background: var(--accent);
-	transform: scale(1.3);
+	background: #ffffff;
+	transform: scale(1.5);
 }
 
 /* ========================================
