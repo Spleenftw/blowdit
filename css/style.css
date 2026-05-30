@@ -1245,6 +1245,96 @@ footer.footer-modern a:hover {
 }
 
 /* ========================================
+   IMAGE CAROUSEL  (```carousel fences)
+   ======================================== */
+.carousel {
+	position: relative;
+	margin: var(--space-md) 0;
+	border-radius: var(--radius-md);
+	overflow: hidden;
+	background: var(--bg-subtle);
+	border: 1px solid var(--border-color);
+}
+
+.carousel-track {
+	position: relative;
+}
+
+.carousel-slide {
+	display: none;
+}
+
+.carousel-slide.is-active {
+	display: block;
+}
+
+.carousel-slide img {
+	width: 100%;
+	height: auto;
+	display: block;
+	cursor: zoom-in;
+}
+
+.carousel-caption {
+	margin: 0;
+	padding: 0.5rem 1rem;
+	font-size: var(--font-size-sm);
+	color: var(--text-secondary);
+	text-align: center;
+	background: var(--bg-subtle);
+}
+
+.carousel-arrow {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 10;
+	background: rgba(0, 0, 0, 0.45);
+	color: #ffffff;
+	border: none;
+	width: 38px;
+	height: 38px;
+	border-radius: 50%;
+	font-size: 1.6rem;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: background 0.15s ease;
+}
+
+.carousel-arrow:hover {
+	background: rgba(0, 0, 0, 0.72);
+}
+
+.carousel-prev { left: 10px; }
+.carousel-next { right: 10px; }
+
+.carousel-dots {
+	display: flex;
+	justify-content: center;
+	gap: 6px;
+	padding: 8px;
+}
+
+.carousel-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--border-color);
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.carousel-dot.is-active {
+	background: var(--accent);
+	transform: scale(1.3);
+}
+
+/* ========================================
    LIGHTBOX
    ======================================== */
 .lightbox-overlay {

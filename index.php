@@ -348,11 +348,11 @@
 				var pre  = code.parentNode;
 				var raw  = code.textContent;
 
-				// Split on [Tab Name] header lines
+				// Split on "=== Tab Name" header lines (avoids Parsedown link-ref conflicts)
 				var tabs = [];
 				var current = null;
 				raw.split('\n').forEach(function (line) {
-					var m = line.match(/^\[(.+)\]\s*$/);
+					var m = line.match(/^===\s+(.+?)\s*$/);
 					if (m) {
 						current = { name: m[1], lines: [] };
 						tabs.push(current);
@@ -410,6 +410,99 @@
 				});
 
 				pre.parentNode.replaceChild(group, pre);
+			});
+		})();
+	</script>
+
+	<!-- Image carousel: transforms ```carousel fences into a slideshow -->
+	<script>
+		(function () {
+			var blocks = document.querySelectorAll('pre > code.language-carousel');
+			Array.prototype.forEach.call(blocks, function (code) {
+				var pre = code.parentNode;
+
+				// Each non-empty line: "url" or "url | caption"
+				var slides = [];
+				code.textContent.split('\n').forEach(function (line) {
+					line = line.trim();
+					if (!line) return;
+					var parts = line.split('|');
+					slides.push({ url: parts[0].trim(), caption: (parts[1] || '').trim() });
+				});
+				if (!slides.length) return;
+
+				var car   = document.createElement('div');
+				car.className = 'carousel';
+
+				var track = document.createElement('div');
+				track.className = 'carousel-track';
+				car.appendChild(track);
+
+				var slideEls = [];
+				var dotEls   = [];
+				var current  = 0;
+
+				slides.forEach(function (s, i) {
+					var slide = document.createElement('div');
+					slide.className = 'carousel-slide' + (i === 0 ? ' is-active' : '');
+					var img = document.createElement('img');
+					img.src = s.url;
+					img.alt = s.caption;
+					img.loading = 'lazy';
+					slide.appendChild(img);
+					if (s.caption) {
+						var cap = document.createElement('p');
+						cap.className = 'carousel-caption';
+						cap.textContent = s.caption;
+						slide.appendChild(cap);
+					}
+					track.appendChild(slide);
+					slideEls.push(slide);
+				});
+
+				function goTo(idx) {
+					slideEls[current].classList.remove('is-active');
+					if (dotEls[current]) dotEls[current].classList.remove('is-active');
+					current = (idx + slides.length) % slides.length;
+					slideEls[current].classList.add('is-active');
+					if (dotEls[current]) dotEls[current].classList.add('is-active');
+				}
+
+				if (slides.length > 1) {
+					var prev = document.createElement('button');
+					prev.type = 'button'; prev.className = 'carousel-arrow carousel-prev';
+					prev.innerHTML = '&#8249;';
+					prev.addEventListener('click', function () { goTo(current - 1); });
+					car.appendChild(prev);
+
+					var next = document.createElement('button');
+					next.type = 'button'; next.className = 'carousel-arrow carousel-next';
+					next.innerHTML = '&#8250;';
+					next.addEventListener('click', function () { goTo(current + 1); });
+					car.appendChild(next);
+
+					var dots = document.createElement('div');
+					dots.className = 'carousel-dots';
+					slides.forEach(function (_, i) {
+						var dot = document.createElement('button');
+						dot.type = 'button';
+						dot.className = 'carousel-dot' + (i === 0 ? ' is-active' : '');
+						dot.addEventListener('click', function () { goTo(i); });
+						dots.appendChild(dot);
+						dotEls.push(dot);
+					});
+					car.appendChild(dots);
+
+					// Swipe support
+					var startX = 0;
+					track.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
+					track.addEventListener('touchend', function (e) {
+						var dx = e.changedTouches[0].clientX - startX;
+						if (Math.abs(dx) > 40) goTo(dx < 0 ? current + 1 : current - 1);
+					}, { passive: true });
+				}
+
+				pre.parentNode.replaceChild(car, pre);
 			});
 		})();
 	</script>
