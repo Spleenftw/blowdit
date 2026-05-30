@@ -1252,8 +1252,6 @@ footer.footer-modern a:hover {
 	margin: var(--space-md) 0;
 	border-radius: var(--radius-md);
 	overflow: hidden;
-	border: 1px solid var(--border-color);
-	background: #000;
 }
 
 .carousel-slide {
