@@ -2,9 +2,9 @@
   "author": "spleenftw",
   "email": "",
   "website": "https://github.com/Spleenftw/blowdit",
-  "version": "1.0.0",
-  "releaseDate": "2026-05-29",
+  "version": "1.2.0",
+  "releaseDate": "2026-05-30",
   "license": "MIT",
   "compatible": "3.9",
-  "notes": "A Bludit theme inspired by the Blowfish Hugo theme. Features dark mode, card-based post listing, responsive navigation, and clean typography."
+  "notes": "A Bludit theme inspired by the Blowfish Hugo theme. Five-theme swatch picker (Light/Dark/Nord/Dracula/Catppuccin), sticky ToC sidebar on articles, image lightbox with zoom, image carousel (```carousel fence), tabbed code blocks (```tabs fence), smart sidebar per page type, and clean responsive typography."
 }
