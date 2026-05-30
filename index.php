@@ -368,16 +368,25 @@
 				document.body.style.overflow = '';
 			}
 
-			Array.prototype.forEach.call(images, function (el) {
-				// Skip icons / tiny images — not worth zooming
-				if (el.offsetWidth < 80 && el.offsetHeight < 80) return;
+			function wrapImage(el) {
+				// Skip icons / tiny images using natural dimensions (reliable after load)
+				if (el.naturalWidth > 0 && el.naturalWidth < 100) return;
+				if (el.naturalHeight > 0 && el.naturalHeight < 100) return;
 
-				// Wrap in a span so CSS can attach the hover overlay via ::after
 				var wrap = document.createElement('span');
 				wrap.className = 'zoomable-wrap';
 				el.parentNode.insertBefore(wrap, el);
 				wrap.appendChild(el);
 				el.addEventListener('click', function () { open(el.src, el.alt); });
+			}
+
+			Array.prototype.forEach.call(images, function (el) {
+				// If already loaded (e.g. from cache) act immediately; otherwise wait
+				if (el.complete && el.naturalWidth) {
+					wrapImage(el);
+				} else {
+					el.addEventListener('load', function () { wrapImage(el); });
+				}
 			});
 
 			overlay.addEventListener('click', close);
