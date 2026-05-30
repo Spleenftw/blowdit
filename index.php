@@ -340,6 +340,48 @@
 		})();
 	</script>
 
+	<!-- Lightbox: click any article image to zoom -->
+	<script>
+		(function () {
+			var content = document.querySelector('.content');
+			if (!content) return;
+
+			var images = content.querySelectorAll('img');
+			if (!images.length) return;
+
+			// Build overlay once, reuse for every image
+			var overlay = document.createElement('div');
+			overlay.className = 'lightbox-overlay';
+			var zoomed = document.createElement('img');
+			overlay.appendChild(zoomed);
+			document.body.appendChild(overlay);
+
+			function open(src, alt) {
+				zoomed.src = src;
+				zoomed.alt = alt || '';
+				overlay.classList.add('is-open');
+				document.body.style.overflow = 'hidden';
+			}
+
+			function close() {
+				overlay.classList.remove('is-open');
+				document.body.style.overflow = '';
+			}
+
+			Array.prototype.forEach.call(images, function (el) {
+				el.addEventListener('click', function () { open(el.src, el.alt); });
+			});
+
+			overlay.addEventListener('click', close);
+
+			document.addEventListener('keydown', function (e) {
+				if ((e.key === 'Escape' || e.key === 'Esc') && overlay.classList.contains('is-open')) {
+					close();
+				}
+			});
+		})();
+	</script>
+
 	<!-- Load Bludit Plugins: Site Body End -->
 	<?php Theme::plugins('siteBodyEnd'); ?>
 
