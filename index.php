@@ -343,16 +343,21 @@
 	<!-- Tabbed code blocks: transforms ```tabs fences into a tab UI -->
 	<script>
 		(function () {
-			var blocks = document.querySelectorAll('pre > code.language-tabs');
+			// Match both "language-tabs" (Parsedown ≥ 1.7) and bare "tabs" (older Bludit builds)
+			var blocks = document.querySelectorAll(
+				'pre > code.language-tabs, pre > code.tabs'
+			);
 			Array.prototype.forEach.call(blocks, function (code) {
 				var pre  = code.parentNode;
 				var raw  = code.textContent;
 
-				// Split on "=== Tab Name" header lines (avoids Parsedown link-ref conflicts)
+				// "@tab Name" — @ prefix is inert to every markdown processor
 				var tabs = [];
 				var current = null;
 				raw.split('\n').forEach(function (line) {
-					var m = line.match(/^===\s+(.+?)\s*$/);
+					// strip Windows \r if present
+					line = line.replace(/\r$/, '');
+					var m = line.match(/^@tab\s+(.+?)\s*$/);
 					if (m) {
 						current = { name: m[1], lines: [] };
 						tabs.push(current);
