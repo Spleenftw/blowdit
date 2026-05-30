@@ -351,13 +351,13 @@
 				var pre  = code.parentNode;
 				var raw  = code.textContent;
 
-				// "@tab Name" — @ prefix is inert to every markdown processor
+				// Supports "[Name]" and "@tab Name" as tab headers
 				var tabs = [];
 				var current = null;
 				raw.split('\n').forEach(function (line) {
-					// strip Windows \r if present
-					line = line.replace(/\r$/, '');
-					var m = line.match(/^@tab\s+(.+?)\s*$/);
+					line = line.replace(/\r$/, ''); // strip Windows CR
+					var m = line.match(/^\[([^\]]+)\]\s*$/) ||
+					        line.match(/^@tab\s+(.+?)\s*$/);
 					if (m) {
 						current = { name: m[1], lines: [] };
 						tabs.push(current);
@@ -426,13 +426,21 @@
 			Array.prototype.forEach.call(blocks, function (code) {
 				var pre = code.parentNode;
 
-				// Each non-empty line: "url" or "url | caption"
+				// Accepts "![alt](url)", "url | caption", or bare "url"
 				var slides = [];
 				code.textContent.split('\n').forEach(function (line) {
-					line = line.trim();
+					line = line.replace(/\r$/, '').trim();
 					if (!line) return;
+					// Markdown image syntax: ![alt text](url)
+					var md = line.match(/^!\[([^\]]*)\]\(([^)]+)\)\s*$/);
+					if (md) {
+						slides.push({ url: md[2].trim(), caption: md[1].trim() });
+						return;
+					}
+					// Plain: "url | caption" or bare url
 					var parts = line.split('|');
-					slides.push({ url: parts[0].trim(), caption: (parts[1] || '').trim() });
+					var url = parts[0].trim();
+					if (url) slides.push({ url: url, caption: (parts[1] || '').trim() });
 				});
 				if (!slides.length) return;
 
