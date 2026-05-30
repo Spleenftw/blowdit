@@ -340,6 +340,80 @@
 		})();
 	</script>
 
+	<!-- Tabbed code blocks: transforms ```tabs fences into a tab UI -->
+	<script>
+		(function () {
+			var blocks = document.querySelectorAll('pre > code.language-tabs');
+			Array.prototype.forEach.call(blocks, function (code) {
+				var pre  = code.parentNode;
+				var raw  = code.textContent;
+
+				// Split on [Tab Name] header lines
+				var tabs = [];
+				var current = null;
+				raw.split('\n').forEach(function (line) {
+					var m = line.match(/^\[(.+)\]\s*$/);
+					if (m) {
+						current = { name: m[1], lines: [] };
+						tabs.push(current);
+					} else if (current) {
+						current.lines.push(line);
+					}
+				});
+				if (!tabs.length) return;
+
+				// Trim leading / trailing blank lines from each tab
+				tabs.forEach(function (t) {
+					while (t.lines.length && !t.lines[0].trim())            t.lines.shift();
+					while (t.lines.length && !t.lines[t.lines.length - 1].trim()) t.lines.pop();
+				});
+
+				// Build the tab group
+				var group = document.createElement('div');
+				group.className = 'tab-group';
+
+				var list = document.createElement('div');
+				list.className = 'tab-list';
+				list.setAttribute('role', 'tablist');
+				group.appendChild(list);
+
+				var panels = [];
+				tabs.forEach(function (t, i) {
+					// Tab button
+					var btn = document.createElement('button');
+					btn.type = 'button';
+					btn.className = 'tab-btn' + (i === 0 ? ' is-active' : '');
+					btn.setAttribute('role', 'tab');
+					btn.textContent = t.name;
+					list.appendChild(btn);
+
+					// Tab panel
+					var panel = document.createElement('div');
+					panel.className = 'tab-panel' + (i === 0 ? ' is-active' : '');
+					panel.setAttribute('role', 'tabpanel');
+					var panelPre  = document.createElement('pre');
+					var panelCode = document.createElement('code');
+					panelCode.textContent = t.lines.join('\n');
+					panelPre.appendChild(panelCode);
+					panel.appendChild(panelPre);
+					group.appendChild(panel);
+					panels.push({ btn: btn, panel: panel });
+
+					btn.addEventListener('click', function () {
+						panels.forEach(function (p) {
+							p.btn.classList.remove('is-active');
+							p.panel.classList.remove('is-active');
+						});
+						btn.classList.add('is-active');
+						panel.classList.add('is-active');
+					});
+				});
+
+				pre.parentNode.replaceChild(group, pre);
+			});
+		})();
+	</script>
+
 	<!-- Lightbox: click any article image to zoom -->
 	<script>
 		(function () {
