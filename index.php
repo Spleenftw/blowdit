@@ -369,6 +369,11 @@
 			}
 
 			Array.prototype.forEach.call(images, function (el) {
+				// Wrap in a span so CSS can attach the hover badge via ::after
+				var wrap = document.createElement('span');
+				wrap.className = 'zoomable-wrap';
+				el.parentNode.insertBefore(wrap, el);
+				wrap.appendChild(el);
 				el.addEventListener('click', function () { open(el.src, el.alt); });
 			});
 
