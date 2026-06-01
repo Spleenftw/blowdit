@@ -153,11 +153,12 @@
 
 	<!-- Javascript -->
 	<?php
-		// Include Jquery file from Bludit Core
-		echo Theme::jquery();
-
-		// Include javascript Bootstrap file from Bludit Core
-		echo Theme::jsBootstrap();
+		// jQuery and Bootstrap's JS bundle are intentionally NOT loaded: every
+		// interactive piece in this theme is vanilla JS (theme picker, tabs,
+		// carousel, lightbox), and the only Bootstrap-JS feature used — the
+		// mobile navbar collapse — is reimplemented in blowdit.js. This drops
+		// ~115 KB. Re-add Theme::jquery() / Theme::jsBootstrap() here if you
+		// install a plugin that depends on them.
 	?>
 
 	<!-- Theme behaviour: deferred, cached external bundle.

@@ -1,0 +1,38 @@
+# ============================================================
+# BLOWDIT — static asset delivery (Apache)
+# Scoped to the theme directory: only affects files served from
+# this folder (css/js/img/fonts). Bludit's routing lives in the
+# site-root .htaccess and is untouched.
+# No-op on nginx / PHP's built-in server.
+# ============================================================
+
+# ---- Compression ----
+<IfModule mod_brotli.c>
+	AddOutputFilterByType BROTLI_COMPRESS text/css application/javascript application/json image/svg+xml application/xml
+</IfModule>
+<IfModule mod_deflate.c>
+	AddOutputFilterByType DEFLATE text/css application/javascript application/json image/svg+xml application/xml text/plain
+</IfModule>
+
+# ---- Far-future caching ----
+# Safe because every asset is requested with a ?v=<mtime> query string
+# (see head.php / index.php), so a changed file gets a fresh URL.
+<IfModule mod_expires.c>
+	ExpiresActive On
+	ExpiresByType text/css                 "access plus 1 year"
+	ExpiresByType application/javascript   "access plus 1 year"
+	ExpiresByType image/png                "access plus 1 year"
+	ExpiresByType image/jpeg               "access plus 1 year"
+	ExpiresByType image/gif                "access plus 1 year"
+	ExpiresByType image/webp               "access plus 1 year"
+	ExpiresByType image/svg+xml            "access plus 1 year"
+	ExpiresByType image/x-icon             "access plus 1 year"
+	ExpiresByType font/woff                "access plus 1 year"
+	ExpiresByType font/woff2               "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+	<FilesMatch "\.(css|js|png|jpe?g|gif|webp|svg|ico|woff2?)$">
+		Header set Cache-Control "public, max-age=31536000, immutable"
+	</FilesMatch>
+</IfModule>

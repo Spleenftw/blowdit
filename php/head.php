@@ -160,10 +160,12 @@
 <!-- Include Favicon -->
 <?php echo Theme::favicon('img/favicon.png'); ?>
 
-<!-- Inter typeface (Blowfish-like typography) -->
+<!-- Inter typeface (Blowfish-like typography) — loaded non-render-blocking:
+     fetched as print media, then flipped to all once it arrives. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
 
 <!-- Include Bootstrap CSS file bootstrap.css -->
 <?php echo Theme::cssBootstrap(); ?>

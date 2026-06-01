@@ -7,7 +7,7 @@
 	<!-- Cover image -->
 	<?php if ($page->coverImage()): ?>
 	<div class="cover-image-wrapper">
-		<img class="card-img-top" alt="<?php echo htmlspecialchars($page->title()); ?>" src="<?php echo $page->coverImage(); ?>"/>
+		<img class="card-img-top" alt="<?php echo htmlspecialchars($page->title(), ENT_QUOTES, 'UTF-8'); ?>" src="<?php echo $page->coverImage(); ?>" fetchpriority="high" decoding="async"/>
 	</div>
 	<?php endif ?>
 
@@ -25,7 +25,16 @@
 
 		<!-- Full content -->
 		<div class="content">
-			<?php echo $page->content(); ?>
+			<?php
+				// Lazy-load + async-decode in-content images that don't already
+				// set a loading attribute. Operates on the rendered HTML, so
+				// carousel/tabs fences (still raw text inside <pre>) are untouched.
+				echo preg_replace(
+					'/<img(?![^>]*\bloading=)/i',
+					'<img loading="lazy" decoding="async"',
+					$page->content()
+				);
+			?>
 		</div>
 
 		<!-- Tags and Category -->

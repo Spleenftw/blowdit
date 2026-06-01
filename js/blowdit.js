@@ -26,6 +26,33 @@
 	};
 
 	/* --------------------------------------------------------
+	   Mobile navbar toggle (replaces Bootstrap's collapse JS)
+	   Toggles the .show class that Bootstrap's CSS already styles.
+	   -------------------------------------------------------- */
+	(function () {
+		var toggler = document.querySelector('.navbar-toggler');
+		var target  = document.getElementById('navbarResponsive');
+		if (!toggler || !target) return;
+
+		function setOpen(open) {
+			target.classList.toggle('show', open);
+			toggler.classList.toggle('collapsed', !open);
+			toggler.setAttribute('aria-expanded', open ? 'true' : 'false');
+		}
+
+		toggler.addEventListener('click', function () {
+			setOpen(!target.classList.contains('show'));
+		});
+
+		// Collapse the menu after tapping a link (mobile)
+		Array.prototype.forEach.call(target.querySelectorAll('.nav-link'), function (link) {
+			link.addEventListener('click', function () {
+				if (target.classList.contains('show')) setOpen(false);
+			});
+		});
+	})();
+
+	/* --------------------------------------------------------
 	   Theme picker
 	   -------------------------------------------------------- */
 	(function () {
@@ -617,6 +644,51 @@
 
 		var pres = document.querySelectorAll('.content pre, .tab-panel pre');
 		Array.prototype.forEach.call(pres, enhance);
+	})();
+
+	/* --------------------------------------------------------
+	   Syntax highlighting (highlight.js, from CDN)
+	   Loaded ONLY when the page actually contains code. Just the token
+	   colours are used — backgrounds/padding stay on the theme's --code-bg
+	   (see style.css). The colour theme swaps with data-theme.
+	   -------------------------------------------------------- */
+	(function () {
+		var codes = document.querySelectorAll('.content pre code, .tab-panel pre code');
+		if (!codes.length) return;
+
+		var BASE = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/';
+
+		function makeThemeLink(name) {
+			var l = document.createElement('link');
+			l.rel = 'stylesheet';
+			l.href = BASE + 'styles/' + name + '.min.css';
+			l.crossOrigin = 'anonymous';
+			document.head.appendChild(l);
+			return l;
+		}
+		var lightCss = makeThemeLink('github');
+		var darkCss  = makeThemeLink('github-dark');
+
+		function syncTheme() {
+			var isLight = (document.documentElement.getAttribute('data-theme') === 'light');
+			lightCss.disabled = !isLight;
+			darkCss.disabled  = isLight;
+		}
+		syncTheme();
+		new MutationObserver(syncTheme).observe(document.documentElement, {
+			attributes: true, attributeFilter: ['data-theme']
+		});
+
+		var s = document.createElement('script');
+		s.src = BASE + 'highlight.min.js';
+		s.crossOrigin = 'anonymous';
+		s.onload = function () {
+			if (!window.hljs) return;
+			Array.prototype.forEach.call(codes, function (code) {
+				try { window.hljs.highlightElement(code); } catch (e) {}
+			});
+		};
+		document.head.appendChild(s);
 	})();
 
 	/* --------------------------------------------------------

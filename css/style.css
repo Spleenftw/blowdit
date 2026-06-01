@@ -1727,6 +1727,95 @@ footer.footer-modern a:hover {
 }
 
 /* ========================================
+   SYNTAX HIGHLIGHTING (highlight.js)
+   Use only the theme's token colours; keep the code block's own
+   background/padding (set on pre / --code-bg) rather than hljs's.
+   ======================================== */
+pre code.hljs {
+	padding: 0 !important;
+	background: transparent !important;
+}
+
+/* ========================================
+   KEYBOARD FOCUS — visible ring for keyboard users only
+   ======================================== */
+a:focus-visible,
+button:focus-visible,
+.swatch:focus-visible,
+.tab-btn:focus-visible,
+.carousel-arrow:focus-visible,
+.carousel-dot:focus-visible,
+.lightbox-arrow:focus-visible,
+.code-copy:focus-visible,
+.back-to-top:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
+/* Don't show the ring for mouse clicks */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+	outline: none;
+}
+
+/* ========================================
+   PRINT — clean, ink-friendly article output
+   ======================================== */
+@media print {
+	.navbar-modern,
+	.footer,
+	.sidebar-container,
+	.toc-sidebar,
+	.skip-link,
+	.reading-progress,
+	.back-to-top,
+	.code-copy,
+	.code-copy-toast,
+	.theme-picker-wrap {
+		display: none !important;
+	}
+
+	html, body {
+		background: #ffffff !important;
+		color: #000000 !important;
+	}
+
+	/* Use the full page width once the chrome is gone */
+	.container,
+	.container-wide {
+		max-width: 100% !important;
+		width: 100% !important;
+	}
+
+	.card-modern {
+		box-shadow: none !important;
+		border: none !important;
+	}
+
+	a {
+		color: #000000 !important;
+		text-decoration: underline;
+	}
+
+	/* Keep code blocks readable on paper */
+	pre, code {
+		background: #f5f5f5 !important;
+		color: #000000 !important;
+		border-color: #cccccc !important;
+	}
+
+	pre {
+		white-space: pre-wrap;
+		word-wrap: break-word;
+	}
+
+	/* Avoid awkward page breaks */
+	h1, h2, h3, h4 { page-break-after: avoid; }
+	pre, blockquote, table, figure, img { page-break-inside: avoid; }
+}
+
+/* ========================================
    RESPONSIVE
    ======================================== */
 @media (max-width: 767.98px) {
