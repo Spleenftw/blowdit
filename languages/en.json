@@ -5,5 +5,16 @@
 		"description": "A Bludit theme inspired by the Blowfish Hugo theme. Right sidebar, reading time, a light/dark mode toggle and a navbar with social icons and static pages."
 	},
 	"Toggle theme": "Toggle theme",
-	"Author": "Author"
+	"Author": "Author",
+	"Skip to content": "Skip to content",
+	"Copy": "Copy",
+	"Copied": "Copied",
+	"Copy code": "Copy code",
+	"Back to top": "Back to top",
+	"Previous slide": "Previous slide",
+	"Next slide": "Next slide",
+	"Go to slide": "Go to slide",
+	"Previous image": "Previous image",
+	"Next image": "Next image",
+	"Image viewer": "Image viewer"
 }

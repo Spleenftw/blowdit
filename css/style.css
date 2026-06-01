@@ -1540,6 +1540,165 @@ footer.footer-modern a:hover {
 }
 
 /* ========================================
+   SKIP-TO-CONTENT LINK (keyboard / a11y)
+   ======================================== */
+.skip-link {
+	position: fixed;
+	top: -120px;
+	left: 1rem;
+	z-index: 3000;
+	padding: 0.6rem 1rem;
+	background: var(--accent);
+	color: var(--accent-contrast);
+	border-radius: var(--radius-sm);
+	font-weight: 600;
+	text-decoration: none;
+	box-shadow: var(--shadow-md);
+	transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+	top: 1rem;
+	color: var(--accent-contrast);
+	text-decoration: none;
+	outline: 2px solid var(--accent-contrast);
+	outline-offset: 2px;
+}
+
+/* The skip target shouldn't paint a focus ring when jumped to */
+#main-content:focus {
+	outline: none;
+}
+
+/* ========================================
+   READING PROGRESS BAR
+   ======================================== */
+.reading-progress {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	z-index: 1040; /* above the fixed-top navbar (Bootstrap z-index 1030) */
+	background: transparent;
+	pointer-events: none;
+}
+
+.reading-progress-fill {
+	height: 100%;
+	width: 0;
+	background: var(--accent);
+	transition: width 0.05s linear;
+}
+
+/* ========================================
+   BACK-TO-TOP BUTTON
+   ======================================== */
+.back-to-top {
+	position: fixed;
+	bottom: 1.5rem;
+	right: 1.5rem;
+	z-index: 1035;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	background: var(--accent);
+	color: var(--accent-contrast);
+	font-size: 1.25rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	box-shadow: var(--shadow-md);
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(10px);
+	transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s, background 0.15s ease;
+}
+
+.back-to-top.is-visible {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+	transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0s, background 0.15s ease;
+}
+
+.back-to-top:hover {
+	background: var(--accent-hover);
+}
+
+/* ========================================
+   COPY-TO-CLIPBOARD ON CODE BLOCKS
+   ======================================== */
+.code-block {
+	position: relative;
+}
+
+.code-copy {
+	position: absolute;
+	top: 0.5rem;
+	right: 0.5rem;
+	z-index: 2;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-sm);
+	background: var(--bg-subtle);
+	color: var(--text-secondary);
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.code-block:hover .code-copy,
+.code-copy:focus {
+	opacity: 1;
+}
+
+.code-copy:hover {
+	color: var(--text-primary);
+	border-color: var(--accent);
+}
+
+.code-copy.is-copied {
+	opacity: 1;
+	color: var(--accent-contrast);
+	background: var(--accent);
+	border-color: var(--accent);
+}
+
+.code-copy i {
+	font-size: 0.95rem;
+	line-height: 1;
+}
+
+/* Touch devices have no hover — keep the button discoverable */
+@media (hover: none) {
+	.code-copy { opacity: 0.7; }
+}
+
+/* ========================================
+   GPU HINTS — promote animated layers ahead of time
+   ======================================== */
+.lightbox-overlay img,
+.carousel-slide img {
+	will-change: transform;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	.reading-progress-fill { transition: none; }
+	.back-to-top,
+	.back-to-top.is-visible { transform: none; }
+}
+
+/* ========================================
    RESPONSIVE
    ======================================== */
 @media (max-width: 767.98px) {
