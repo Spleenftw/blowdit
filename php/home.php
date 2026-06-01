@@ -7,20 +7,20 @@
 ?>
 <?php if ($showProfile) : ?>
   <header class="profile text-center">
-    <img class="profile-avatar" src="<?php echo $profileImage; ?>" alt="<?php echo $site->title(); ?>" />
-    <h1 class="profile-name"><?php echo $site->title(); ?></h1>
+    <img class="profile-avatar" src="<?php echo $profileImage; ?>" alt="<?php echo htmlspecialchars($site->title(), ENT_QUOTES, 'UTF-8'); ?>" />
+    <h1 class="profile-name"><?php echo htmlspecialchars($site->title(), ENT_QUOTES, 'UTF-8'); ?></h1>
     <?php if ($site->slogan()) : ?>
-      <p class="profile-bio"><?php echo $site->slogan(); ?></p>
+      <p class="profile-bio"><?php echo htmlspecialchars($site->slogan(), ENT_QUOTES, 'UTF-8'); ?></p>
     <?php elseif ($site->description()) : ?>
-      <p class="profile-bio"><?php echo $site->description(); ?></p>
+      <p class="profile-bio"><?php echo htmlspecialchars($site->description(), ENT_QUOTES, 'UTF-8'); ?></p>
     <?php endif ?>
 
     <?php $networks = Theme::socialNetworks(); ?>
     <?php if (!empty($networks)) : ?>
       <div class="profile-social">
         <?php foreach ($networks as $key => $label) : ?>
-          <a href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo $label ?>">
-            <img class="profile-social-icon" src="<?php echo DOMAIN_THEME . 'img/' . $key . '.svg' ?>" alt="<?php echo $label ?>" />
+          <a href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>">
+            <img class="profile-social-icon" src="<?php echo DOMAIN_THEME . 'img/' . $key . '.svg' ?>" alt="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" />
           </a>
         <?php endforeach ?>
       </div>
@@ -51,7 +51,7 @@
 
       <div class="post-list-head">
         <a href="<?php echo $page->permalink(); ?>">
-          <h2 class="post-list-title"><?php echo $page->title(); ?></h2>
+          <h2 class="post-list-title"><?php echo htmlspecialchars($page->title(), ENT_QUOTES, 'UTF-8'); ?></h2>
         </a>
         <div class="post-list-meta">
           <span><i class="bi bi-calendar3"></i><?php echo $page->date(); ?></span>
@@ -67,11 +67,11 @@
         <div class="post-taxonomy">
           <?php if ($categoryKey) : ?>
             <a class="taxonomy-badge" href="<?php echo $page->categoryPermalink(); ?>">
-              <i class="bi bi-folder2"></i><?php echo $page->category(); ?>
+              <i class="bi bi-folder2"></i><?php echo htmlspecialchars($page->category(), ENT_QUOTES, 'UTF-8'); ?>
             </a>
           <?php endif ?>
           <?php foreach ($tagsList as $tagKey => $tagName) : ?>
-            <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><i class="bi bi-tag"></i><?php echo $tagName; ?></a>
+            <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><i class="bi bi-tag"></i><?php echo htmlspecialchars($tagName, ENT_QUOTES, 'UTF-8'); ?></a>
           <?php endforeach ?>
         </div>
       <?php endif ?>

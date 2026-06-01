@@ -8,11 +8,11 @@
 	<?php if ($isArticle) : ?>
 		<div class="sidebar-profile text-center">
 			<a href="<?php echo Theme::siteUrl() ?>">
-				<img class="sidebar-profile-avatar" src="<?php echo DOMAIN_THEME . 'img/spleenftw.jpeg' ?>" alt="<?php echo $site->title() ?>" />
+				<img class="sidebar-profile-avatar" src="<?php echo DOMAIN_THEME . 'img/spleenftw.jpeg' ?>" alt="<?php echo htmlspecialchars($site->title(), ENT_QUOTES, 'UTF-8') ?>" />
 			</a>
-			<div class="sidebar-profile-name"><?php echo $site->title() ?></div>
+			<div class="sidebar-profile-name"><?php echo htmlspecialchars($site->title(), ENT_QUOTES, 'UTF-8') ?></div>
 			<?php if ($site->slogan()) : ?>
-				<p class="sidebar-profile-bio"><?php echo $site->slogan() ?></p>
+				<p class="sidebar-profile-bio"><?php echo htmlspecialchars($site->slogan(), ENT_QUOTES, 'UTF-8') ?></p>
 			<?php endif ?>
 		</div>
 	<?php endif ?>

@@ -13,7 +13,7 @@
 
 	<div class="card-body">
 		<!-- Title -->
-		<h1 class="title"><?php echo $page->title(); ?></h1>
+		<h1 class="title"><?php echo htmlspecialchars($page->title(), ENT_QUOTES, 'UTF-8'); ?></h1>
 
 		<?php if (!$page->isStatic() && !$url->notFound()): ?>
 		<!-- Creation date, reading time and author -->
@@ -35,11 +35,11 @@
 		<div class="post-taxonomy mt-4">
 			<?php if ($categoryKey) : ?>
 				<a class="taxonomy-badge" href="<?php echo $page->categoryPermalink(); ?>">
-					<i class="bi bi-folder2"></i><?php echo $page->category(); ?>
+					<i class="bi bi-folder2"></i><?php echo htmlspecialchars($page->category(), ENT_QUOTES, 'UTF-8'); ?>
 				</a>
 			<?php endif ?>
 			<?php foreach ($tagsList as $tagKey => $tagName) : ?>
-				<a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><i class="bi bi-tag"></i><?php echo $tagName; ?></a>
+				<a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><i class="bi bi-tag"></i><?php echo htmlspecialchars($tagName, ENT_QUOTES, 'UTF-8'); ?></a>
 			<?php endforeach ?>
 		</div>
 		<?php endif ?>
