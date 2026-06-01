@@ -5,7 +5,7 @@
 <!-- Set the colour theme as early as possible to avoid a white flash.
      Sets data-theme AND paints the html background/color-scheme inline, so the
      very first frame (before style.css loads) already uses the theme colour. -->
-<script>
+<script data-cfasync="false">
 	window.BLOWDIT_THEME_BG = {
 		light:      '#ffffff',
 		dark:       '#171717',

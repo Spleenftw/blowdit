@@ -6,13 +6,28 @@
 		$isArticle = ($WHERE_AM_I === 'page' && isset($page) && !$page->isStatic() && !$url->notFound());
 	?>
 	<?php if ($isArticle) : ?>
-		<div class="sidebar-profile text-center">
-			<a href="<?php echo Theme::siteUrl() ?>">
-				<img class="sidebar-profile-avatar" src="<?php echo DOMAIN_THEME . 'img/spleenftw.jpeg' ?>" alt="<?php echo htmlspecialchars($site->title(), ENT_QUOTES, 'UTF-8') ?>" />
-			</a>
-			<div class="sidebar-profile-name"><?php echo htmlspecialchars($site->title(), ENT_QUOTES, 'UTF-8') ?></div>
-			<?php if ($site->slogan()) : ?>
-				<p class="sidebar-profile-bio"><?php echo htmlspecialchars($site->slogan(), ENT_QUOTES, 'UTF-8') ?></p>
+		<div class="sidebar-author">
+			<span class="sidebar-author-label">Author</span>
+			<div class="sidebar-author-identity">
+				<a href="<?php echo Theme::siteUrl() ?>">
+					<img class="sidebar-author-avatar" src="<?php echo DOMAIN_THEME . 'img/spleenftw.jpeg' ?>" alt="<?php echo htmlspecialchars($page->username(), ENT_QUOTES, 'UTF-8') ?>" />
+				</a>
+				<div>
+					<div class="sidebar-author-name"><?php echo htmlspecialchars($page->username(), ENT_QUOTES, 'UTF-8') ?></div>
+					<?php if ($site->slogan()) : ?>
+						<p class="sidebar-author-bio"><?php echo htmlspecialchars($site->slogan(), ENT_QUOTES, 'UTF-8') ?></p>
+					<?php endif ?>
+				</div>
+			</div>
+			<?php $networks = Theme::socialNetworks(); ?>
+			<?php if (!empty($networks)) : ?>
+			<div class="sidebar-author-social">
+				<?php foreach ($networks as $key => $label) : ?>
+				<a href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>">
+					<img class="sidebar-social-icon" src="<?php echo DOMAIN_THEME . 'img/' . $key . '.svg' ?>" alt="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" />
+				</a>
+				<?php endforeach ?>
+			</div>
 			<?php endif ?>
 		</div>
 	<?php endif ?>
