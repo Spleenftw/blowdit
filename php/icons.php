@@ -34,6 +34,12 @@ if (!function_exists('blowdit_icon')) {
 			. 'stroke-linejoin="round" aria-hidden="true">' . $paths[$name] . '</svg>';
 	}
 
+	// Theme asset URL with an mtime cache-buster (so edited images/SVGs refetch).
+	function blowdit_asset($rel) {
+		$v = @filemtime(THEME_DIR . $rel);
+		return DOMAIN_THEME . $rel . ($v ? '?v=' . $v : '');
+	}
+
 	// Map a theme key to its toggle icon name.
 	function blowdit_theme_icon($theme) {
 		$map = array(

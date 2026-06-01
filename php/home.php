@@ -19,12 +19,12 @@
     <div class="profile-social">
       <?php foreach ($networks as $key => $label) : ?>
         <a href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>">
-          <img class="profile-social-icon" src="<?php echo DOMAIN_THEME . 'img/' . $key . '.svg' ?>" alt="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" />
+          <img class="profile-social-icon" src="<?php echo blowdit_asset('img/' . $key . '.svg') ?>" alt="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" />
         </a>
       <?php endforeach ?>
       <!-- RSS feed (served by the RSS plugin at /rss.xml) -->
       <a href="<?php echo rtrim(Theme::siteUrl(), '/') . '/rss.xml'; ?>" target="_blank" rel="noopener" title="<?php echo $L->get('RSS'); ?>">
-        <img class="profile-social-icon" src="<?php echo DOMAIN_THEME . 'img/rss.svg' ?>" alt="<?php echo $L->get('RSS'); ?>" />
+        <img class="profile-social-icon" src="<?php echo blowdit_asset('img/rss.svg') ?>" alt="<?php echo $L->get('RSS'); ?>" />
       </a>
     </div>
   </header>

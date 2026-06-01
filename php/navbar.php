@@ -23,23 +23,31 @@
 					</li>
 				<?php endforeach ?>
 
-				<!-- Social Networks (SVG icons live in img/<network>.svg) -->
-				<?php foreach (Theme::socialNetworks() as $key => $label) : ?>
+				<?php
+					// The homepage hero (home.php) already shows the social row in
+					// its central block, so hide the navbar copy there to avoid
+					// duplication. Show it on every other view.
+					$heroVisible = ($WHERE_AM_I === 'home' && Paginator::currentPage() == 1);
+				?>
+				<?php if (!$heroVisible) : ?>
+					<!-- Social Networks (SVG icons live in img/<network>.svg) -->
+					<?php foreach (Theme::socialNetworks() as $key => $label) : ?>
+						<li class="nav-item">
+							<a class="nav-link" href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>">
+								<img class="d-none d-md-block nav-svg-icon" src="<?php echo blowdit_asset('img/' . $key . '.svg') ?>" alt="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" />
+								<span class="d-inline d-md-none"><?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?></span>
+							</a>
+						</li>
+					<?php endforeach; ?>
+
+					<!-- RSS feed (served by the RSS plugin at /rss.xml) -->
 					<li class="nav-item">
-						<a class="nav-link" href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>">
-							<img class="d-none d-md-block nav-svg-icon" src="<?php echo DOMAIN_THEME . 'img/' . $key . '.svg' ?>" alt="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" />
-							<span class="d-inline d-md-none"><?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?></span>
+						<a class="nav-link" href="<?php echo rtrim(Theme::siteUrl(), '/') . '/rss.xml'; ?>" target="_blank" rel="noopener" title="<?php echo $L->get('RSS'); ?>">
+							<img class="d-none d-md-block nav-svg-icon" src="<?php echo blowdit_asset('img/rss.svg') ?>" alt="<?php echo $L->get('RSS'); ?>" />
+							<span class="d-inline d-md-none"><?php echo $L->get('RSS'); ?></span>
 						</a>
 					</li>
-				<?php endforeach; ?>
-
-				<!-- RSS feed (served by the RSS plugin at /rss.xml) -->
-				<li class="nav-item">
-					<a class="nav-link" href="<?php echo rtrim(Theme::siteUrl(), '/') . '/rss.xml'; ?>" target="_blank" rel="noopener" title="<?php echo $L->get('RSS'); ?>">
-						<img class="d-none d-md-block nav-svg-icon" src="<?php echo DOMAIN_THEME . 'img/rss.svg' ?>" alt="<?php echo $L->get('RSS'); ?>" />
-						<span class="d-inline d-md-none"><?php echo $L->get('RSS'); ?></span>
-					</a>
-				</li>
+				<?php endif; ?>
 
 				<!-- Theme picker -->
 				<li class="nav-item ml-md-2 mt-2 mt-md-0 theme-picker-wrap">
