@@ -484,13 +484,13 @@
 				if (slides.length > 1) {
 					var prev = document.createElement('button');
 					prev.type = 'button'; prev.className = 'carousel-arrow carousel-prev';
-					prev.innerHTML = '&#8249;';
+					prev.textContent = '‹';
 					prev.addEventListener('click', function () { goTo(current - 1); });
 					car.appendChild(prev);
 
 					var next = document.createElement('button');
 					next.type = 'button'; next.className = 'carousel-arrow carousel-next';
-					next.innerHTML = '&#8250;';
+					next.textContent = '›';
 					next.addEventListener('click', function () { goTo(current + 1); });
 					car.appendChild(next);
 
@@ -536,14 +536,14 @@
 			var prevBtn = document.createElement('button');
 			prevBtn.type = 'button';
 			prevBtn.className = 'lightbox-arrow lightbox-prev';
-			prevBtn.innerHTML = '&#8249;';
+			prevBtn.textContent = '‹'; // ‹
 
 			var zoomed = document.createElement('img');
 
 			var nextBtn = document.createElement('button');
 			nextBtn.type = 'button';
 			nextBtn.className = 'lightbox-arrow lightbox-next';
-			nextBtn.innerHTML = '&#8250;';
+			nextBtn.textContent = '›'; // ›
 
 			overlay.appendChild(prevBtn);
 			overlay.appendChild(zoomed);

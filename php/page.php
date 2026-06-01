@@ -7,7 +7,7 @@
 	<!-- Cover image -->
 	<?php if ($page->coverImage()): ?>
 	<div class="cover-image-wrapper">
-		<img class="card-img-top" alt="<?php echo $page->title(); ?>" src="<?php echo $page->coverImage(); ?>"/>
+		<img class="card-img-top" alt="<?php echo htmlspecialchars($page->title()); ?>" src="<?php echo $page->coverImage(); ?>"/>
 	</div>
 	<?php endif ?>
 
