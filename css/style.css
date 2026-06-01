@@ -1752,6 +1752,20 @@ pre code.hljs {
 }
 
 /* ========================================
+   ANCHOR OFFSET — clear the fixed navbar on ToC / hash jumps
+   Without this, jumping to a heading lands it at y=0, hidden behind the
+   fixed-top navbar. scroll-margin-top stops the jump below the bar.
+   ======================================== */
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5,
+.content h6 {
+	scroll-margin-top: 5rem;
+}
+
+/* ========================================
    KEYBOARD FOCUS — visible ring for keyboard users only
    ======================================== */
 a:focus-visible,
