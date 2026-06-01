@@ -561,6 +561,16 @@
 			});
 		}
 
+		// Inline SVGs — centred in their own viewBox, so no icon-font baseline /
+		// side-bearing offsets to fight.
+		var SVG_COPY = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" ' +
+			'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+			'aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/>' +
+			'<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+		var SVG_CHECK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" ' +
+			'stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ' +
+			'aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+
 		function enhance(pre) {
 			// Skip if already wrapped
 			if (pre.parentNode && pre.parentNode.classList &&
@@ -575,7 +585,12 @@
 			btn.type = 'button';
 			btn.className = 'code-copy';
 			btn.setAttribute('aria-label', T.copyCode);
-			btn.innerHTML = '<i class="bi bi-clipboard" aria-hidden="true"></i>';
+			btn.innerHTML = SVG_COPY;
+
+			// "Copied" toast that pops up next to the button
+			var toast = document.createElement('span');
+			toast.className = 'code-copy-toast';
+			toast.textContent = T.copied;
 
 			var resetTimer = null;
 			btn.addEventListener('click', function () {
@@ -583,18 +598,21 @@
 				var text = (code ? code.textContent : pre.textContent) || '';
 				copyText(text).then(function () {
 					btn.classList.add('is-copied');
-					btn.innerHTML = '<i class="bi bi-check-lg" aria-hidden="true"></i>';
+					btn.innerHTML = SVG_CHECK;
 					btn.setAttribute('aria-label', T.copied);
+					toast.classList.add('is-visible');
 					clearTimeout(resetTimer);
 					resetTimer = setTimeout(function () {
 						btn.classList.remove('is-copied');
-						btn.innerHTML = '<i class="bi bi-clipboard" aria-hidden="true"></i>';
+						btn.innerHTML = SVG_COPY;
 						btn.setAttribute('aria-label', T.copyCode);
-					}, 1800);
+						toast.classList.remove('is-visible');
+					}, 1000);
 				}).catch(function () {});
 			});
 
 			wrap.appendChild(btn);
+			wrap.appendChild(toast);
 		}
 
 		var pres = document.querySelectorAll('.content pre, .tab-panel pre');
