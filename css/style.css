@@ -1153,6 +1153,21 @@ img.nav-svg-icon {
 	color: var(--accent-contrast);
 }
 
+/* Categories: fixed 2-per-line grid (tidier than ragged wrapping pills) */
+.plugin.plugin-categories ul {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.4rem;
+}
+
+.plugin.plugin-categories li a {
+	display: block;
+	text-align: center;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
 /* Search plugin — target input directly in case the plugin omits form-control */
 .plugin.plugin-search input,
 .plugin.plugin-search .form-control {
