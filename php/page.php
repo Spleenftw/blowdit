@@ -16,10 +16,15 @@
 		<h1 class="title"><?php echo $page->title(); ?></h1>
 
 		<?php if (!$page->isStatic() && !$url->notFound()): ?>
-		<!-- Creation date and reading time -->
+		<!-- Creation date, reading time and author -->
+		<?php
+			$_authorUser = $users->getUser($page->username());
+			$_authorName = ($_authorUser && $_authorUser->nickname()) ? $_authorUser->nickname() : $page->username();
+		?>
 		<div class="metadata mb-4">
 			<span><i class="bi bi-calendar3"></i><?php echo $page->date(); ?></span>
 			<span><i class="bi bi-clock-history"></i><?php echo $L->get('Reading time') . ': ' . $page->readingTime() ?></span>
+			<span><i class="bi bi-person"></i><?php echo $L->get('Author') . ': ' . htmlspecialchars($_authorName) ?></span>
 		</div>
 		<?php endif ?>
 

@@ -520,7 +520,7 @@
 		})();
 	</script>
 
-	<!-- Lightbox: click any article image to zoom -->
+	<!-- Lightbox: click any article image to zoom; carousel-aware prev/next -->
 	<script>
 		(function () {
 			var content = document.querySelector('.content');
@@ -529,16 +529,52 @@
 			var images = content.querySelectorAll('img');
 			if (!images.length) return;
 
-			// Build overlay once, reuse for every image
+			// Build overlay with optional prev/next arrows for carousel galleries
 			var overlay = document.createElement('div');
 			overlay.className = 'lightbox-overlay';
+
+			var prevBtn = document.createElement('button');
+			prevBtn.type = 'button';
+			prevBtn.className = 'lightbox-arrow lightbox-prev';
+			prevBtn.innerHTML = '&#8249;';
+
 			var zoomed = document.createElement('img');
+
+			var nextBtn = document.createElement('button');
+			nextBtn.type = 'button';
+			nextBtn.className = 'lightbox-arrow lightbox-next';
+			nextBtn.innerHTML = '&#8250;';
+
+			overlay.appendChild(prevBtn);
 			overlay.appendChild(zoomed);
+			overlay.appendChild(nextBtn);
 			document.body.appendChild(overlay);
 
-			function open(src, alt) {
-				zoomed.src = src;
-				zoomed.alt = alt || '';
+			var gallery = [];   // images in the current carousel (empty = single image)
+			var galIdx  = 0;
+
+			function showAt(idx) {
+				galIdx = (idx + gallery.length) % gallery.length;
+				zoomed.src = gallery[galIdx].src;
+				zoomed.alt = gallery[galIdx].alt || '';
+			}
+
+			function open(el) {
+				// If the image lives inside a carousel, collect all slides for navigation
+				var car = el.closest ? el.closest('.carousel') : null;
+				if (car) {
+					gallery = Array.prototype.slice.call(car.querySelectorAll('.carousel-slide img'));
+					galIdx  = gallery.indexOf(el);
+					if (galIdx === -1) galIdx = 0;
+				} else {
+					gallery = [el];
+					galIdx  = 0;
+				}
+				var hasMultiple = gallery.length > 1;
+				prevBtn.style.display = hasMultiple ? '' : 'none';
+				nextBtn.style.display = hasMultiple ? '' : 'none';
+				zoomed.src = el.src;
+				zoomed.alt = el.alt || '';
 				overlay.classList.add('is-open');
 				document.body.style.overflow = 'hidden';
 			}
@@ -548,20 +584,26 @@
 				document.body.style.overflow = '';
 			}
 
+			prevBtn.addEventListener('click', function (e) {
+				e.stopPropagation();
+				showAt(galIdx - 1);
+			});
+			nextBtn.addEventListener('click', function (e) {
+				e.stopPropagation();
+				showAt(galIdx + 1);
+			});
+
 			function wrapImage(el) {
-				// Skip icons / tiny images using natural dimensions (reliable after load)
 				if (el.naturalWidth > 0 && el.naturalWidth < 100) return;
 				if (el.naturalHeight > 0 && el.naturalHeight < 100) return;
-
 				var wrap = document.createElement('span');
 				wrap.className = 'zoomable-wrap';
 				el.parentNode.insertBefore(wrap, el);
 				wrap.appendChild(el);
-				el.addEventListener('click', function () { open(el.src, el.alt); });
+				el.addEventListener('click', function () { open(el); });
 			}
 
 			Array.prototype.forEach.call(images, function (el) {
-				// If already loaded (e.g. from cache) act immediately; otherwise wait
 				if (el.complete && el.naturalWidth) {
 					wrapImage(el);
 				} else {
@@ -569,12 +611,16 @@
 				}
 			});
 
-			overlay.addEventListener('click', close);
+			// Close on backdrop click (not on arrows or image)
+			overlay.addEventListener('click', function (e) {
+				if (e.target === overlay) close();
+			});
 
 			document.addEventListener('keydown', function (e) {
-				if ((e.key === 'Escape' || e.key === 'Esc') && overlay.classList.contains('is-open')) {
-					close();
-				}
+				if (!overlay.classList.contains('is-open')) return;
+				if (e.key === 'Escape' || e.key === 'Esc')   close();
+				if (e.key === 'ArrowLeft'  && gallery.length > 1) showAt(galIdx - 1);
+				if (e.key === 'ArrowRight' && gallery.length > 1) showAt(galIdx + 1);
 			});
 		})();
 	</script>

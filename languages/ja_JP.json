@@ -4,5 +4,6 @@
 		"name": "Blowdit",
 		"description": "Hugo の Blowfish テーマにインスパイアされた Bludit テーマ。右サイドバー、読了時間、ライト/ダークモードの切り替え、ソーシャルアイコンと固定ページを備えたナビゲーションバーを搭載しています。"
 	},
-	"Toggle theme": "テーマを切り替え"
+	"Toggle theme": "テーマを切り替え",
+	"Author": "著者"
 }

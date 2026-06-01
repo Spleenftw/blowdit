@@ -4,5 +4,6 @@
 		"name": "Blowdit",
 		"description": "Een Bludit-thema geïnspireerd op het Blowfish-thema voor Hugo. Zijbalk rechts, leestijd, schakelaar voor lichte/donkere modus en een navigatiebalk met sociale iconen en statische pagina's."
 	},
-	"Toggle theme": "Thema wisselen"
+	"Toggle theme": "Thema wisselen",
+	"Author": "Auteur"
 }

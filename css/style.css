@@ -1391,6 +1391,33 @@ footer.footer-modern a:hover {
 	transform: scale(1);
 }
 
+.lightbox-arrow {
+	position: fixed;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 2001;
+	background: rgba(255, 255, 255, 0.12);
+	color: #ffffff;
+	border: none;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	font-size: 2rem;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: background 0.15s ease;
+}
+
+.lightbox-arrow:hover {
+	background: rgba(255, 255, 255, 0.28);
+}
+
+.lightbox-prev { left: 20px; }
+.lightbox-next { right: 20px; }
+
 /* Zoomable image wrapper — JS wraps each content image in this span */
 .zoomable-wrap {
 	position: relative;
