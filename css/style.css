@@ -1629,10 +1629,14 @@ footer.footer-modern a:hover {
 	background: var(--accent-hover);
 }
 
-/* display:block neutralises Bootstrap Icons' vertical-align:-.125em so the
-   glyph sits dead-centre inside the flex button */
+/* The <i> fills the button and flex-centres its ::before glyph, so neither
+   Bootstrap Icons' vertical-align:-.125em nor glyph side-bearing can offset it */
 .back-to-top i {
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
 	line-height: 1;
 }
 
@@ -1681,7 +1685,11 @@ footer.footer-modern a:hover {
 }
 
 .code-copy i {
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
 	font-size: 0.95rem;
 	line-height: 1;
 }
