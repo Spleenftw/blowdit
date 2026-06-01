@@ -58,22 +58,27 @@
 	(function () {
 		var STORAGE_KEY = 'blowdit-theme';
 		var THEMES = ['light', 'dark', 'nord', 'dracula', 'catppuccin'];
+		// Inline-SVG icons — mirror of php/icons.php (keep the two in sync).
+		function svg(inner) {
+			return '<svg class="bd-icon" viewBox="0 0 24 24" width="1em" height="1em" ' +
+				'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+				'stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
+		}
 		var ICONS = {
-			light:      'bi-brightness-high',
-			dark:       'bi-moon-stars',
-			nord:       'bi-snow',
-			dracula:    'bi-droplet',
-			catppuccin: 'bi-cup'
+			light:      svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+			dark:       svg('<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>'),
+			nord:       svg('<path d="M12 2v20M2 12h20M5 5l14 14M19 5 5 19"/>'),
+			dracula:    svg('<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>'),
+			catppuccin: svg('<path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 9h2.5a2.5 2.5 0 0 1 0 5H17"/><path d="M7 2v2M11 2v2M15 2v2"/>')
 		};
+		var ICON_FALLBACK = svg('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/>');
 		var root   = document.documentElement;
 		var btn    = document.getElementById('theme-toggle');
 		var picker = document.getElementById('theme-picker');
 
 		function syncIcon(theme) {
 			if (!btn) return;
-			var icon = btn.querySelector('i');
-			if (!icon) return;
-			icon.className = 'bi ' + (ICONS[theme] || 'bi-circle-half');
+			btn.innerHTML = ICONS[theme] || ICON_FALLBACK;
 		}
 
 		function syncSwatches(theme) {
@@ -656,13 +661,13 @@
 		var codes = document.querySelectorAll('.content pre code, .tab-panel pre code');
 		if (!codes.length) return;
 
-		var BASE = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/';
+		// Self-hosted under the theme directory (no third-party request).
+		var BASE = window.BLOWDIT_THEME_URL || '';
 
 		function makeThemeLink(name) {
 			var l = document.createElement('link');
 			l.rel = 'stylesheet';
-			l.href = BASE + 'styles/' + name + '.min.css';
-			l.crossOrigin = 'anonymous';
+			l.href = BASE + 'css/hljs/' + name + '.min.css';
 			document.head.appendChild(l);
 			return l;
 		}
@@ -680,8 +685,7 @@
 		});
 
 		var s = document.createElement('script');
-		s.src = BASE + 'highlight.min.js';
-		s.crossOrigin = 'anonymous';
+		s.src = BASE + 'js/highlight.min.js';
 		s.onload = function () {
 			if (!window.hljs) return;
 			Array.prototype.forEach.call(codes, function (code) {

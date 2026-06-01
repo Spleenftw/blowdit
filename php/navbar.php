@@ -36,7 +36,7 @@
 				<!-- Theme picker -->
 				<li class="nav-item ml-md-2 mt-2 mt-md-0 theme-picker-wrap">
 					<button type="button" id="theme-toggle" class="theme-toggle" aria-label="<?php echo $L->get('Toggle theme') ?>" title="<?php echo $L->get('Toggle theme') ?>" aria-haspopup="true" aria-expanded="false">
-						<i class="bi bi-moon-stars" aria-hidden="true"></i>
+						<?php echo blowdit_icon(blowdit_theme_icon($blowditTheme)); ?>
 					</button>
 					<div id="theme-picker" class="theme-picker" role="menu">
 						<button class="swatch" data-pick="light"      title="Light"      style="--sb:#ffffff;--sa:#1f1f1f"><span class="swatch-dot"></span><span class="swatch-label">Light</span></button>

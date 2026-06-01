@@ -16,6 +16,11 @@
 ?>
 <meta name="theme-color" content="<?php echo $blowditChrome; ?>">
 
+<?php if (!empty($blowditIsArticle) && $page->coverImage()): ?>
+<!-- Preload the article cover image (typically the LCP element) -->
+<link rel="preload" as="image" href="<?php echo htmlspecialchars($page->coverImage(true), ENT_QUOTES, 'UTF-8'); ?>" fetchpriority="high">
+<?php endif ?>
+
 <!-- Set the colour theme as early as possible to avoid a white flash.
      Sets data-theme AND paints the html background/color-scheme inline, so the
      very first frame (before style.css loads) already uses the theme colour. -->
@@ -157,6 +162,9 @@
 	}
 ?>
 
+<!-- RSS feed auto-discovery (RSS plugin serves /rss.xml) -->
+<link rel="alternate" type="application/rss+xml" title="<?php echo htmlspecialchars($site->title(), ENT_QUOTES, 'UTF-8'); ?>" href="<?php echo rtrim(Theme::siteUrl(), '/') . '/rss.xml'; ?>">
+
 <!-- Include Favicon -->
 <?php echo Theme::favicon('img/favicon.png'); ?>
 
@@ -170,8 +178,8 @@
 <!-- Include Bootstrap CSS file bootstrap.css -->
 <?php echo Theme::cssBootstrap(); ?>
 
-<!-- Include CSS Bootstrap ICONS file from Bludit Core -->
-<?php echo Theme::cssBootstrapIcons(); ?>
+<!-- Bootstrap Icons webfont removed: the few icons used are inline SVGs
+     (see php/icons.php + blowdit.js), saving ~120 KB font + ~80 KB CSS. -->
 
 <!-- Include CSS Styles from this theme (cache-busted by file mtime) -->
 <?php

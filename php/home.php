@@ -54,9 +54,9 @@
           <h2 class="post-list-title"><?php echo htmlspecialchars($page->title(), ENT_QUOTES, 'UTF-8'); ?></h2>
         </a>
         <div class="post-list-meta">
-          <span><i class="bi bi-calendar3"></i><?php echo $page->date(); ?></span>
+          <span><?php echo blowdit_icon('calendar'); ?><?php echo $page->date(); ?></span>
           <?php if (!$page->isStatic()) : ?>
-          <span><i class="bi bi-clock-history"></i><?php echo $page->readingTime(); ?></span>
+          <span><?php echo blowdit_icon('clock'); ?><?php echo $page->readingTime(); ?></span>
           <?php endif ?>
         </div>
       </div>
@@ -67,11 +67,11 @@
         <div class="post-taxonomy">
           <?php if ($categoryKey) : ?>
             <a class="taxonomy-badge" href="<?php echo $page->categoryPermalink(); ?>">
-              <i class="bi bi-folder2"></i><?php echo htmlspecialchars($page->category(), ENT_QUOTES, 'UTF-8'); ?>
+              <?php echo blowdit_icon('folder'); ?><?php echo htmlspecialchars($page->category(), ENT_QUOTES, 'UTF-8'); ?>
             </a>
           <?php endif ?>
           <?php foreach ($tagsList as $tagKey => $tagName) : ?>
-            <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><i class="bi bi-tag"></i><?php echo htmlspecialchars($tagName, ENT_QUOTES, 'UTF-8'); ?></a>
+            <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><?php echo blowdit_icon('tag'); ?><?php echo htmlspecialchars($tagName, ENT_QUOTES, 'UTF-8'); ?></a>
           <?php endforeach ?>
         </div>
       <?php endif ?>
@@ -92,7 +92,7 @@
       <?php if (Paginator::showPrev()) : ?>
         <li class="page-item mr-2">
           <a class="page-link" href="<?php echo Paginator::previousPageUrl() ?>" tabindex="-1">
-            <i class="bi bi-chevron-left"></i> <?php echo $L->get('Previous'); ?>
+            <?php echo blowdit_icon('chevron-left'); ?> <?php echo $L->get('Previous'); ?>
           </a>
         </li>
       <?php endif; ?>
@@ -100,7 +100,7 @@
       <!-- Home button -->
       <li class="page-item mx-2 <?php if (Paginator::currentPage() == 1) echo 'disabled' ?>">
         <a class="page-link" href="<?php echo Theme::siteUrl() ?>">
-          <i class="bi bi-house-door"></i> Home
+          <?php echo blowdit_icon('house'); ?> Home
         </a>
       </li>
 
@@ -108,7 +108,7 @@
       <?php if (Paginator::showNext()) : ?>
         <li class="page-item ml-2">
           <a class="page-link" href="<?php echo Paginator::nextPageUrl() ?>">
-            <?php echo $L->get('Next'); ?> <i class="bi bi-chevron-right"></i>
+            <?php echo $L->get('Next'); ?> <?php echo blowdit_icon('chevron-right'); ?>
           </a>
         </li>
       <?php endif; ?>

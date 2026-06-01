@@ -18,8 +18,8 @@
 		<?php if (!$page->isStatic() && !$url->notFound()): ?>
 		<!-- Creation date, reading time and author -->
 		<div class="metadata mb-4">
-			<span><i class="bi bi-calendar3"></i><?php echo $page->date(); ?></span>
-			<span><i class="bi bi-clock-history"></i><?php echo $L->get('Reading time') . ': ' . $page->readingTime() ?></span>
+			<span><?php echo blowdit_icon('calendar'); ?><?php echo $page->date(); ?></span>
+			<span><?php echo blowdit_icon('clock'); ?><?php echo $L->get('Reading time') . ': ' . $page->readingTime() ?></span>
 		</div>
 		<?php endif ?>
 
@@ -43,11 +43,11 @@
 		<div class="post-taxonomy mt-4">
 			<?php if ($categoryKey) : ?>
 				<a class="taxonomy-badge" href="<?php echo $page->categoryPermalink(); ?>">
-					<i class="bi bi-folder2"></i><?php echo htmlspecialchars($page->category(), ENT_QUOTES, 'UTF-8'); ?>
+					<?php echo blowdit_icon('folder'); ?><?php echo htmlspecialchars($page->category(), ENT_QUOTES, 'UTF-8'); ?>
 				</a>
 			<?php endif ?>
 			<?php foreach ($tagsList as $tagKey => $tagName) : ?>
-				<a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><i class="bi bi-tag"></i><?php echo htmlspecialchars($tagName, ENT_QUOTES, 'UTF-8'); ?></a>
+				<a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><?php echo blowdit_icon('tag'); ?><?php echo htmlspecialchars($tagName, ENT_QUOTES, 'UTF-8'); ?></a>
 			<?php endforeach ?>
 		</div>
 		<?php endif ?>

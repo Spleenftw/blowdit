@@ -502,7 +502,8 @@ blockquote {
 	color: var(--chrome-text-hover) !important;
 }
 
-.navbar .nav-link .bi {
+.navbar .nav-link .bi,
+.navbar .nav-link .bd-icon {
 	font-size: 1.15rem;
 	margin-right: 0;
 	vertical-align: -0.05em;
@@ -543,7 +544,8 @@ img.nav-svg-icon {
 	color: #ffffff !important;
 }
 
-.theme-toggle .bi {
+.theme-toggle .bi,
+.theme-toggle .bd-icon {
 	font-size: 1.1rem;
 	margin-right: 0;
 }
@@ -797,7 +799,8 @@ img.nav-svg-icon {
 	white-space: nowrap;
 }
 
-.post-list-meta .bi {
+.post-list-meta .bi,
+.post-list-meta .bd-icon {
 	margin-right: 0.25rem;
 }
 
@@ -865,7 +868,8 @@ img.nav-svg-icon {
 	align-items: center;
 }
 
-.metadata i {
+.metadata i,
+.metadata .bd-icon {
 	color: var(--text-muted);
 	margin-right: 0.35rem;
 }
@@ -896,12 +900,14 @@ img.nav-svg-icon {
 	text-decoration: none;
 }
 
-.btn-primary-gradient .bi {
+.btn-primary-gradient .bi,
+.btn-primary-gradient .bd-icon {
 	margin-right: 0;
 	transition: transform 0.2s ease;
 }
 
-.btn-primary-gradient:hover .bi {
+.btn-primary-gradient:hover .bi,
+.btn-primary-gradient:hover .bd-icon {
 	transform: translateX(3px);
 }
 
@@ -928,7 +934,8 @@ img.nav-svg-icon {
 	transition: all 0.2s ease;
 }
 
-.taxonomy-badge .bi {
+.taxonomy-badge .bi,
+.taxonomy-badge .bd-icon {
 	margin-right: 0.35rem;
 	font-size: 0.85em;
 }
@@ -1207,8 +1214,16 @@ footer.footer-modern a:hover {
 /* ========================================
    ICON SPACING
    ======================================== */
-.bi {
+.bi,
+.bd-icon {
 	margin-right: 0.4rem;
+}
+
+/* Inline SVG icons: sized to 1em via their width/height attrs, aligned like
+   the old icon font, and never shrink inside flex rows. */
+.bd-icon {
+	vertical-align: -0.125em;
+	flex: 0 0 auto;
 }
 
 /* ========================================

@@ -1,4 +1,8 @@
 <?php
+	// Inline-SVG icon helper (replaces the Bootstrap Icons webfont). Included
+	// first so blowdit_icon() is available to head.php and every body template.
+	include(THEME_DIR_PHP.'icons.php');
+
 	// Read the theme from a cookie so the root element can be rendered
 	// pre-coloured. This paints the page in the theme colour from the first
 	// byte of every response, eliminating the white flash between navigations.
@@ -165,6 +169,9 @@
 	     The anti-flash theme bootstrap stays inline in head.php — it must
 	     run before the first paint and so cannot be deferred. -->
 	<script>
+		// Theme directory URL, so the deferred bundle can load self-hosted assets
+		// (highlight.js + its theme CSS) relative to the theme.
+		window.BLOWDIT_THEME_URL = <?php echo json_encode(DOMAIN_THEME); ?>;
 		// Localised UI strings for the deferred bundle. $L->get() falls back to
 		// the key itself when a translation is missing, so this is safe in any language.
 		window.BLOWDIT_I18N = {
