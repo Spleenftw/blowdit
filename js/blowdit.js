@@ -644,7 +644,9 @@
 		btn.type = 'button';
 		btn.className = 'back-to-top';
 		btn.setAttribute('aria-label', T.backToTop);
-		btn.innerHTML = '<i class="bi bi-arrow-up" aria-hidden="true"></i>';
+		btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" ' +
+			'stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+			'stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
 		document.body.appendChild(btn);
 
 		btn.addEventListener('click', function () {
