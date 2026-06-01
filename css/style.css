@@ -1629,6 +1629,13 @@ footer.footer-modern a:hover {
 	background: var(--accent-hover);
 }
 
+/* display:block neutralises Bootstrap Icons' vertical-align:-.125em so the
+   glyph sits dead-centre inside the flex button */
+.back-to-top i {
+	display: block;
+	line-height: 1;
+}
+
 /* ========================================
    COPY-TO-CLIPBOARD ON CODE BLOCKS
    ======================================== */
@@ -1674,6 +1681,7 @@ footer.footer-modern a:hover {
 }
 
 .code-copy i {
+	display: block;
 	font-size: 0.95rem;
 	line-height: 1;
 }
