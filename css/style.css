@@ -788,10 +788,17 @@ img.nav-svg-icon {
 	color: var(--text-secondary);
 }
 
-.post-list-date {
-	display: block;
+.post-list-meta {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
 	color: var(--text-muted);
 	font-size: var(--font-size-sm);
+	white-space: nowrap;
+}
+
+.post-list-meta .bi {
+	margin-right: 0.25rem;
 }
 
 .post-list-item .post-taxonomy {

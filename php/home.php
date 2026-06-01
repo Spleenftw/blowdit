@@ -53,7 +53,12 @@
         <a href="<?php echo $page->permalink(); ?>">
           <h2 class="post-list-title"><?php echo $page->title(); ?></h2>
         </a>
-        <span class="post-list-date"><?php echo $page->date(); ?></span>
+        <div class="post-list-meta">
+          <span><i class="bi bi-calendar3"></i><?php echo $page->date(); ?></span>
+          <?php if (!$page->isStatic()) : ?>
+          <span><i class="bi bi-clock-history"></i><?php echo $page->readingTime(); ?></span>
+          <?php endif ?>
+        </div>
       </div>
 
       <!-- Tags and Category -->
