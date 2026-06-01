@@ -12,17 +12,15 @@
 				<a href="<?php echo Theme::siteUrl() ?>">
 					<img class="sidebar-author-avatar" src="<?php echo DOMAIN_THEME . 'img/spleenftw.jpeg' ?>" alt="<?php echo htmlspecialchars($page->username(), ENT_QUOTES, 'UTF-8') ?>" />
 				</a>
-				<div>
-					<div class="sidebar-author-name"><?php echo htmlspecialchars($page->username(), ENT_QUOTES, 'UTF-8') ?></div>
-					<?php
-						// Bio: set in Bludit Admin → Settings → General → Description
-						// Falls back to Slogan if Description is empty.
-						$_authorBio = $site->description() ?: $site->slogan();
-					?>
-					<?php if ($_authorBio) : ?>
-						<p class="sidebar-author-bio"><?php echo htmlspecialchars($_authorBio, ENT_QUOTES, 'UTF-8') ?></p>
-					<?php endif ?>
-				</div>
+				<div class="sidebar-author-name"><?php echo htmlspecialchars($page->username(), ENT_QUOTES, 'UTF-8') ?></div>
+				<?php
+					// Bio: set in Bludit Admin → Settings → General → Description
+					// Falls back to Slogan if Description is empty.
+					$_authorBio = $site->description() ?: $site->slogan();
+				?>
+				<?php if ($_authorBio) : ?>
+					<p class="sidebar-author-bio"><?php echo htmlspecialchars($_authorBio, ENT_QUOTES, 'UTF-8') ?></p>
+				<?php endif ?>
 			</div>
 		</div>
 	<?php endif ?>
