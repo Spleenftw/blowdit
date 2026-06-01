@@ -16,15 +16,17 @@
     <?php endif ?>
 
     <?php $networks = Theme::socialNetworks(); ?>
-    <?php if (!empty($networks)) : ?>
-      <div class="profile-social">
-        <?php foreach ($networks as $key => $label) : ?>
-          <a href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>">
-            <img class="profile-social-icon" src="<?php echo DOMAIN_THEME . 'img/' . $key . '.svg' ?>" alt="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" />
-          </a>
-        <?php endforeach ?>
-      </div>
-    <?php endif ?>
+    <div class="profile-social">
+      <?php foreach ($networks as $key => $label) : ?>
+        <a href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>">
+          <img class="profile-social-icon" src="<?php echo DOMAIN_THEME . 'img/' . $key . '.svg' ?>" alt="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" />
+        </a>
+      <?php endforeach ?>
+      <!-- RSS feed (served by the RSS plugin at /rss.xml) -->
+      <a href="<?php echo rtrim(Theme::siteUrl(), '/') . '/rss.xml'; ?>" target="_blank" rel="noopener" title="<?php echo $L->get('RSS'); ?>">
+        <img class="profile-social-icon" src="<?php echo DOMAIN_THEME . 'img/rss.svg' ?>" alt="<?php echo $L->get('RSS'); ?>" />
+      </a>
+    </div>
   </header>
 
   <!-- Search box, relocated from the sidebar (Popeye-style) -->
@@ -85,30 +87,54 @@
 
 <!-- Pagination -->
 <?php if (Paginator::numberOfPages() > 1) : ?>
-  <nav class="paginator mt-5">
+  <?php
+    $totalPages  = Paginator::numberOfPages();
+    $currentPage = Paginator::currentPage();
+
+    // Derive a per-page URL template by borrowing Bludit's own next/prev URL
+    // (always of the form ...?page=N) and turning the number into a token. Use
+    // a page >= 2 as the source so the "page=N" token is always present.
+    $pageTemplate = null;
+    if (Paginator::showNext()) {
+      $pageTemplate = str_replace('page=' . ($currentPage + 1), 'page={N}', Paginator::nextPageUrl());
+    } elseif (Paginator::showPrev() && ($currentPage - 1) >= 2) {
+      $pageTemplate = str_replace('page=' . ($currentPage - 1), 'page={N}', Paginator::previousPageUrl());
+    }
+    // Adjacent pages use Bludit's exact URLs; non-adjacent use the template.
+    $pageUrl = function ($n) use ($currentPage, $pageTemplate) {
+      if ($n == $currentPage - 1) { return Paginator::previousPageUrl(); }
+      if ($n == $currentPage + 1) { return Paginator::nextPageUrl(); }
+      return $pageTemplate ? str_replace('{N}', $n, $pageTemplate) : '#';
+    };
+  ?>
+  <nav class="paginator mt-5" aria-label="<?php echo $L->get('Pagination'); ?>">
     <ul class="pagination flex-wrap justify-content-center">
 
-      <!-- Previous button -->
+      <!-- Previous -->
       <?php if (Paginator::showPrev()) : ?>
-        <li class="page-item mr-2">
-          <a class="page-link" href="<?php echo Paginator::previousPageUrl() ?>" tabindex="-1">
-            <?php echo blowdit_icon('chevron-left'); ?> <?php echo $L->get('Previous'); ?>
+        <li class="page-item">
+          <a class="page-link is-arrow" href="<?php echo Paginator::previousPageUrl() ?>" aria-label="<?php echo $L->get('Previous'); ?>">
+            <?php echo blowdit_icon('chevron-left'); ?>
           </a>
         </li>
       <?php endif; ?>
 
-      <!-- Home button -->
-      <li class="page-item mx-2 <?php if (Paginator::currentPage() == 1) echo 'disabled' ?>">
-        <a class="page-link" href="<?php echo Theme::siteUrl() ?>">
-          <?php echo blowdit_icon('house'); ?> Home
-        </a>
-      </li>
+      <!-- Numbered pages -->
+      <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
+        <li class="page-item<?php echo ($i == $currentPage) ? ' active' : ''; ?>">
+          <?php if ($i == $currentPage) : ?>
+            <span class="page-link" aria-current="page"><?php echo $i; ?></span>
+          <?php else : ?>
+            <a class="page-link" href="<?php echo $pageUrl($i); ?>"><?php echo $i; ?></a>
+          <?php endif; ?>
+        </li>
+      <?php endfor; ?>
 
-      <!-- Next button -->
+      <!-- Next -->
       <?php if (Paginator::showNext()) : ?>
-        <li class="page-item ml-2">
-          <a class="page-link" href="<?php echo Paginator::nextPageUrl() ?>">
-            <?php echo $L->get('Next'); ?> <?php echo blowdit_icon('chevron-right'); ?>
+        <li class="page-item">
+          <a class="page-link is-arrow" href="<?php echo Paginator::nextPageUrl() ?>" aria-label="<?php echo $L->get('Next'); ?>">
+            <?php echo blowdit_icon('chevron-right'); ?>
           </a>
         </li>
       <?php endif; ?>

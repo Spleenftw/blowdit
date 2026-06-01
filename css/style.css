@@ -949,11 +949,20 @@ img.nav-svg-icon {
 /* ========================================
    PAGINATION
    ======================================== */
+.pagination {
+	display: flex;
+	gap: 0.4rem;
+}
+
 .pagination .page-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.6rem;
 	background: var(--bg-surface);
 	border: 1px solid var(--border-color);
 	color: var(--text-primary);
-	padding: 0.55rem 1.1rem;
+	padding: 0.55rem 0.9rem;
 	border-radius: var(--radius-sm);
 	font-weight: 500;
 	transition: all 0.2s ease;
@@ -964,6 +973,25 @@ img.nav-svg-icon {
 	color: var(--accent-contrast);
 	border-color: var(--accent);
 	transform: translateY(-2px);
+}
+
+/* Compact prev/next arrow buttons */
+.pagination .page-link.is-arrow {
+	min-width: 0;
+	padding: 0.55rem 0.7rem;
+}
+
+.pagination .page-link.is-arrow .bd-icon {
+	margin-right: 0;
+}
+
+/* Current page: highlighted, non-interactive */
+.pagination .page-item.active .page-link {
+	background: var(--accent);
+	color: var(--accent-contrast);
+	border-color: var(--accent);
+	transform: none;
+	cursor: default;
 }
 
 .pagination .page-item.disabled .page-link {

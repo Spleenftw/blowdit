@@ -33,6 +33,14 @@
 					</li>
 				<?php endforeach; ?>
 
+				<!-- RSS feed (served by the RSS plugin at /rss.xml) -->
+				<li class="nav-item">
+					<a class="nav-link" href="<?php echo rtrim(Theme::siteUrl(), '/') . '/rss.xml'; ?>" target="_blank" rel="noopener" title="<?php echo $L->get('RSS'); ?>">
+						<img class="d-none d-md-block nav-svg-icon" src="<?php echo DOMAIN_THEME . 'img/rss.svg' ?>" alt="<?php echo $L->get('RSS'); ?>" />
+						<span class="d-inline d-md-none"><?php echo $L->get('RSS'); ?></span>
+					</a>
+				</li>
+
 				<!-- Theme picker -->
 				<li class="nav-item ml-md-2 mt-2 mt-md-0 theme-picker-wrap">
 					<button type="button" id="theme-toggle" class="theme-toggle" aria-label="<?php echo $L->get('Toggle theme') ?>" title="<?php echo $L->get('Toggle theme') ?>" aria-haspopup="true" aria-expanded="false">
