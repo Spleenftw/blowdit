@@ -17,14 +17,10 @@
 
 		<?php if (!$page->isStatic() && !$url->notFound()): ?>
 		<!-- Creation date, reading time and author -->
-		<?php
-			$_authorUser = $users->getUser($page->username());
-			$_authorName = ($_authorUser && $_authorUser->nickname()) ? $_authorUser->nickname() : $page->username();
-		?>
 		<div class="metadata mb-4">
 			<span><i class="bi bi-calendar3"></i><?php echo $page->date(); ?></span>
 			<span><i class="bi bi-clock-history"></i><?php echo $L->get('Reading time') . ': ' . $page->readingTime() ?></span>
-			<span><i class="bi bi-person"></i><?php echo $L->get('Author') . ': ' . htmlspecialchars($_authorName) ?></span>
+			<span><i class="bi bi-person"></i><?php echo $L->get('Author') . ': ' . htmlspecialchars($page->username()) ?></span>
 		</div>
 		<?php endif ?>
 
