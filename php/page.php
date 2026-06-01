@@ -20,7 +20,6 @@
 		<div class="metadata mb-4">
 			<span><i class="bi bi-calendar3"></i><?php echo $page->date(); ?></span>
 			<span><i class="bi bi-clock-history"></i><?php echo $L->get('Reading time') . ': ' . $page->readingTime() ?></span>
-			<span><i class="bi bi-person"></i><?php echo $L->get('Author') . ': ' . htmlspecialchars($page->username()) ?></span>
 		</div>
 		<?php endif ?>
 

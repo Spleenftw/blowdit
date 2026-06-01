@@ -14,8 +14,13 @@
 				</a>
 				<div>
 					<div class="sidebar-author-name"><?php echo htmlspecialchars($page->username(), ENT_QUOTES, 'UTF-8') ?></div>
-					<?php if ($site->slogan()) : ?>
-						<p class="sidebar-author-bio"><?php echo htmlspecialchars($site->slogan(), ENT_QUOTES, 'UTF-8') ?></p>
+					<?php
+						// Bio: set in Bludit Admin → Settings → General → Description
+						// Falls back to Slogan if Description is empty.
+						$_authorBio = $site->description() ?: $site->slogan();
+					?>
+					<?php if ($_authorBio) : ?>
+						<p class="sidebar-author-bio"><?php echo htmlspecialchars($_authorBio, ENT_QUOTES, 'UTF-8') ?></p>
 					<?php endif ?>
 				</div>
 			</div>
