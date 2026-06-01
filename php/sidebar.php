@@ -24,16 +24,6 @@
 					<?php endif ?>
 				</div>
 			</div>
-			<?php $networks = Theme::socialNetworks(); ?>
-			<?php if (!empty($networks)) : ?>
-			<div class="sidebar-author-social">
-				<?php foreach ($networks as $key => $label) : ?>
-				<a href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>">
-					<img class="sidebar-social-icon" src="<?php echo DOMAIN_THEME . 'img/' . $key . '.svg' ?>" alt="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" />
-				</a>
-				<?php endforeach ?>
-			</div>
-			<?php endif ?>
 		</div>
 	<?php endif ?>
 
