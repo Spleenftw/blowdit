@@ -662,22 +662,37 @@
 		if (!codes.length) return;
 
 		// Self-hosted under the theme directory (no third-party request).
+		// Each site theme maps to a matching highlight.js palette. Palettes are
+		// loaded lazily (only the themes actually viewed) and toggled via
+		// link.disabled. style.css forces the code background to stay --code-bg,
+		// so only the palette's token colours are used.
 		var BASE = window.BLOWDIT_THEME_URL || '';
+		var THEME_CSS = {
+			light:      'github',
+			dark:       'github-dark',
+			nord:       'nord',
+			dracula:    'dracula',
+			catppuccin: 'catppuccin-mocha'
+		};
+		var loaded = {}; // file name -> <link> element
 
-		function makeThemeLink(name) {
+		function ensure(file) {
+			if (loaded[file]) return loaded[file];
 			var l = document.createElement('link');
 			l.rel = 'stylesheet';
-			l.href = BASE + 'css/hljs/' + name + '.min.css';
+			l.href = BASE + 'css/hljs/' + file + '.min.css';
 			document.head.appendChild(l);
+			loaded[file] = l;
 			return l;
 		}
-		var lightCss = makeThemeLink('github');
-		var darkCss  = makeThemeLink('github-dark');
 
 		function syncTheme() {
-			var isLight = (document.documentElement.getAttribute('data-theme') === 'light');
-			lightCss.disabled = !isLight;
-			darkCss.disabled  = isLight;
+			var t = document.documentElement.getAttribute('data-theme') || 'light';
+			var want = THEME_CSS[t] || 'github-dark';
+			ensure(want).disabled = false;
+			Object.keys(loaded).forEach(function (f) {
+				if (f !== want) loaded[f].disabled = true;
+			});
 		}
 		syncTheme();
 		new MutationObserver(syncTheme).observe(document.documentElement, {
