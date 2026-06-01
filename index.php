@@ -104,8 +104,8 @@
 			}
 		}
 
-		// The hero (and the relocated search) only appear on the blog front page.
-		$heroVisible   = ($WHERE_AM_I === 'home' && Paginator::currentPage() == 1);
+		// The hero (and the relocated search) appear on every paginated home page.
+		$heroVisible   = ($WHERE_AM_I === 'home');
 		// Reuse the values pre-computed before <body> (avoids calling $page->content() twice).
 		$isArticlePage = $blowditIsArticle;
 		$hasHeadings   = $blowditHasHeadings;

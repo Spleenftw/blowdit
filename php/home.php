@@ -3,7 +3,7 @@
   // Shown only on the blog front page (first paginated page).
   // Drop your avatar at img/spleenftw.jpeg (change the filename below to reuse).
   $profileImage = DOMAIN_THEME . 'img/spleenftw.jpeg';
-  $showProfile  = ($WHERE_AM_I === 'home' && Paginator::currentPage() == 1);
+  $showProfile  = ($WHERE_AM_I === 'home');
 ?>
 <?php if ($showProfile) : ?>
   <header class="profile text-center">

@@ -25,9 +25,9 @@
 
 				<?php
 					// The homepage hero (home.php) already shows the social row in
-					// its central block, so hide the navbar copy there to avoid
-					// duplication. Show it on every other view.
-					$heroVisible = ($WHERE_AM_I === 'home' && Paginator::currentPage() == 1);
+					// its central block on every paginated home page, so hide the
+					// navbar copy there to avoid duplication. Show it elsewhere.
+					$heroVisible = ($WHERE_AM_I === 'home');
 				?>
 				<?php if (!$heroVisible) : ?>
 					<!-- Social Networks (SVG icons live in img/<network>.svg) -->
