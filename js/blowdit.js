@@ -778,4 +778,44 @@
 		update();
 	})();
 
+	/* --------------------------------------------------------
+	   Twitter / X embeds — upgrade <blockquote class="twitter-tweet"> into the
+	   rich card (with media). widgets.js auto-scans on load, but that's fragile
+	   when the embed's own <script> and the content load in an unexpected order,
+	   so we explicitly (re)load. Idempotent if it already rendered.
+	   -------------------------------------------------------- */
+	(function () {
+		if (!document.querySelector('.twitter-tweet, .twitter-timeline')) return;
+
+		function render() {
+			if (window.twttr && window.twttr.widgets && window.twttr.widgets.load) {
+				window.twttr.widgets.load();
+				return true;
+			}
+			return false;
+		}
+
+		// Already loaded (e.g. the embed's script ran but scanned too early)? Just load.
+		if (render()) return;
+
+		// Otherwise make sure widgets.js is present, then render once it's ready.
+		var existing = document.querySelector('script[src*="widgets.js"]');
+		if (existing) {
+			existing.addEventListener('load', render);
+		} else {
+			var s = document.createElement('script');
+			s.src = 'https://platform.twitter.com/widgets.js';
+			s.async = true;
+			s.charset = 'utf-8';
+			s.onload = render;
+			document.body.appendChild(s);
+		}
+
+		// Safety net in case the load event was missed (cached script, etc.).
+		var tries = 0;
+		var poll = setInterval(function () {
+			if (render() || ++tries > 40) clearInterval(poll);
+		}, 250);
+	})();
+
 })();
