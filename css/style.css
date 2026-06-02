@@ -1158,22 +1158,21 @@ img.nav-svg-icon {
 	color: var(--accent-contrast);
 }
 
-/* Categories: 2-per-line grid. minmax(0, 1fr) (not the default minmax(auto,1fr))
-   lets the columns shrink to fit a narrow sidebar instead of overflowing it. */
+/* Categories grid: as many ~7rem columns as fit — 2 on the wider article-page
+   sidebar, automatically 1 on the narrower homepage sidebar — so names are never
+   crushed into a too-small cell. */
 .plugin.plugin-categories ul {
 	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
 	gap: 0.4rem;
 }
 
 .plugin.plugin-categories li {
-	min-width: 0; /* allow the grid item (and its ellipsis) to shrink */
+	min-width: 0; /* let grid items shrink rather than overflow */
 }
 
 .plugin.plugin-categories li a {
-	/* fill the grid cell and centre the label; tighter side padding + wrapping
-	   so names fit the narrow columns instead of being truncated. Flex + 100%
-	   height keeps both pills in a row the same height when one wraps. */
+	/* fill the cell and centre the label; equal-height pills per row */
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -1181,8 +1180,9 @@ img.nav-svg-icon {
 	text-align: center;
 	padding: 0.3rem 0.55rem;
 	line-height: 1.25;
-	overflow-wrap: anywhere;
-	hyphens: auto;
+	/* wrap only at spaces (e.g. "Security" / "(1)"), never mid-word */
+	overflow-wrap: normal;
+	word-break: normal;
 }
 
 /* Search plugin — target input directly in case the plugin omits form-control */
