@@ -423,6 +423,7 @@ code {
 }
 
 pre code {
+	display: block; /* not inline-block — avoids the baseline gap below the code */
 	padding: 0;
 	background: transparent;
 	border: none;
