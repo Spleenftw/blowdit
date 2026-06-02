@@ -354,11 +354,12 @@
 				if (!active) panel.hidden = true;
 				var panelPre  = document.createElement('pre');
 				var panelCode = document.createElement('code');
-				panelCode.textContent = t.lines.join('\n');
+				var panelSrc  = t.lines.join('\n');
+				panelCode.textContent = panelSrc;
 				panelPre.appendChild(panelCode);
 				panel.appendChild(panelPre);
 				group.appendChild(panel);
-				panels.push({ btn: btn, panel: panel });
+				panels.push({ btn: btn, panel: panel, src: panelSrc });
 
 				function activate() {
 					panels.forEach(function (p) {
@@ -398,9 +399,11 @@
 
 			var tabCopyTimer = null;
 			tabCopy.addEventListener('click', function () {
-				var activePanel = group.querySelector('.tab-panel.is-active');
-				var activeCode = activePanel ? activePanel.querySelector('code') : null;
-				copyToClipboard(activeCode ? activeCode.textContent : '').then(function () {
+				var src = '';
+				for (var pi = 0; pi < panels.length; pi++) {
+					if (panels[pi].panel.classList.contains('is-active')) { src = panels[pi].src; break; }
+				}
+				copyToClipboard(src).then(function () {
 					tabCopy.classList.add('is-copied');
 					tabCopy.innerHTML = TAB_CHECK + '<span class="tab-copy-label">' + T.copied + '</span>';
 					clearTimeout(tabCopyTimer);
@@ -807,7 +810,8 @@
 			ln.onload = function () {
 				if (!window.hljs || !window.hljs.lineNumbersBlock) return;
 				Array.prototype.forEach.call(codes, function (code) {
-					if (code.closest && code.closest('.tab-group')) return; // keep tab copy clean
+					// Drop a trailing newline so the plugin doesn't add a blank last line.
+					code.innerHTML = code.innerHTML.replace(/\n+$/, '');
 					try { window.hljs.lineNumbersBlock(code, { singleLine: false }); } catch (e) {}
 				});
 			};
@@ -1278,14 +1282,6 @@
 		// Navbar button(s) open the overlay.
 		Array.prototype.forEach.call(document.querySelectorAll('.js-search-open'), function (b) {
 			b.addEventListener('click', function (e) { e.preventDefault(); open(); });
-		});
-
-		// Reproduce search on the existing on-page boxes (hero + sidebar): focusing
-		// or clicking them opens the overlay instead of the plain server search.
-		Array.prototype.forEach.call(document.querySelectorAll('.home-search input, .plugin-search input, .plugin-search .form-control'), function (inp) {
-			['focus', 'click', 'mousedown'].forEach(function (ev) {
-				inp.addEventListener(ev, function (e) { e.preventDefault(); inp.blur(); open(); });
-			});
 		});
 
 		// Navbar loupe: show only when no on-page search box is visible (avoids a
