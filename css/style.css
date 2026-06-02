@@ -1171,11 +1171,18 @@ img.nav-svg-icon {
 }
 
 .plugin.plugin-categories li a {
-	display: block;
+	/* fill the grid cell and centre the label; tighter side padding + wrapping
+	   so names fit the narrow columns instead of being truncated. Flex + 100%
+	   height keeps both pills in a row the same height when one wraps. */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
 	text-align: center;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	padding: 0.3rem 0.55rem;
+	line-height: 1.25;
+	overflow-wrap: anywhere;
+	hyphens: auto;
 }
 
 /* Search plugin — target input directly in case the plugin omits form-control */

@@ -757,8 +757,12 @@
 
 	/* --------------------------------------------------------
 	   Back-to-top button — appears after scrolling down.
+	   Only on article/page views (where there's .content to read), not on the
+	   homepage post list.
 	   -------------------------------------------------------- */
 	(function () {
+		if (!document.querySelector('.content')) return;
+
 		var btn = document.createElement('button');
 		btn.type = 'button';
 		btn.className = 'back-to-top';
