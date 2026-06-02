@@ -407,6 +407,7 @@ pre {
 	   to actually scroll rather than expand or clip the flex column. */
 	max-width: 100%;
 	white-space: pre;
+	line-height: 1.55; /* denser than body text — reads better for code */
 }
 
 /* Bootstrap flex columns default to min-width:auto, which lets them grow past
@@ -1410,6 +1411,7 @@ footer.footer-modern a:hover {
 	border: none;
 	border-radius: 0;
 	border-left: 3px solid var(--accent);
+	padding: var(--space-sm) var(--space-md);
 }
 
 /* ========================================
@@ -1784,11 +1786,14 @@ footer.footer-modern a:hover {
 	overflow: hidden;
 }
 
-/* The frame is owned by .code-block, so the inner <pre> drops its own */
+/* The frame is owned by .code-block, so the inner <pre> drops its own.
+   Tighter vertical padding (the header already bounds the top) so there's no
+   tall empty band reading as a blank line above/below the numbered code. */
 .code-block pre {
 	margin: 0;
 	border: none;
 	border-radius: 0;
+	padding: var(--space-sm) var(--space-md);
 }
 
 .code-header {
