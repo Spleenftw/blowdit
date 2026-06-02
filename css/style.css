@@ -407,7 +407,7 @@ pre {
 	   to actually scroll rather than expand or clip the flex column. */
 	max-width: 100%;
 	white-space: pre;
-	line-height: 1.55; /* denser than body text — reads better for code */
+	line-height: 1.5; /* denser than body text — reads better for code */
 }
 
 /* Bootstrap flex columns default to min-width:auto, which lets them grow past
