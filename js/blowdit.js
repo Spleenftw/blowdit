@@ -702,8 +702,13 @@
 			});
 		}
 
-		var pres = document.querySelectorAll('.content pre, .tab-panel pre');
-		Array.prototype.forEach.call(pres, enhance);
+		// Regular code blocks only — the tabbed component (.tab-group) has its
+		// own frame, so adding a header inside each panel would double-frame it.
+		var pres = document.querySelectorAll('.content pre');
+		Array.prototype.forEach.call(pres, function (pre) {
+			if (pre.closest && pre.closest('.tab-group')) return;
+			enhance(pre);
+		});
 	})();
 
 	/* --------------------------------------------------------

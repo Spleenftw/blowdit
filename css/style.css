@@ -1975,56 +1975,6 @@ button:focus:not(:focus-visible) {
 .utterances { margin-top: var(--space-xl) !important; }
 
 /* ========================================
-   PREV / NEXT ARTICLE NAV
-   ======================================== */
-.post-nav {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: var(--space-sm);
-	margin: var(--space-lg) 0;
-}
-
-.post-nav-link {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	min-width: 0;
-	padding: var(--space-sm) var(--space-md);
-	border: 1px solid var(--border-color);
-	border-radius: var(--radius-md);
-	background: var(--bg-surface);
-	color: var(--text-primary);
-	transition: all 0.2s ease;
-}
-
-.post-nav-link:hover {
-	border-color: var(--accent);
-	transform: translateY(-2px);
-	box-shadow: var(--shadow-md);
-	text-decoration: none;
-}
-
-.post-nav-next { justify-content: flex-end; text-align: right; }
-
-.post-nav-text { display: flex; flex-direction: column; min-width: 0; }
-
-.post-nav-meta {
-	font-size: var(--font-size-xs);
-	text-transform: uppercase;
-	letter-spacing: 0.06em;
-	color: var(--text-muted);
-}
-
-.post-nav-title {
-	font-weight: 600;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.post-nav .bd-icon { flex: 0 0 auto; color: var(--text-muted); margin: 0; }
-
-/* ========================================
    RELATED POSTS
    ======================================== */
 .related-posts { margin: var(--space-xl) 0 var(--space-lg); }
@@ -2241,7 +2191,6 @@ button:focus:not(:focus-visible) {
    RESPONSIVE
    ======================================== */
 @media (max-width: 767.98px) {
-	.post-nav { grid-template-columns: 1fr; }
 	h1.title { font-size: 1.9rem; }
 	h2.title { font-size: 1.5rem; }
 

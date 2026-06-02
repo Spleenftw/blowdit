@@ -47,23 +47,10 @@
 		<h1 class="title"><?php echo blowdit_text($page->title()); ?></h1>
 
 		<?php if (!$page->isStatic() && !$url->notFound()): ?>
-		<!-- Creation date, reading time and (if edited) updated date -->
-		<?php
-			$bdPubRaw = $page->getValue('date');
-			$bdModRaw = $page->getValue('dateModified');
-			$bdUpdated = '';
-			if ($bdModRaw && class_exists('Date')
-				&& substr($bdModRaw, 0, 10) !== substr($bdPubRaw, 0, 10)
-				&& $bdModRaw > $bdPubRaw) {
-				$bdUpdated = Date::format($bdModRaw, DB_DATE_FORMAT, 'M j, Y');
-			}
-		?>
+		<!-- Creation date and reading time -->
 		<div class="metadata mb-4">
 			<span><?php echo blowdit_icon('calendar'); ?><?php echo $page->date(); ?></span>
 			<span><?php echo blowdit_icon('clock'); ?><?php echo $L->get('Reading time') . ': ' . $page->readingTime() ?></span>
-			<?php if ($bdUpdated): ?>
-			<span><?php echo blowdit_icon('calendar'); ?><?php echo $L->get('Updated') . ': ' . htmlspecialchars($bdUpdated, ENT_QUOTES, 'UTF-8'); ?></span>
-			<?php endif ?>
 		</div>
 		<?php endif ?>
 
@@ -116,23 +103,17 @@
 </article>
 
 <?php
-	// ---- Prev/next + related posts ----
+	// ---- Related posts ----
 	// Best-effort via Bludit's Pages API; wrapped so any API difference degrades
 	// to nothing instead of erroring the page.
 	if (!$page->isStatic() && !$url->notFound()) {
-		$bdOlder = null; $bdNewer = null; $bdRelated = array();
+		$bdRelated = array();
 		try {
 			global $pages;
 			if (isset($pages) && method_exists($pages, 'getList')) {
-				$bdKeys = $pages->getList(1, 10000, true); // published, newest-first
+				$bdKeys = $pages->getList(1, 10000, true); // published
 				if (is_array($bdKeys)) {
-					$bdKeys = array_values($bdKeys);
 					$bdCur  = $page->key();
-					$bdI    = array_search($bdCur, $bdKeys, true);
-					if ($bdI !== false) {
-						if (isset($bdKeys[$bdI + 1])) { $bdOlder = new Page($bdKeys[$bdI + 1]); }
-						if ($bdI > 0 && isset($bdKeys[$bdI - 1])) { $bdNewer = new Page($bdKeys[$bdI - 1]); }
-					}
 					$bdCat  = $page->categoryKey();
 					$bdTags = array_keys($page->tags(true));
 					foreach ($bdKeys as $bdK) {
@@ -148,26 +129,9 @@
 				}
 			}
 		} catch (\Throwable $e) {
-			$bdOlder = null; $bdNewer = null; $bdRelated = array();
+			$bdRelated = array();
 		}
 	?>
-
-	<?php if ($bdOlder || $bdNewer) : ?>
-	<nav class="post-nav" aria-label="<?php echo $L->get('Pagination'); ?>">
-		<?php if ($bdOlder) : ?>
-		<a class="post-nav-link post-nav-prev" href="<?php echo $bdOlder->permalink(); ?>">
-			<?php echo blowdit_icon('chevron-left'); ?>
-			<span class="post-nav-text"><span class="post-nav-meta"><?php echo $L->get('Previous'); ?></span><span class="post-nav-title"><?php echo blowdit_text($bdOlder->title()); ?></span></span>
-		</a>
-		<?php else : ?><span></span><?php endif ?>
-		<?php if ($bdNewer) : ?>
-		<a class="post-nav-link post-nav-next" href="<?php echo $bdNewer->permalink(); ?>">
-			<span class="post-nav-text"><span class="post-nav-meta"><?php echo $L->get('Next'); ?></span><span class="post-nav-title"><?php echo blowdit_text($bdNewer->title()); ?></span></span>
-			<?php echo blowdit_icon('chevron-right'); ?>
-		</a>
-		<?php endif ?>
-	</nav>
-	<?php endif ?>
 
 	<?php if (!empty($bdRelated)) : ?>
 	<section class="related-posts">
