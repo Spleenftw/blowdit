@@ -832,4 +832,42 @@
 		}, 250);
 	})();
 
+	/* --------------------------------------------------------
+	   Utterances comments: keep the widget's theme in sync with the site theme,
+	   on load and on every theme switch (the plugin only sets a fixed theme).
+	   -------------------------------------------------------- */
+	(function () {
+		if (!document.querySelector('script[src*="utteranc.es"], .utterances')) return;
+
+		var UT_ORIGIN = 'https://utteranc.es';
+
+		function utterancesTheme() {
+			// Map the site theme to an Utterances theme (light vs. the dark family).
+			return (document.documentElement.getAttribute('data-theme') === 'light')
+				? 'github-light'
+				: 'github-dark';
+		}
+
+		function applyTheme() {
+			var frame = document.querySelector('iframe.utterances-frame');
+			if (frame && frame.contentWindow) {
+				frame.contentWindow.postMessage(
+					{ type: 'set-theme', theme: utterancesTheme() },
+					UT_ORIGIN
+				);
+			}
+		}
+
+		// utteranc.es posts messages once its iframe is ready (and on resize) —
+		// push the current theme whenever we hear from it.
+		window.addEventListener('message', function (e) {
+			if (e.origin === UT_ORIGIN) applyTheme();
+		});
+
+		// React to live theme changes from the picker.
+		new MutationObserver(applyTheme).observe(document.documentElement, {
+			attributes: true, attributeFilter: ['data-theme']
+		});
+	})();
+
 })();
