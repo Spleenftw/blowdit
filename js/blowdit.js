@@ -694,6 +694,9 @@
 			    pre.parentNode.classList.contains('code-block')) return;
 
 			var code = pre.querySelector('code');
+			// Capture now — before highlighting/line-numbers rewrite the DOM (the
+			// line-numbers table would otherwise mangle textContent on copy).
+			var sourceText = (code ? code.textContent : pre.textContent) || '';
 
 			var wrap = document.createElement('div');
 			wrap.className = 'code-block';
@@ -720,8 +723,7 @@
 
 			var resetTimer = null;
 			btn.addEventListener('click', function () {
-				var text = (code ? code.textContent : pre.textContent) || '';
-				copyText(text).then(function () {
+				copyText(sourceText).then(function () {
 					btn.classList.add('is-copied');
 					btn.innerHTML = SVG_CHECK + '<span class="code-copy-label">' + T.copied + '</span>';
 					btn.setAttribute('aria-label', T.copied);
@@ -799,6 +801,17 @@
 			Array.prototype.forEach.call(codes, function (code) {
 				try { window.hljs.highlightElement(code); } catch (e) {}
 			});
+			// Line numbers (self-hosted plugin). Skips single-line blocks by default.
+			var ln = document.createElement('script');
+			ln.src = BASE + 'js/highlightjs-line-numbers.min.js';
+			ln.onload = function () {
+				if (!window.hljs || !window.hljs.lineNumbersBlock) return;
+				Array.prototype.forEach.call(codes, function (code) {
+					if (code.closest && code.closest('.tab-group')) return; // keep tab copy clean
+					try { window.hljs.lineNumbersBlock(code, { singleLine: false }); } catch (e) {}
+				});
+			};
+			document.head.appendChild(ln);
 		};
 		document.head.appendChild(s);
 	})();
@@ -1179,13 +1192,20 @@
 		var el = document.getElementById('blowdit-search-index');
 		if (el) { try { data = JSON.parse(el.textContent) || []; } catch (e) { data = []; } }
 
+		var ICON = '<svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" ' +
+			'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+			'aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>';
+
 		var overlay = document.createElement('div');
 		overlay.className = 'search-overlay';
 		overlay.innerHTML =
 			'<div class="search-box" role="dialog" aria-modal="true" aria-label="' + T.search + '">' +
-				'<input type="text" class="search-input" autocomplete="off" spellcheck="false" placeholder="' + T.searchPlaceholder + '" aria-label="' + T.search + '">' +
+				'<div class="search-field">' + ICON +
+					'<input type="text" class="search-input" autocomplete="off" spellcheck="false" placeholder="' + T.searchPlaceholder + '" aria-label="' + T.search + '">' +
+				'</div>' +
 				'<ul class="search-results"></ul>' +
 				'<div class="search-empty" hidden>' + T.noResults + '</div>' +
+				'<div class="search-hint"><kbd>↑</kbd><kbd>↓</kbd> &nbsp;<kbd>↵</kbd> &nbsp;<kbd>esc</kbd></div>' +
 			'</div>';
 		document.body.appendChild(overlay);
 
@@ -1193,13 +1213,12 @@
 		var results = overlay.querySelector('.search-results');
 		var empty   = overlay.querySelector('.search-empty');
 		var active  = -1;
-		var current = [];
 
 		function open() {
 			overlay.classList.add('is-open');
 			document.body.style.overflow = 'hidden';
 			input.value = '';
-			render([]);
+			update();
 			setTimeout(function () { input.focus(); }, 30);
 		}
 		function close() {
@@ -1208,13 +1227,12 @@
 		}
 		function isOpen() { return overlay.classList.contains('is-open'); }
 
-		function score(item, q) {
+		function matches(item, q) {
 			var hay = (item.t + ' ' + (item.c || '') + ' ' + (item.g || []).join(' ') + ' ' + (item.d || '')).toLowerCase();
 			return hay.indexOf(q) !== -1;
 		}
 
 		function render(list) {
-			current = list;
 			active = list.length ? 0 : -1;
 			results.innerHTML = '';
 			empty.hidden = !(input.value.trim() && list.length === 0);
@@ -1231,14 +1249,14 @@
 
 		function update() {
 			var q = input.value.trim().toLowerCase();
-			if (!q) { render([]); return; }
-			render(data.filter(function (item) { return score(item, q); }).slice(0, 8));
+			if (!q) { render(data.slice(0, 6)); return; } // recent posts as suggestions
+			render(data.filter(function (item) { return matches(item, q); }).slice(0, 8));
 		}
 
 		function move(delta) {
 			var items = results.querySelectorAll('.search-result');
 			if (!items.length) return;
-			items[active] && items[active].classList.remove('is-active');
+			if (items[active]) items[active].classList.remove('is-active');
 			active = (active + delta + items.length) % items.length;
 			items[active].classList.add('is-active');
 			items[active].scrollIntoView({ block: 'nearest' });
@@ -1257,9 +1275,36 @@
 		});
 		overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
 
+		// Navbar button(s) open the overlay.
 		Array.prototype.forEach.call(document.querySelectorAll('.js-search-open'), function (b) {
 			b.addEventListener('click', function (e) { e.preventDefault(); open(); });
 		});
+
+		// Reproduce search on the existing on-page boxes (hero + sidebar): focusing
+		// or clicking them opens the overlay instead of the plain server search.
+		Array.prototype.forEach.call(document.querySelectorAll('.home-search input, .plugin-search input, .plugin-search .form-control'), function (inp) {
+			['focus', 'click', 'mousedown'].forEach(function (ev) {
+				inp.addEventListener(ev, function (e) { e.preventDefault(); inp.blur(); open(); });
+			});
+		});
+
+		// Navbar loupe: show only when no on-page search box is visible (avoids a
+		// duplicate). Appears once the hero/sidebar search scrolls out of view.
+		var navItems = document.querySelectorAll('.nav-search');
+		var pageSearch = document.querySelector('.home-search, .sidebar-container .plugin-search');
+		function setNav(v) {
+			Array.prototype.forEach.call(navItems, function (n) { n.classList.toggle('is-visible', v); });
+		}
+		if (navItems.length) {
+			if (!pageSearch || !('IntersectionObserver' in window)) {
+				setNav(true); // nothing on-page to duplicate -> always available
+			} else {
+				setNav(false);
+				new IntersectionObserver(function (entries) {
+					setNav(!entries[0].isIntersecting);
+				}, { rootMargin: '-64px 0px 0px 0px' }).observe(pageSearch);
+			}
+		}
 
 		// Expose for the keyboard-shortcuts handler.
 		window.BLOWDIT_SEARCH = { open: open, close: close, isOpen: isOpen };

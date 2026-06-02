@@ -59,8 +59,9 @@
 					<?php endif; ?>
 				<?php endif; ?>
 
-				<!-- Search (opens the overlay; also bound to the "/" key) -->
-				<li class="nav-item ml-md-2 mt-2 mt-md-0">
+				<!-- Search (opens the overlay; also bound to the "/" key). Shown by
+				     blowdit.js only when no on-page search box is visible. -->
+				<li class="nav-item nav-search ml-md-2 mt-2 mt-md-0">
 					<button type="button" class="theme-toggle js-search-open" aria-label="<?php echo $L->get('Search'); ?>" title="<?php echo $L->get('Search'); ?> (/)">
 						<?php echo blowdit_icon('search'); ?>
 					</button>
