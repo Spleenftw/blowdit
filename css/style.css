@@ -1339,6 +1339,31 @@ footer.footer-modern a:hover {
 	border-bottom-color: var(--accent);
 }
 
+/* Copy button pinned to the right of the tab bar (copies the active tab) */
+.tab-copy {
+	align-self: center;
+	margin-left: auto;
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.25rem 0.7rem;
+	border: none;
+	background: transparent;
+	color: var(--text-muted);
+	font-size: var(--font-size-xs);
+	font-weight: 600;
+	font-family: var(--font-sans);
+	white-space: nowrap;
+	cursor: pointer;
+	transition: color 0.15s ease;
+}
+
+.tab-copy:hover { color: var(--text-primary); }
+.tab-copy.is-copied { color: var(--accent); }
+.tab-copy svg { display: block; }
+.tab-copy-label { line-height: 1; }
+
 .tab-panel {
 	display: none;
 }
