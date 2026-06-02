@@ -1412,7 +1412,7 @@ footer.footer-modern a:hover {
 	border: none;
 	border-radius: 0;
 	border-left: 3px solid var(--accent);
-	padding: var(--space-sm) var(--space-md);
+	padding: 0.7rem var(--space-md);
 }
 
 /* ========================================
@@ -1794,7 +1794,7 @@ footer.footer-modern a:hover {
 	margin: 0;
 	border: none;
 	border-radius: 0;
-	padding: var(--space-sm) var(--space-md);
+	padding: 0.7rem var(--space-md);
 }
 
 .code-header {
