@@ -1984,6 +1984,9 @@ button:focus:not(:focus-visible) {
 
 .post-share-btn .bd-icon { margin-right: 0; }
 
+/* Separate the comments widget from the share row so it doesn't feel cramped. */
+.utterances { margin-top: var(--space-xl) !important; }
+
 /* ========================================
    PREV / NEXT ARTICLE NAV
    ======================================== */

@@ -9,7 +9,7 @@
 	// below to override. Empty -> the icon is hidden.
 	$blowditEmail = '';
 	if (isset($site)) {
-		// Bludit's accessor is getValue(); fall back to getField() just in case.
+		// Try Bludit's site settings (accessor is getValue(); getField() as backup).
 		$bdGet = method_exists($site, 'getValue') ? 'getValue'
 		       : (method_exists($site, 'getField') ? 'getField' : null);
 		if ($bdGet) {
@@ -17,7 +17,9 @@
 			if (empty($blowditEmail)) { $blowditEmail = $site->$bdGet('email'); }
 		}
 	}
-	// $blowditEmail = 'you@example.com'; // <- uncomment to set manually
+	// Bludit's sender email isn't always exposed to themes (it's an SMTP/plugin
+	// setting), so fall back to a fixed address. Set to '' to hide the icon.
+	if (empty($blowditEmail)) { $blowditEmail = 'contact@interlope.xyz'; }
 	$blowditTwitterHandle = '@spleenftw'; // twitter:site / twitter:creator; '' to omit
 
 	// Read the theme from a cookie so the root element can be rendered
