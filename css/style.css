@@ -951,38 +951,43 @@ img.nav-svg-icon {
    ======================================== */
 .pagination {
 	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
 	gap: 0.4rem;
 }
 
-.pagination .page-link {
-	display: inline-flex;
+/* Use .page-item .page-link (3 classes) so we beat Bootstrap's own
+   .page-item:first-child/:last-child rules that round only the outer corners
+   and add -1px margins — otherwise the buttons look like a connected group
+   with mismatched corners. Every button is a uniform, evenly-rounded box. */
+.pagination .page-item .page-link {
+	display: inline-flex !important;
 	align-items: center;
 	justify-content: center;
+	box-sizing: border-box;
 	min-width: 2.6rem;
+	min-height: 2.6rem;
+	margin: 0 !important;
+	padding: 0.5rem 0.7rem;
 	background: var(--bg-surface);
 	border: 1px solid var(--border-color);
+	border-radius: var(--radius-sm) !important;
 	color: var(--text-primary);
-	padding: 0.55rem 0.9rem;
-	border-radius: var(--radius-sm);
 	font-weight: 500;
+	line-height: 1;
 	transition: all 0.2s ease;
 }
 
-.pagination .page-link:hover {
+/* Chevrons sit centred (the shared icon margin would push them off-centre) */
+.pagination .page-item .page-link .bd-icon {
+	margin-right: 0;
+}
+
+.pagination .page-item .page-link:hover {
 	background: var(--accent);
 	color: var(--accent-contrast);
 	border-color: var(--accent);
 	transform: translateY(-2px);
-}
-
-/* Compact prev/next arrow buttons */
-.pagination .page-link.is-arrow {
-	min-width: 0;
-	padding: 0.55rem 0.7rem;
-}
-
-.pagination .page-link.is-arrow .bd-icon {
-	margin-right: 0;
 }
 
 /* Current page: highlighted, non-interactive */
@@ -1153,11 +1158,16 @@ img.nav-svg-icon {
 	color: var(--accent-contrast);
 }
 
-/* Categories: fixed 2-per-line grid (tidier than ragged wrapping pills) */
+/* Categories: 2-per-line grid. minmax(0, 1fr) (not the default minmax(auto,1fr))
+   lets the columns shrink to fit a narrow sidebar instead of overflowing it. */
 .plugin.plugin-categories ul {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 0.4rem;
+}
+
+.plugin.plugin-categories li {
+	min-width: 0; /* allow the grid item (and its ellipsis) to shrink */
 }
 
 .plugin.plugin-categories li a {
