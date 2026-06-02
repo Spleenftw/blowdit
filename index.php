@@ -8,9 +8,14 @@
 	// Email account settings). Leave it to auto-detect, or hard-set $blowditEmail
 	// below to override. Empty -> the icon is hidden.
 	$blowditEmail = '';
-	if (isset($site) && method_exists($site, 'getField')) {
-		$blowditEmail = $site->getField('emailFromAddress');   // Bludit's "Sender email"
-		if (empty($blowditEmail)) { $blowditEmail = $site->getField('email'); }
+	if (isset($site)) {
+		// Bludit's accessor is getValue(); fall back to getField() just in case.
+		$bdGet = method_exists($site, 'getValue') ? 'getValue'
+		       : (method_exists($site, 'getField') ? 'getField' : null);
+		if ($bdGet) {
+			$blowditEmail = $site->$bdGet('emailFromAddress');     // Bludit's "Sender email"
+			if (empty($blowditEmail)) { $blowditEmail = $site->$bdGet('email'); }
+		}
 	}
 	// $blowditEmail = 'you@example.com'; // <- uncomment to set manually
 	$blowditTwitterHandle = '@spleenftw'; // twitter:site / twitter:creator; '' to omit

@@ -70,7 +70,8 @@
 		<?php $bdShareUrl = $page->permalink(true); $bdShareTitle = blowdit_plain($page->title()); ?>
 		<div class="post-share mt-4">
 			<span class="post-share-label"><?php echo $L->get('Share'); ?></span>
-			<a class="post-share-btn" href="https://twitter.com/intent/tweet?url=<?php echo rawurlencode($bdShareUrl); ?>&amp;text=<?php echo rawurlencode($bdShareTitle); ?>" target="_blank" rel="noopener" aria-label="<?php echo $L->get('Share on X'); ?>">X</a>
+			<a class="post-share-btn" href="https://twitter.com/intent/tweet?url=<?php echo rawurlencode($bdShareUrl); ?>&amp;text=<?php echo rawurlencode($bdShareTitle); ?>" target="_blank" rel="noopener" aria-label="<?php echo $L->get('Share on X (Twitter)'); ?>">X (Twitter)</a>
+			<a class="post-share-btn" href="https://www.reddit.com/submit?url=<?php echo rawurlencode($bdShareUrl); ?>&amp;title=<?php echo rawurlencode($bdShareTitle); ?>" target="_blank" rel="noopener" aria-label="<?php echo $L->get('Share on Reddit'); ?>">Reddit</a>
 			<a class="post-share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo rawurlencode($bdShareUrl); ?>" target="_blank" rel="noopener" aria-label="<?php echo $L->get('Share on LinkedIn'); ?>">LinkedIn</a>
 			<button type="button" class="post-share-btn js-copy-link" data-url="<?php echo htmlspecialchars($bdShareUrl, ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo $L->get('Copy link'); ?>"><?php echo blowdit_icon('link'); ?><span class="post-share-copy-label"><?php echo $L->get('Copy link'); ?></span></button>
 		</div>
