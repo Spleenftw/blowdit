@@ -47,6 +47,16 @@
 							<span class="d-inline d-md-none"><?php echo $L->get('RSS'); ?></span>
 						</a>
 					</li>
+
+					<!-- Email (mailto) -->
+					<?php if (!empty($blowditEmail)) : ?>
+					<li class="nav-item">
+						<a class="nav-link" href="mailto:<?php echo htmlspecialchars($blowditEmail, ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo $L->get('Email'); ?>">
+							<img class="d-none d-md-block nav-svg-icon" src="<?php echo blowdit_asset('img/mail.svg') ?>" alt="<?php echo $L->get('Email'); ?>" />
+							<span class="d-inline d-md-none"><?php echo $L->get('Email'); ?></span>
+						</a>
+					</li>
+					<?php endif; ?>
 				<?php endif; ?>
 
 				<!-- Theme picker -->

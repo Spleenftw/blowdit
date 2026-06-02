@@ -25,6 +25,26 @@
 		imageViewer: I18N.imageViewer || 'Image viewer'
 	};
 
+	// Clipboard helper (Clipboard API with a legacy fallback).
+	function copyToClipboard(text) {
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			return navigator.clipboard.writeText(text);
+		}
+		return new Promise(function (resolve, reject) {
+			try {
+				var ta = document.createElement('textarea');
+				ta.value = text;
+				ta.style.position = 'fixed';
+				ta.style.opacity = '0';
+				document.body.appendChild(ta);
+				ta.select();
+				document.execCommand('copy');
+				document.body.removeChild(ta);
+				resolve();
+			} catch (e) { reject(e); }
+		});
+	}
+
 	/* --------------------------------------------------------
 	   Mobile navbar toggle (replaces Bootstrap's collapse JS)
 	   Toggles the .show class that Bootstrap's CSS already styles.
@@ -867,6 +887,85 @@
 		// React to live theme changes from the picker.
 		new MutationObserver(applyTheme).observe(document.documentElement, {
 			attributes: true, attributeFilter: ['data-theme']
+		});
+	})();
+
+	/* --------------------------------------------------------
+	   Heading anchor links — hover a heading to reveal a "#" that links to it.
+	   IDs are assigned by the ToC script; assign any missing ones here too.
+	   -------------------------------------------------------- */
+	(function () {
+		var content = document.querySelector('.content');
+		if (!content) return;
+		var headings = content.querySelectorAll('h2, h3, h4');
+		if (!headings.length) return;
+
+		var used = {};
+		Array.prototype.forEach.call(content.querySelectorAll('[id]'), function (el) {
+			used[el.id] = true;
+		});
+
+		Array.prototype.forEach.call(headings, function (h) {
+			if (!h.id) {
+				var base = h.textContent.trim().toLowerCase()
+					.replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-')
+					.replace(/^-+|-+$/g, '') || 'section';
+				var id = base, n = 2;
+				while (used[id]) { id = base + '-' + (n++); }
+				used[id] = true;
+				h.id = id;
+			}
+			if (h.querySelector('.heading-anchor')) return;
+			var a = document.createElement('a');
+			a.className = 'heading-anchor';
+			a.href = '#' + h.id;
+			a.setAttribute('aria-label', 'Link to this section');
+			a.textContent = '#';
+			h.appendChild(a);
+		});
+	})();
+
+	/* --------------------------------------------------------
+	   Harden outbound links in article content: rel="noopener noreferrer"
+	   (anti reverse-tabnabbing + no referrer leak) and open in a new tab.
+	   -------------------------------------------------------- */
+	(function () {
+		var content = document.querySelector('.content');
+		if (!content) return;
+		Array.prototype.forEach.call(content.querySelectorAll('a[href]'), function (a) {
+			if (!/^https?:\/\//i.test(a.getAttribute('href') || '')) return;
+			if (a.host === window.location.host) return; // same-site: leave alone
+			var rel = (a.getAttribute('rel') || '').split(/\s+/).filter(Boolean);
+			['noopener', 'noreferrer'].forEach(function (r) {
+				if (rel.indexOf(r) === -1) rel.push(r);
+			});
+			a.setAttribute('rel', rel.join(' '));
+			if (!a.getAttribute('target')) a.setAttribute('target', '_blank');
+		});
+	})();
+
+	/* --------------------------------------------------------
+	   "Copy link" share button.
+	   -------------------------------------------------------- */
+	(function () {
+		var btns = document.querySelectorAll('.js-copy-link');
+		if (!btns.length) return;
+		Array.prototype.forEach.call(btns, function (btn) {
+			var label = btn.querySelector('.post-share-copy-label');
+			var resetTimer = null;
+			btn.addEventListener('click', function () {
+				var url = btn.getAttribute('data-url') || window.location.href;
+				copyToClipboard(url).then(function () {
+					btn.classList.add('is-copied');
+					var original = label ? label.textContent : '';
+					if (label) label.textContent = T.copied;
+					clearTimeout(resetTimer);
+					resetTimer = setTimeout(function () {
+						btn.classList.remove('is-copied');
+						if (label) label.textContent = original;
+					}, 1500);
+				}).catch(function () {});
+			});
 		});
 	})();
 

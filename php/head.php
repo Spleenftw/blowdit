@@ -93,6 +93,9 @@
 	$ogType     = $ogIsArticle ? 'article' : 'website';
 	$ogSiteName = $site->title();
 ?>
+<!-- Canonical URL -->
+<link rel="canonical" href="<?php echo htmlspecialchars($ogUrl, ENT_QUOTES, 'UTF-8'); ?>">
+
 <!-- Open Graph -->
 <meta property="og:type" content="<?php echo htmlspecialchars($ogType, ENT_QUOTES, 'UTF-8'); ?>">
 <meta property="og:site_name" content="<?php echo blowdit_text($ogSiteName); ?>">
@@ -100,18 +103,58 @@
 <meta property="og:description" content="<?php echo blowdit_text($ogDesc); ?>">
 <meta property="og:url" content="<?php echo htmlspecialchars($ogUrl, ENT_QUOTES, 'UTF-8'); ?>">
 <meta property="og:image" content="<?php echo htmlspecialchars($ogImage, ENT_QUOTES, 'UTF-8'); ?>">
+<meta property="og:image:alt" content="<?php echo blowdit_text($ogTitle); ?>">
+<meta property="og:locale" content="<?php echo htmlspecialchars(str_replace('-', '_', Theme::lang()), ENT_QUOTES, 'UTF-8'); ?>">
 <?php if ($ogIsArticle): ?>
 <meta property="article:published_time" content="<?php echo htmlspecialchars($ogPublishedIso, ENT_QUOTES, 'UTF-8'); ?>">
 <meta property="article:author" content="<?php echo blowdit_text($page->username()); ?>">
 <?php endif ?>
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
+<?php if (!empty($blowditTwitterHandle)): ?>
+<meta name="twitter:site" content="<?php echo htmlspecialchars($blowditTwitterHandle, ENT_QUOTES, 'UTF-8'); ?>">
+<meta name="twitter:creator" content="<?php echo htmlspecialchars($blowditTwitterHandle, ENT_QUOTES, 'UTF-8'); ?>">
+<?php endif ?>
 <meta name="twitter:title" content="<?php echo blowdit_text($ogTitle); ?>">
 <meta name="twitter:description" content="<?php echo blowdit_text($ogDesc); ?>">
 <meta name="twitter:image" content="<?php echo htmlspecialchars($ogImage, ENT_QUOTES, 'UTF-8'); ?>">
+<meta name="twitter:image:alt" content="<?php echo blowdit_text($ogTitle); ?>">
 
 <?php
-	// ---- JSON-LD structured data (BlogPosting) — articles only ----
+	// ---- JSON-LD structured data ----
+	$blowditEmitLd = function ($doc) {
+		echo '<script type="application/ld+json">'
+			. json_encode($doc, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+			. '</script>' . "\n";
+	};
+
+	// Social profile URLs, used as schema.org "sameAs".
+	$blowditSameAs = array();
+	foreach (Theme::socialNetworks() as $snKey => $snLabel) {
+		$snUrl = $site->{$snKey}();
+		if (!empty($snUrl)) { $blowditSameAs[] = $snUrl; }
+	}
+
+	// WebSite (every page) — declares the site + a sitelinks search box.
+	$siteLd = array(
+		'@context' => 'https://schema.org',
+		'@type'    => 'WebSite',
+		'name'     => blowdit_plain($site->title()),
+		'url'      => Theme::siteUrl(),
+	);
+	$siteDesc = $site->description() ?: $site->slogan();
+	if ($siteDesc) { $siteLd['description'] = blowdit_plain($siteDesc); }
+	$siteLd['potentialAction'] = array(
+		'@type'  => 'SearchAction',
+		'target' => array(
+			'@type'       => 'EntryPoint',
+			'urlTemplate' => rtrim(Theme::siteUrl(), '/') . '/search/{search_term_string}',
+		),
+		'query-input' => 'required name=search_term_string',
+	);
+	$blowditEmitLd($siteLd);
+
+	// BlogPosting + BreadcrumbList — articles only.
 	if ($ogIsArticle) {
 		$ldDescription = $page->description() ?: ($site->description() ?: $site->slogan());
 		$ldImage       = $page->coverImage(true) ?: (DOMAIN_THEME . 'img/spleenftw.jpeg');
@@ -127,6 +170,13 @@
 			$ldTimeRequired = 'PT' . $rtMatch[0] . 'M';
 		}
 
+		$author = array(
+			'@type' => 'Person',
+			'name'  => blowdit_plain($page->username()),
+			'url'   => Theme::siteUrl(),
+		);
+		if (!empty($blowditSameAs)) { $author['sameAs'] = $blowditSameAs; }
+
 		$jsonLd = array(
 			'@context' => 'https://schema.org',
 			'@type'    => 'BlogPosting',
@@ -135,11 +185,7 @@
 			'image'    => $ldImage,
 			'datePublished' => $ldPublished,
 			'dateModified'  => $ldModified,
-			'author'   => array(
-				'@type' => 'Person',
-				'name'  => blowdit_plain($page->username()),
-				'url'   => Theme::siteUrl(),
-			),
+			'author'   => $author,
 			'publisher' => array(
 				'@type' => 'Organization',
 				'name'  => blowdit_plain($site->title()),
@@ -155,10 +201,29 @@
 			'wordCount' => str_word_count(strip_tags($page->content())),
 		);
 		if ($ldTimeRequired) { $jsonLd['timeRequired'] = $ldTimeRequired; }
+		$blowditEmitLd($jsonLd);
 
-		echo '<script type="application/ld+json">'
-			. json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
-			. '</script>' . "\n";
+		// Breadcrumb: Home > [Category] > Article
+		$crumbs = array(array(
+			'@type' => 'ListItem', 'position' => 1,
+			'name'  => blowdit_plain($site->title()), 'item' => Theme::siteUrl(),
+		));
+		$pos = 2;
+		if ($page->categoryKey()) {
+			$crumbs[] = array(
+				'@type' => 'ListItem', 'position' => $pos++,
+				'name'  => blowdit_plain($page->category()), 'item' => $page->categoryPermalink(),
+			);
+		}
+		$crumbs[] = array(
+			'@type' => 'ListItem', 'position' => $pos,
+			'name'  => blowdit_plain($page->title()), 'item' => $page->permalink(true),
+		);
+		$blowditEmitLd(array(
+			'@context' => 'https://schema.org',
+			'@type'    => 'BreadcrumbList',
+			'itemListElement' => $crumbs,
+		));
 	}
 ?>
 
@@ -167,6 +232,10 @@
 
 <!-- Include Favicon -->
 <?php echo Theme::favicon('img/favicon.png'); ?>
+
+<!-- PWA web app manifest (installable; uses theme-color above) -->
+<link rel="manifest" href="<?php echo DOMAIN_THEME . 'manifest.webmanifest'; ?>">
+<link rel="apple-touch-icon" href="<?php echo DOMAIN_THEME . 'img/favicon.png'; ?>">
 
 <!-- Inter typeface (Blowfish-like typography) — loaded non-render-blocking:
      fetched as print media, then flipped to all once it arrives. -->

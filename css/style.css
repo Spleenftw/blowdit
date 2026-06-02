@@ -846,9 +846,16 @@ img.nav-svg-icon {
 	overflow: hidden;
 	border-radius: var(--radius-md);
 	margin-bottom: var(--space-md);
+	/* Reserve space at a fixed ratio so the cover doesn't shift layout while it
+	   loads (Cumulative Layout Shift). */
+	aspect-ratio: 16 / 9;
 }
 
 .cover-image-wrapper .card-img-top {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
 	transition: transform 0.4s ease;
 }
 
@@ -1905,9 +1912,180 @@ button:focus:not(:focus-visible) {
 }
 
 /* ========================================
+   HEADING ANCHOR LINKS
+   ======================================== */
+.content h2,
+.content h3,
+.content h4 { position: relative; }
+
+.heading-anchor {
+	margin-left: 0.4rem;
+	color: var(--text-muted);
+	font-weight: 400;
+	text-decoration: none;
+	opacity: 0;
+	transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.content h2:hover .heading-anchor,
+.content h3:hover .heading-anchor,
+.content h4:hover .heading-anchor,
+.heading-anchor:focus { opacity: 0.55; }
+
+.heading-anchor:hover { color: var(--accent); opacity: 1; text-decoration: none; }
+
+@media (hover: none) { .heading-anchor { opacity: 0.4; } }
+
+/* ========================================
+   SHARE BUTTONS
+   ======================================== */
+.post-share {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem;
+	margin-top: var(--space-lg);
+	padding-top: var(--space-md);
+	border-top: 1px solid var(--border-subtle);
+}
+
+.post-share-label {
+	font-size: var(--font-size-xs);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--text-muted);
+	margin-right: 0.3rem;
+}
+
+.post-share-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.3rem 0.8rem;
+	border: 1px solid var(--border-color);
+	border-radius: 999px;
+	background: transparent;
+	color: var(--text-secondary);
+	font-size: var(--font-size-xs);
+	font-weight: 600;
+	font-family: var(--font-sans);
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.post-share-btn:hover,
+.post-share-btn.is-copied {
+	background: var(--accent);
+	color: var(--accent-contrast);
+	border-color: var(--accent);
+	text-decoration: none;
+}
+
+.post-share-btn .bd-icon { margin-right: 0; }
+
+/* ========================================
+   PREV / NEXT ARTICLE NAV
+   ======================================== */
+.post-nav {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var(--space-sm);
+	margin: var(--space-lg) 0;
+}
+
+.post-nav-link {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-width: 0;
+	padding: var(--space-sm) var(--space-md);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-md);
+	background: var(--bg-surface);
+	color: var(--text-primary);
+	transition: all 0.2s ease;
+}
+
+.post-nav-link:hover {
+	border-color: var(--accent);
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-md);
+	text-decoration: none;
+}
+
+.post-nav-next { justify-content: flex-end; text-align: right; }
+
+.post-nav-text { display: flex; flex-direction: column; min-width: 0; }
+
+.post-nav-meta {
+	font-size: var(--font-size-xs);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--text-muted);
+}
+
+.post-nav-title {
+	font-weight: 600;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.post-nav .bd-icon { flex: 0 0 auto; color: var(--text-muted); margin: 0; }
+
+/* ========================================
+   RELATED POSTS
+   ======================================== */
+.related-posts { margin: var(--space-xl) 0 var(--space-lg); }
+
+.related-posts-title { font-size: 1.15rem; margin-bottom: var(--space-md); }
+
+.related-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+	gap: var(--space-sm);
+}
+
+.related-card {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-md);
+	background: var(--bg-surface);
+	color: var(--text-primary);
+	transition: all 0.2s ease;
+}
+
+.related-card:hover {
+	border-color: var(--accent);
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-md);
+	text-decoration: none;
+}
+
+.related-cover {
+	display: block;
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	background-size: cover;
+	background-position: center;
+	background-color: var(--bg-subtle);
+}
+
+.related-card-title {
+	padding: 0.7rem 0.85rem;
+	font-weight: 600;
+	font-size: 0.95rem;
+	line-height: 1.3;
+}
+
+/* ========================================
    RESPONSIVE
    ======================================== */
 @media (max-width: 767.98px) {
+	.post-nav { grid-template-columns: 1fr; }
 	h1.title { font-size: 1.9rem; }
 	h2.title { font-size: 1.5rem; }
 

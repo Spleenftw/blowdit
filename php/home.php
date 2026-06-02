@@ -26,6 +26,12 @@
       <a href="<?php echo rtrim(Theme::siteUrl(), '/') . '/rss.xml'; ?>" target="_blank" rel="noopener" title="<?php echo $L->get('RSS'); ?>">
         <img class="profile-social-icon" src="<?php echo blowdit_asset('img/rss.svg') ?>" alt="<?php echo $L->get('RSS'); ?>" />
       </a>
+      <!-- Email (mailto) -->
+      <?php if (!empty($blowditEmail)) : ?>
+      <a href="mailto:<?php echo htmlspecialchars($blowditEmail, ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo $L->get('Email'); ?>">
+        <img class="profile-social-icon" src="<?php echo blowdit_asset('img/mail.svg') ?>" alt="<?php echo $L->get('Email'); ?>" />
+      </a>
+      <?php endif ?>
     </div>
   </header>
 

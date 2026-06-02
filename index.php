@@ -3,6 +3,18 @@
 	// first so blowdit_icon() is available to head.php and every body template.
 	include(THEME_DIR_PHP.'icons.php');
 
+	// ---- Theme contact / social config ----
+	// The mailto icon uses Bludit's "Sender email" (Settings -> Advanced ->
+	// Email account settings). Leave it to auto-detect, or hard-set $blowditEmail
+	// below to override. Empty -> the icon is hidden.
+	$blowditEmail = '';
+	if (isset($site) && method_exists($site, 'getField')) {
+		$blowditEmail = $site->getField('emailFromAddress');   // Bludit's "Sender email"
+		if (empty($blowditEmail)) { $blowditEmail = $site->getField('email'); }
+	}
+	// $blowditEmail = 'you@example.com'; // <- uncomment to set manually
+	$blowditTwitterHandle = '@spleenftw'; // twitter:site / twitter:creator; '' to omit
+
 	// Read the theme from a cookie so the root element can be rendered
 	// pre-coloured. This paints the page in the theme colour from the first
 	// byte of every response, eliminating the white flash between navigations.

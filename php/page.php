@@ -16,10 +16,23 @@
 		<h1 class="title"><?php echo blowdit_text($page->title()); ?></h1>
 
 		<?php if (!$page->isStatic() && !$url->notFound()): ?>
-		<!-- Creation date, reading time and author -->
+		<!-- Creation date, reading time and (if edited) updated date -->
+		<?php
+			$bdPubRaw = $page->getValue('date');
+			$bdModRaw = $page->getValue('dateModified');
+			$bdUpdated = '';
+			if ($bdModRaw && class_exists('Date')
+				&& substr($bdModRaw, 0, 10) !== substr($bdPubRaw, 0, 10)
+				&& $bdModRaw > $bdPubRaw) {
+				$bdUpdated = Date::format($bdModRaw, DB_DATE_FORMAT, 'M j, Y');
+			}
+		?>
 		<div class="metadata mb-4">
 			<span><?php echo blowdit_icon('calendar'); ?><?php echo $page->date(); ?></span>
 			<span><?php echo blowdit_icon('clock'); ?><?php echo $L->get('Reading time') . ': ' . $page->readingTime() ?></span>
+			<?php if ($bdUpdated): ?>
+			<span><?php echo blowdit_icon('calendar'); ?><?php echo $L->get('Updated') . ': ' . htmlspecialchars($bdUpdated, ENT_QUOTES, 'UTF-8'); ?></span>
+			<?php endif ?>
 		</div>
 		<?php endif ?>
 
@@ -52,9 +65,92 @@
 		</div>
 		<?php endif ?>
 
+		<!-- Share -->
+		<?php if (!$page->isStatic() && !$url->notFound()) : ?>
+		<?php $bdShareUrl = $page->permalink(true); $bdShareTitle = blowdit_plain($page->title()); ?>
+		<div class="post-share mt-4">
+			<span class="post-share-label"><?php echo $L->get('Share'); ?></span>
+			<a class="post-share-btn" href="https://twitter.com/intent/tweet?url=<?php echo rawurlencode($bdShareUrl); ?>&amp;text=<?php echo rawurlencode($bdShareTitle); ?>" target="_blank" rel="noopener" aria-label="<?php echo $L->get('Share on X'); ?>">X</a>
+			<a class="post-share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo rawurlencode($bdShareUrl); ?>" target="_blank" rel="noopener" aria-label="<?php echo $L->get('Share on LinkedIn'); ?>">LinkedIn</a>
+			<button type="button" class="post-share-btn js-copy-link" data-url="<?php echo htmlspecialchars($bdShareUrl, ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo $L->get('Copy link'); ?>"><?php echo blowdit_icon('link'); ?><span class="post-share-copy-label"><?php echo $L->get('Copy link'); ?></span></button>
+		</div>
+		<?php endif ?>
+
 	</div>
 
 	<!-- Load Bludit Plugins: Page End -->
 	<?php Theme::plugins('pageEnd'); ?>
 
 </article>
+
+<?php
+	// ---- Prev/next + related posts ----
+	// Best-effort via Bludit's Pages API; wrapped so any API difference degrades
+	// to nothing instead of erroring the page.
+	if (!$page->isStatic() && !$url->notFound()) {
+		$bdOlder = null; $bdNewer = null; $bdRelated = array();
+		try {
+			global $pages;
+			if (isset($pages) && method_exists($pages, 'getList')) {
+				$bdKeys = $pages->getList(1, 10000, true); // published, newest-first
+				if (is_array($bdKeys)) {
+					$bdKeys = array_values($bdKeys);
+					$bdCur  = $page->key();
+					$bdI    = array_search($bdCur, $bdKeys, true);
+					if ($bdI !== false) {
+						if (isset($bdKeys[$bdI + 1])) { $bdOlder = new Page($bdKeys[$bdI + 1]); }
+						if ($bdI > 0 && isset($bdKeys[$bdI - 1])) { $bdNewer = new Page($bdKeys[$bdI - 1]); }
+					}
+					$bdCat  = $page->categoryKey();
+					$bdTags = array_keys($page->tags(true));
+					foreach ($bdKeys as $bdK) {
+						if ($bdK === $bdCur) { continue; }
+						if (count($bdRelated) >= 3) { break; }
+						$bdCand = new Page($bdK);
+						$bdMatch = ($bdCat && $bdCand->categoryKey() === $bdCat);
+						if (!$bdMatch && $bdTags) {
+							$bdMatch = (bool) array_intersect($bdTags, array_keys($bdCand->tags(true)));
+						}
+						if ($bdMatch) { $bdRelated[] = $bdCand; }
+					}
+				}
+			}
+		} catch (\Throwable $e) {
+			$bdOlder = null; $bdNewer = null; $bdRelated = array();
+		}
+	?>
+
+	<?php if ($bdOlder || $bdNewer) : ?>
+	<nav class="post-nav" aria-label="<?php echo $L->get('Pagination'); ?>">
+		<?php if ($bdOlder) : ?>
+		<a class="post-nav-link post-nav-prev" href="<?php echo $bdOlder->permalink(); ?>">
+			<?php echo blowdit_icon('chevron-left'); ?>
+			<span class="post-nav-text"><span class="post-nav-meta"><?php echo $L->get('Previous'); ?></span><span class="post-nav-title"><?php echo blowdit_text($bdOlder->title()); ?></span></span>
+		</a>
+		<?php else : ?><span></span><?php endif ?>
+		<?php if ($bdNewer) : ?>
+		<a class="post-nav-link post-nav-next" href="<?php echo $bdNewer->permalink(); ?>">
+			<span class="post-nav-text"><span class="post-nav-meta"><?php echo $L->get('Next'); ?></span><span class="post-nav-title"><?php echo blowdit_text($bdNewer->title()); ?></span></span>
+			<?php echo blowdit_icon('chevron-right'); ?>
+		</a>
+		<?php endif ?>
+	</nav>
+	<?php endif ?>
+
+	<?php if (!empty($bdRelated)) : ?>
+	<section class="related-posts">
+		<h2 class="related-posts-title"><?php echo $L->get('Related posts'); ?></h2>
+		<div class="related-grid">
+			<?php foreach ($bdRelated as $bdRp) : ?>
+			<a class="related-card" href="<?php echo $bdRp->permalink(); ?>">
+				<?php if ($bdRp->coverImage()) : ?>
+				<span class="related-cover" style="background-image:url('<?php echo htmlspecialchars($bdRp->coverImage(), ENT_QUOTES, 'UTF-8'); ?>')"></span>
+				<?php endif ?>
+				<span class="related-card-title"><?php echo blowdit_text($bdRp->title()); ?></span>
+			</a>
+			<?php endforeach ?>
+		</div>
+	</section>
+	<?php endif ?>
+
+<?php } ?>
