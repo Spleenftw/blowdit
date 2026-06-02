@@ -62,8 +62,10 @@
 	--font-size-xs: 0.78rem;
 	--line-height-base: 1.7;
 
-	/* Filter applied to the dark social SVG glyphs (none on light themes) */
-	--social-icon-filter: none;
+	/* The social SVGs are baked white (rgba(255,255,255,.5)). On the light theme
+	   the hero sits on a light background, so darken them to black; dark themes
+	   keep them white via brightness(0) invert(1). (The navbar tints its own.) */
+	--social-icon-filter: brightness(0);
 }
 
 /* ----------------------------------------
