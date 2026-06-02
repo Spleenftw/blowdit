@@ -10,16 +10,16 @@
 			<span class="sidebar-author-label">Author</span>
 			<div class="sidebar-author-identity">
 				<a href="<?php echo Theme::siteUrl() ?>">
-					<img class="sidebar-author-avatar" src="<?php echo DOMAIN_THEME . 'img/spleenftw.jpeg' ?>" alt="<?php echo htmlspecialchars($page->username(), ENT_QUOTES, 'UTF-8') ?>" />
+					<img class="sidebar-author-avatar" src="<?php echo DOMAIN_THEME . 'img/spleenftw.jpeg' ?>" alt="<?php echo blowdit_text($page->username()) ?>" />
 				</a>
-				<div class="sidebar-author-name"><?php echo htmlspecialchars($page->username(), ENT_QUOTES, 'UTF-8') ?></div>
+				<div class="sidebar-author-name"><?php echo blowdit_text($page->username()) ?></div>
 				<?php
 					// Bio: set in Bludit Admin → Settings → General → Description
 					// Falls back to Slogan if Description is empty.
 					$_authorBio = $site->description() ?: $site->slogan();
 				?>
 				<?php if ($_authorBio) : ?>
-					<p class="sidebar-author-bio"><?php echo htmlspecialchars($_authorBio, ENT_QUOTES, 'UTF-8') ?></p>
+					<p class="sidebar-author-bio"><?php echo blowdit_text($_authorBio) ?></p>
 				<?php endif ?>
 			</div>
 		</div>

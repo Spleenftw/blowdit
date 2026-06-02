@@ -7,13 +7,13 @@
 	<!-- Cover image -->
 	<?php if ($page->coverImage()): ?>
 	<div class="cover-image-wrapper">
-		<img class="card-img-top" alt="<?php echo htmlspecialchars($page->title(), ENT_QUOTES, 'UTF-8'); ?>" src="<?php echo $page->coverImage(); ?>" fetchpriority="high" decoding="async"/>
+		<img class="card-img-top" alt="<?php echo blowdit_text($page->title()); ?>" src="<?php echo $page->coverImage(); ?>" fetchpriority="high" decoding="async"/>
 	</div>
 	<?php endif ?>
 
 	<div class="card-body">
 		<!-- Title -->
-		<h1 class="title"><?php echo htmlspecialchars($page->title(), ENT_QUOTES, 'UTF-8'); ?></h1>
+		<h1 class="title"><?php echo blowdit_text($page->title()); ?></h1>
 
 		<?php if (!$page->isStatic() && !$url->notFound()): ?>
 		<!-- Creation date, reading time and author -->
@@ -43,11 +43,11 @@
 		<div class="post-taxonomy mt-4">
 			<?php if ($categoryKey) : ?>
 				<a class="taxonomy-badge" href="<?php echo $page->categoryPermalink(); ?>">
-					<?php echo blowdit_icon('folder'); ?><?php echo htmlspecialchars($page->category(), ENT_QUOTES, 'UTF-8'); ?>
+					<?php echo blowdit_icon('folder'); ?><?php echo blowdit_text($page->category()); ?>
 				</a>
 			<?php endif ?>
 			<?php foreach ($tagsList as $tagKey => $tagName) : ?>
-				<a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><?php echo blowdit_icon('tag'); ?><?php echo htmlspecialchars($tagName, ENT_QUOTES, 'UTF-8'); ?></a>
+				<a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><?php echo blowdit_icon('tag'); ?><?php echo blowdit_text($tagName); ?></a>
 			<?php endforeach ?>
 		</div>
 		<?php endif ?>

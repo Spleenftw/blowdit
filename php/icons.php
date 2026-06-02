@@ -34,6 +34,18 @@ if (!function_exists('blowdit_icon')) {
 			. 'stroke-linejoin="round" aria-hidden="true">' . $paths[$name] . '</svg>';
 	}
 
+	// Bludit already HTML-escapes titles/names on save (Sanitize::html), so a
+	// plain htmlspecialchars() in the theme double-encodes ("&" -> "&amp;amp;",
+	// shown as "&amp;"). blowdit_text() decodes any existing entities first, then
+	// encodes exactly once — correct whether the value is pre-encoded or raw, and
+	// always output-safe. blowdit_plain() returns decoded text (for JSON-LD etc.).
+	function blowdit_plain($s) {
+		return html_entity_decode((string) $s, ENT_QUOTES, 'UTF-8');
+	}
+	function blowdit_text($s) {
+		return htmlspecialchars(blowdit_plain($s), ENT_QUOTES, 'UTF-8');
+	}
+
 	// Theme asset URL with an mtime cache-buster (so edited images/SVGs refetch).
 	function blowdit_asset($rel) {
 		$v = @filemtime(THEME_DIR . $rel);

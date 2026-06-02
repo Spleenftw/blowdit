@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-modern">
 	<div class="container">
 		<a class="navbar-brand" href="<?php echo Theme::siteUrl() ?>">
-			<span class="text-white"><?php echo htmlspecialchars($site->title(), ENT_QUOTES, 'UTF-8') ?></span>
+			<span class="text-white"><?php echo blowdit_text($site->title()) ?></span>
 		</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -19,7 +19,7 @@
 				<!-- Static pages -->
 				<?php foreach ($staticContent as $staticPage) : ?>
 					<li class="nav-item">
-						<a class="nav-link<?php echo ($url->slug() == $staticPage->slug()) ? ' active' : '' ?>" href="<?php echo $staticPage->permalink() ?>"><?php echo htmlspecialchars($staticPage->title(), ENT_QUOTES, 'UTF-8') ?></a>
+						<a class="nav-link<?php echo ($url->slug() == $staticPage->slug()) ? ' active' : '' ?>" href="<?php echo $staticPage->permalink() ?>"><?php echo blowdit_text($staticPage->title()) ?></a>
 					</li>
 				<?php endforeach ?>
 
@@ -33,9 +33,9 @@
 					<!-- Social Networks (SVG icons live in img/<network>.svg) -->
 					<?php foreach (Theme::socialNetworks() as $key => $label) : ?>
 						<li class="nav-item">
-							<a class="nav-link" href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>">
-								<img class="d-none d-md-block nav-svg-icon" src="<?php echo blowdit_asset('img/' . $key . '.svg') ?>" alt="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" />
-								<span class="d-inline d-md-none"><?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?></span>
+							<a class="nav-link" href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo blowdit_text($label) ?>">
+								<img class="d-none d-md-block nav-svg-icon" src="<?php echo blowdit_asset('img/' . $key . '.svg') ?>" alt="<?php echo blowdit_text($label) ?>" />
+								<span class="d-inline d-md-none"><?php echo blowdit_text($label); ?></span>
 							</a>
 						</li>
 					<?php endforeach; ?>

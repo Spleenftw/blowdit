@@ -7,19 +7,19 @@
 ?>
 <?php if ($showProfile) : ?>
   <header class="profile text-center">
-    <img class="profile-avatar" src="<?php echo $profileImage; ?>" alt="<?php echo htmlspecialchars($site->title(), ENT_QUOTES, 'UTF-8'); ?>" />
-    <h1 class="profile-name"><?php echo htmlspecialchars($site->title(), ENT_QUOTES, 'UTF-8'); ?></h1>
+    <img class="profile-avatar" src="<?php echo $profileImage; ?>" alt="<?php echo blowdit_text($site->title()); ?>" />
+    <h1 class="profile-name"><?php echo blowdit_text($site->title()); ?></h1>
     <?php if ($site->slogan()) : ?>
-      <p class="profile-bio"><?php echo htmlspecialchars($site->slogan(), ENT_QUOTES, 'UTF-8'); ?></p>
+      <p class="profile-bio"><?php echo blowdit_text($site->slogan()); ?></p>
     <?php elseif ($site->description()) : ?>
-      <p class="profile-bio"><?php echo htmlspecialchars($site->description(), ENT_QUOTES, 'UTF-8'); ?></p>
+      <p class="profile-bio"><?php echo blowdit_text($site->description()); ?></p>
     <?php endif ?>
 
     <?php $networks = Theme::socialNetworks(); ?>
     <div class="profile-social">
       <?php foreach ($networks as $key => $label) : ?>
-        <a href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>">
-          <img class="profile-social-icon" src="<?php echo blowdit_asset('img/' . $key . '.svg') ?>" alt="<?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" />
+        <a href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo blowdit_text($label) ?>">
+          <img class="profile-social-icon" src="<?php echo blowdit_asset('img/' . $key . '.svg') ?>" alt="<?php echo blowdit_text($label) ?>" />
         </a>
       <?php endforeach ?>
       <!-- RSS feed (served by the RSS plugin at /rss.xml) -->
@@ -53,7 +53,7 @@
 
       <div class="post-list-head">
         <a href="<?php echo $page->permalink(); ?>">
-          <h2 class="post-list-title"><?php echo htmlspecialchars($page->title(), ENT_QUOTES, 'UTF-8'); ?></h2>
+          <h2 class="post-list-title"><?php echo blowdit_text($page->title()); ?></h2>
         </a>
         <div class="post-list-meta">
           <span><?php echo blowdit_icon('calendar'); ?><?php echo $page->date(); ?></span>
@@ -69,11 +69,11 @@
         <div class="post-taxonomy">
           <?php if ($categoryKey) : ?>
             <a class="taxonomy-badge" href="<?php echo $page->categoryPermalink(); ?>">
-              <?php echo blowdit_icon('folder'); ?><?php echo htmlspecialchars($page->category(), ENT_QUOTES, 'UTF-8'); ?>
+              <?php echo blowdit_icon('folder'); ?><?php echo blowdit_text($page->category()); ?>
             </a>
           <?php endif ?>
           <?php foreach ($tagsList as $tagKey => $tagName) : ?>
-            <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><?php echo blowdit_icon('tag'); ?><?php echo htmlspecialchars($tagName, ENT_QUOTES, 'UTF-8'); ?></a>
+            <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><?php echo blowdit_icon('tag'); ?><?php echo blowdit_text($tagName); ?></a>
           <?php endforeach ?>
         </div>
       <?php endif ?>

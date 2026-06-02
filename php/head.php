@@ -95,19 +95,19 @@
 ?>
 <!-- Open Graph -->
 <meta property="og:type" content="<?php echo htmlspecialchars($ogType, ENT_QUOTES, 'UTF-8'); ?>">
-<meta property="og:site_name" content="<?php echo htmlspecialchars($ogSiteName, ENT_QUOTES, 'UTF-8'); ?>">
-<meta property="og:title" content="<?php echo htmlspecialchars($ogTitle, ENT_QUOTES, 'UTF-8'); ?>">
-<meta property="og:description" content="<?php echo htmlspecialchars($ogDesc, ENT_QUOTES, 'UTF-8'); ?>">
+<meta property="og:site_name" content="<?php echo blowdit_text($ogSiteName); ?>">
+<meta property="og:title" content="<?php echo blowdit_text($ogTitle); ?>">
+<meta property="og:description" content="<?php echo blowdit_text($ogDesc); ?>">
 <meta property="og:url" content="<?php echo htmlspecialchars($ogUrl, ENT_QUOTES, 'UTF-8'); ?>">
 <meta property="og:image" content="<?php echo htmlspecialchars($ogImage, ENT_QUOTES, 'UTF-8'); ?>">
 <?php if ($ogIsArticle): ?>
 <meta property="article:published_time" content="<?php echo htmlspecialchars($ogPublishedIso, ENT_QUOTES, 'UTF-8'); ?>">
-<meta property="article:author" content="<?php echo htmlspecialchars($page->username(), ENT_QUOTES, 'UTF-8'); ?>">
+<meta property="article:author" content="<?php echo blowdit_text($page->username()); ?>">
 <?php endif ?>
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?php echo htmlspecialchars($ogTitle, ENT_QUOTES, 'UTF-8'); ?>">
-<meta name="twitter:description" content="<?php echo htmlspecialchars($ogDesc, ENT_QUOTES, 'UTF-8'); ?>">
+<meta name="twitter:title" content="<?php echo blowdit_text($ogTitle); ?>">
+<meta name="twitter:description" content="<?php echo blowdit_text($ogDesc); ?>">
 <meta name="twitter:image" content="<?php echo htmlspecialchars($ogImage, ENT_QUOTES, 'UTF-8'); ?>">
 
 <?php
@@ -130,19 +130,19 @@
 		$jsonLd = array(
 			'@context' => 'https://schema.org',
 			'@type'    => 'BlogPosting',
-			'headline' => $page->title(),
-			'description' => $ldDescription,
+			'headline' => blowdit_plain($page->title()),
+			'description' => blowdit_plain($ldDescription),
 			'image'    => $ldImage,
 			'datePublished' => $ldPublished,
 			'dateModified'  => $ldModified,
 			'author'   => array(
 				'@type' => 'Person',
-				'name'  => $page->username(),
+				'name'  => blowdit_plain($page->username()),
 				'url'   => Theme::siteUrl(),
 			),
 			'publisher' => array(
 				'@type' => 'Organization',
-				'name'  => $site->title(),
+				'name'  => blowdit_plain($site->title()),
 				'logo'  => array(
 					'@type' => 'ImageObject',
 					'url'   => DOMAIN_THEME . 'img/favicon.png',
@@ -163,7 +163,7 @@
 ?>
 
 <!-- RSS feed auto-discovery (RSS plugin serves /rss.xml) -->
-<link rel="alternate" type="application/rss+xml" title="<?php echo htmlspecialchars($site->title(), ENT_QUOTES, 'UTF-8'); ?>" href="<?php echo rtrim(Theme::siteUrl(), '/') . '/rss.xml'; ?>">
+<link rel="alternate" type="application/rss+xml" title="<?php echo blowdit_text($site->title()); ?>" href="<?php echo rtrim(Theme::siteUrl(), '/') . '/rss.xml'; ?>">
 
 <!-- Include Favicon -->
 <?php echo Theme::favicon('img/favicon.png'); ?>
