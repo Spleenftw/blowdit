@@ -153,9 +153,15 @@
 	})();
 
 	/* --------------------------------------------------------
-	   Randomise the order of the navigation / pages list on each load
+	   Sidebar nav: show a random selection of links on each load.
+	   The plugin renders the full list (set its "amount" high); we shuffle it
+	   and reveal only SHOW_COUNT items — so it rotates through ALL articles
+	   while keeping the sidebar short. All links stay in the DOM (good for
+	   internal linking/crawl); the extras are just visually hidden.
 	   -------------------------------------------------------- */
 	(function () {
+		var SHOW_COUNT = 3; // how many random links to display; change to taste
+
 		function shuffle(arr) {
 			for (var i = arr.length - 1; i > 0; i--) {
 				var j = Math.floor(Math.random() * (i + 1));
@@ -168,7 +174,11 @@
 			var items = Array.prototype.filter.call(ul.children, function (el) {
 				return el.tagName === 'LI';
 			});
-			shuffle(items).forEach(function (li) { ul.appendChild(li); });
+			shuffle(items);
+			items.forEach(function (li, i) {
+				ul.appendChild(li);                       // apply shuffled order
+				li.style.display = (i < SHOW_COUNT) ? '' : 'none'; // reveal only the first N
+			});
 		});
 	})();
 
