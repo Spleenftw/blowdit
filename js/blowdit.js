@@ -22,7 +22,8 @@
 		goToSlide:   I18N.goToSlide   || 'Go to slide',
 		prevImage:   I18N.prevImage   || 'Previous image',
 		nextImage:   I18N.nextImage   || 'Next image',
-		imageViewer: I18N.imageViewer || 'Image viewer'
+		imageViewer: I18N.imageViewer || 'Image viewer',
+		onThisPage:  I18N.onThisPage  || 'On this page'
 	};
 
 	// Clipboard helper (Clipboard API with a legacy fallback).
@@ -623,58 +624,82 @@
 			});
 		}
 
-		// Inline SVGs — centred in their own viewBox, so no icon-font baseline /
-		// side-bearing offsets to fight.
-		var SVG_COPY = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" ' +
+		// Inline SVGs — centred in their own viewBox.
+		var SVG_COPY = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" ' +
 			'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
 			'aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/>' +
 			'<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
-		var SVG_CHECK = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" ' +
+		var SVG_CHECK = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" ' +
 			'stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" ' +
 			'aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+
+		// Pretty display names for common language classes.
+		var LANG = {
+			js: 'JavaScript', javascript: 'JavaScript', ts: 'TypeScript', typescript: 'TypeScript',
+			json: 'JSON', html: 'HTML', xml: 'XML', css: 'CSS', scss: 'SCSS', bash: 'Bash',
+			sh: 'Shell', shell: 'Shell', zsh: 'Zsh', console: 'Shell', powershell: 'PowerShell',
+			ps1: 'PowerShell', python: 'Python', py: 'Python', php: 'PHP', go: 'Go', golang: 'Go',
+			rust: 'Rust', rs: 'Rust', c: 'C', cpp: 'C++', csharp: 'C#', cs: 'C#', java: 'Java',
+			kotlin: 'Kotlin', ruby: 'Ruby', rb: 'Ruby', sql: 'SQL', yaml: 'YAML', yml: 'YAML',
+			toml: 'TOML', ini: 'INI', dockerfile: 'Dockerfile', docker: 'Dockerfile', nginx: 'Nginx',
+			apache: 'Apache', diff: 'Diff', md: 'Markdown', markdown: 'Markdown', text: 'Text',
+			plaintext: 'Text'
+		};
+
+		function langName(code) {
+			if (!code) return '';
+			var m = (code.className || '').match(/language-([\w-]+)/i);
+			if (!m) return '';
+			var key = m[1].toLowerCase();
+			if (key === 'tabs' || key === 'carousel') return ''; // theme fences, not languages
+			return LANG[key] || (key.charAt(0).toUpperCase() + key.slice(1));
+		}
 
 		function enhance(pre) {
 			// Skip if already wrapped
 			if (pre.parentNode && pre.parentNode.classList &&
 			    pre.parentNode.classList.contains('code-block')) return;
 
+			var code = pre.querySelector('code');
+
 			var wrap = document.createElement('div');
 			wrap.className = 'code-block';
 			pre.parentNode.insertBefore(wrap, pre);
 			wrap.appendChild(pre);
 
+			// Header bar: language label (left) + copy button (right)
+			var header = document.createElement('div');
+			header.className = 'code-header';
+
+			var lang = document.createElement('span');
+			lang.className = 'code-lang';
+			lang.textContent = langName(code);
+			header.appendChild(lang);
+
 			var btn = document.createElement('button');
 			btn.type = 'button';
 			btn.className = 'code-copy';
 			btn.setAttribute('aria-label', T.copyCode);
-			btn.innerHTML = SVG_COPY;
+			btn.innerHTML = SVG_COPY + '<span class="code-copy-label">' + T.copy + '</span>';
+			header.appendChild(btn);
 
-			// "Copied" toast that pops up next to the button
-			var toast = document.createElement('span');
-			toast.className = 'code-copy-toast';
-			toast.textContent = T.copied;
+			wrap.insertBefore(header, pre);
 
 			var resetTimer = null;
 			btn.addEventListener('click', function () {
-				var code = pre.querySelector('code');
 				var text = (code ? code.textContent : pre.textContent) || '';
 				copyText(text).then(function () {
 					btn.classList.add('is-copied');
-					btn.innerHTML = SVG_CHECK;
+					btn.innerHTML = SVG_CHECK + '<span class="code-copy-label">' + T.copied + '</span>';
 					btn.setAttribute('aria-label', T.copied);
-					toast.classList.add('is-visible');
 					clearTimeout(resetTimer);
 					resetTimer = setTimeout(function () {
 						btn.classList.remove('is-copied');
-						btn.innerHTML = SVG_COPY;
+						btn.innerHTML = SVG_COPY + '<span class="code-copy-label">' + T.copy + '</span>';
 						btn.setAttribute('aria-label', T.copyCode);
-						toast.classList.remove('is-visible');
-					}, 1000);
+					}, 1200);
 				}).catch(function () {});
 			});
-
-			wrap.appendChild(btn);
-			wrap.appendChild(toast);
 		}
 
 		var pres = document.querySelectorAll('.content pre, .tab-panel pre');
@@ -966,6 +991,121 @@
 					}, 1500);
 				}).catch(function () {});
 			});
+		});
+	})();
+
+	/* --------------------------------------------------------
+	   Callout / admonition boxes from GitHub-style blockquotes:
+	   > [!NOTE] / [!TIP] / [!IMPORTANT] / [!WARNING] / [!CAUTION] (or [!DANGER]).
+	   -------------------------------------------------------- */
+	(function () {
+		var content = document.querySelector('.content');
+		if (!content) return;
+
+		function svg(inner) {
+			return '<svg class="callout-icon" viewBox="0 0 24 24" width="18" height="18" ' +
+				'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+				'stroke-linejoin="round" aria-hidden="true">' + inner + '</svg>';
+		}
+		var ICONS = {
+			note:      svg('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>'),
+			tip:       svg('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.8 10.6c.5.5 1 1.4 1 2.4h5.6c0-1 .5-1.9 1-2.4A6 6 0 0 0 12 3z"/>'),
+			important: svg('<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>'),
+			warning:   svg('<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h16.9a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>'),
+			caution:   svg('<path d="M7.9 2h8.2L22 7.9v8.2L16.1 22H7.9L2 16.1V7.9z"/><path d="M12 8v4M12 16h.01"/>')
+		};
+		var LABELS = { note: 'Note', tip: 'Tip', important: 'Important', warning: 'Warning', caution: 'Caution' };
+		var ALIAS  = { danger: 'caution' };
+
+		Array.prototype.forEach.call(content.querySelectorAll('blockquote'), function (bq) {
+			var first = bq.querySelector('p');
+			if (!first) return;
+			var m = first.innerHTML.match(/^\s*\[!(\w+)\]\s*(<br\s*\/?>)?\s*/i);
+			if (!m) return;
+			var type = m[1].toLowerCase();
+			if (ALIAS[type]) type = ALIAS[type];
+			if (!ICONS[type]) return;
+
+			first.innerHTML = first.innerHTML.replace(m[0], '');
+			if (!first.innerHTML.trim()) { first.parentNode.removeChild(first); }
+
+			bq.classList.add('callout', 'callout-' + type);
+			var title = document.createElement('div');
+			title.className = 'callout-title';
+			title.innerHTML = ICONS[type] + '<span>' + LABELS[type] + '</span>';
+			bq.insertBefore(title, bq.firstChild);
+		});
+	})();
+
+	/* --------------------------------------------------------
+	   Figures: turn a standalone content image WITH a title into a
+	   <figure> + <figcaption> (the markdown title becomes the caption).
+	   Runs after the lightbox so it can wrap the .zoomable-wrap.
+	   -------------------------------------------------------- */
+	(function () {
+		var content = document.querySelector('.content');
+		if (!content) return;
+		Array.prototype.forEach.call(content.querySelectorAll('img'), function (img) {
+			var cap = img.getAttribute('title');
+			if (!cap) return;
+			if (img.closest('figure')) return;
+			var node = img.closest('.zoomable-wrap') || img;
+			var p = node.parentNode;
+			// Only convert images that sit alone in their paragraph.
+			if (!p || p.tagName !== 'P' || p.textContent.trim() !== '' || p.querySelectorAll('img').length !== 1) return;
+			var fig = document.createElement('figure');
+			fig.className = 'content-figure';
+			fig.appendChild(node);
+			var capEl = document.createElement('figcaption');
+			capEl.textContent = cap;
+			fig.appendChild(capEl);
+			p.parentNode.replaceChild(fig, p);
+		});
+	})();
+
+	/* --------------------------------------------------------
+	   Mobile ToC — a floating button that opens the table of contents in a
+	   drawer (the sidebar ToC is desktop-only). Mirrors the generated list.
+	   -------------------------------------------------------- */
+	(function () {
+		var tocNav = document.getElementById('toc-nav');
+		if (!tocNav) return;
+		var list = tocNav.querySelector('.toc-list');
+		if (!list) return; // no headings -> no ToC
+
+		var fab = document.createElement('button');
+		fab.type = 'button';
+		fab.className = 'toc-fab';
+		fab.setAttribute('aria-label', T.onThisPage);
+		fab.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" ' +
+			'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+			'aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>';
+
+		var drawer = document.createElement('div');
+		drawer.className = 'toc-drawer';
+		var panel = document.createElement('div');
+		panel.className = 'toc-drawer-panel';
+		var title = document.createElement('div');
+		title.className = 'toc-drawer-title';
+		title.textContent = T.onThisPage;
+		panel.appendChild(title);
+		var clone = list.cloneNode(true);
+		panel.appendChild(clone);
+		drawer.appendChild(panel);
+
+		document.body.appendChild(fab);
+		document.body.appendChild(drawer);
+
+		function open()  { drawer.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
+		function close() { drawer.classList.remove('is-open'); document.body.style.overflow = ''; }
+
+		fab.addEventListener('click', open);
+		drawer.addEventListener('click', function (e) { if (e.target === drawer) close(); });
+		Array.prototype.forEach.call(clone.querySelectorAll('a'), function (a) {
+			a.addEventListener('click', close);
+		});
+		document.addEventListener('keydown', function (e) {
+			if ((e.key === 'Escape' || e.key === 'Esc') && drawer.classList.contains('is-open')) close();
 		});
 	})();
 

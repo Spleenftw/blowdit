@@ -1,3 +1,20 @@
+<?php if ($url->notFound()) : ?>
+
+<!-- Custom 404 -->
+<article class="card card-modern my-5 page-404">
+	<div class="card-body error-body">
+		<p class="error-code">404</p>
+		<h1 class="title"><?php echo $L->get('Page not found'); ?></h1>
+		<p class="error-text"><?php echo $L->get('The page you are looking for does not exist or has moved.'); ?></p>
+		<?php if (!empty($sidebarSearchHtml)) : ?>
+		<div class="error-search"><?php echo $sidebarSearchHtml; ?></div>
+		<?php endif ?>
+		<a class="btn-primary-gradient error-home" href="<?php echo Theme::siteUrl(); ?>"><?php echo blowdit_icon('house'); ?> <?php echo $L->get('Back to home'); ?></a>
+	</div>
+</article>
+
+<?php else : ?>
+
 <!-- Post -->
 <article class="card card-modern my-5">
 
@@ -12,6 +29,20 @@
 	<?php endif ?>
 
 	<div class="card-body">
+
+		<!-- Breadcrumbs (articles only) -->
+		<?php if (!$page->isStatic() && !$url->notFound()) : ?>
+		<nav class="breadcrumbs" aria-label="Breadcrumb">
+			<a href="<?php echo Theme::siteUrl(); ?>"><?php echo $L->get('Home'); ?></a>
+			<?php if ($page->categoryKey()) : ?>
+			<span class="breadcrumb-sep" aria-hidden="true">›</span>
+			<a href="<?php echo $page->categoryPermalink(); ?>"><?php echo blowdit_text($page->category()); ?></a>
+			<?php endif ?>
+			<span class="breadcrumb-sep" aria-hidden="true">›</span>
+			<span class="breadcrumb-current" aria-current="page"><?php echo blowdit_text($page->title()); ?></span>
+		</nav>
+		<?php endif ?>
+
 		<!-- Title -->
 		<h1 class="title"><?php echo blowdit_text($page->title()); ?></h1>
 
@@ -155,3 +186,5 @@
 	<?php endif ?>
 
 <?php } ?>
+
+<?php endif ?>

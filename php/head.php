@@ -21,6 +21,13 @@
 <link rel="preload" as="image" href="<?php echo htmlspecialchars($page->coverImage(true), ENT_QUOTES, 'UTF-8'); ?>" fetchpriority="high">
 <?php endif ?>
 
+<?php if (!empty($blowditIsArticle)): ?>
+<!-- Warm up connections to article third-parties (comments + tweet embeds) -->
+<link rel="preconnect" href="https://utteranc.es" crossorigin>
+<link rel="dns-prefetch" href="https://platform.twitter.com">
+<link rel="dns-prefetch" href="https://cdn.syndication.twimg.com">
+<?php endif ?>
+
 <!-- Set the colour theme as early as possible to avoid a white flash.
      Sets data-theme AND paints the html background/color-scheme inline, so the
      very first frame (before style.css loads) already uses the theme colour. -->
