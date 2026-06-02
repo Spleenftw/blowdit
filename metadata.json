@@ -2,9 +2,9 @@
   "author": "spleenftw",
   "email": "",
   "website": "https://github.com/Spleenftw/blowdit",
-  "version": "1.2.0",
-  "releaseDate": "2026-05-30",
+  "version": "1.3.0",
+  "releaseDate": "2026-06-02",
   "license": "MIT",
   "compatible": "3.22.0",
-  "notes": "A Bludit theme inspired by the Blowfish Hugo theme. Five-theme swatch picker (Light/Dark/Nord/Dracula/Catppuccin), sticky ToC sidebar on articles, image lightbox with zoom, image carousel (```carousel fence), tabbed code blocks (```tabs fence), smart sidebar per page type, and clean responsive typography."
+  "notes": "A Bludit theme inspired by the Blowfish Hugo theme. Five-theme swatch picker (Light/Dark/Nord/Dracula/Catppuccin), sticky ToC sidebar on articles, image lightbox with zoom, image carousel (```carousel fence), tabbed code blocks (```tabs fence), smart sidebar per page type, and clean responsive typography. v1.3.0: SEO (Open Graph, Twitter Card, JSON-LD, theme-color, cover preload), per-theme syntax highlighting (self-hosted highlight.js), copy-to-clipboard on code blocks, numbered pagination, inline-SVG icons (dropped the Bootstrap Icons webfont), removed jQuery/Bootstrap JS, deferred cached JS bundle, reading progress bar, back-to-top, randomised sidebar selection, lazy-loaded images, accessibility (skip link, ARIA, :focus-visible) and a print stylesheet."
 }
