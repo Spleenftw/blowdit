@@ -4,6 +4,38 @@
    ======================================== */
 
 /* ----------------------------------------
+   INTER — self-hosted (no third-party font request)
+   ---------------------------------------- */
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/inter-400.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('../fonts/inter-500.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('../fonts/inter-600.woff2') format('woff2');
+}
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('../fonts/inter-700.woff2') format('woff2');
+}
+
+/* ----------------------------------------
    THEME TOKENS — Light Mode (default)
    ---------------------------------------- */
 :root {
@@ -2211,6 +2243,164 @@ button:focus:not(:focus-visible) {
 	.toc-fab,
 	.toc-drawer { display: none !important; }
 }
+
+/* ========================================
+   SEARCH OVERLAY
+   ======================================== */
+.search-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 2500;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	padding: 12vh 1rem 1rem;
+	background: rgba(0, 0, 0, 0.5);
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.15s ease, visibility 0s linear 0.15s;
+}
+
+.search-overlay.is-open {
+	opacity: 1;
+	visibility: visible;
+	transition: opacity 0.15s ease;
+}
+
+.search-box {
+	width: 100%;
+	max-width: 560px;
+	overflow: hidden;
+	background: var(--bg-surface);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-md);
+	box-shadow: var(--shadow-lg);
+}
+
+.search-input {
+	width: 100%;
+	padding: 1rem 1.2rem;
+	border: none;
+	border-bottom: 1px solid var(--border-color);
+	background: transparent;
+	color: var(--text-primary);
+	font-family: var(--font-sans);
+	font-size: 1.05rem;
+	outline: none;
+}
+
+.search-input::placeholder { color: var(--text-muted); }
+
+.search-results {
+	list-style: none;
+	margin: 0;
+	padding: 0.4rem;
+	max-height: 50vh;
+	overflow-y: auto;
+}
+
+.search-result a {
+	display: flex;
+	align-items: baseline;
+	gap: 0.6rem;
+	padding: 0.55rem 0.8rem;
+	border-radius: var(--radius-sm);
+	color: var(--text-primary);
+}
+
+.search-result a:hover,
+.search-result.is-active a {
+	background: var(--bg-hover);
+	text-decoration: none;
+}
+
+.search-result-title { font-weight: 600; }
+.search-result-meta {
+	margin-left: auto;
+	font-size: var(--font-size-xs);
+	color: var(--text-muted);
+	white-space: nowrap;
+}
+
+.search-empty { padding: 1rem 1.2rem; color: var(--text-muted); }
+
+/* ========================================
+   SERIES BOX
+   ======================================== */
+.series-box {
+	margin: 0 0 var(--space-lg);
+	padding: var(--space-sm) var(--space-md);
+	border: 1px solid var(--border-color);
+	border-left: 4px solid var(--accent);
+	border-radius: var(--radius-sm);
+	background: var(--bg-subtle);
+}
+
+.series-box-title {
+	display: flex;
+	align-items: center;
+	gap: 0.45rem;
+	margin-bottom: 0.4rem;
+	font-weight: 700;
+	color: var(--text-primary);
+}
+
+.series-box-title .bd-icon { color: var(--accent); flex: 0 0 auto; }
+.series-list { margin: 0; padding-left: 1.5rem; }
+.series-item { padding: 0.12rem 0; color: var(--text-secondary); }
+.series-item a { color: var(--text-secondary); }
+.series-item a:hover { color: var(--accent); }
+.series-item.is-current span { color: var(--accent); font-weight: 600; }
+
+/* ========================================
+   CONTENT EXTRAS (kbd, mark, task lists, footnotes, external links)
+   ======================================== */
+.content kbd {
+	display: inline-block;
+	padding: 0.1em 0.45em;
+	font-family: var(--font-sans);
+	font-size: 0.8em;
+	line-height: 1.4;
+	color: var(--text-primary);
+	background: var(--bg-subtle);
+	border: 1px solid var(--border-color);
+	border-bottom-width: 2px;
+	border-radius: 5px;
+	white-space: nowrap;
+}
+
+.content mark {
+	padding: 0.05em 0.2em;
+	border-radius: 3px;
+	background: rgba(245, 200, 66, 0.35);
+	color: inherit;
+}
+
+/* Small ↗ after outbound links (JS adds target=_blank to external links) */
+.content a[target="_blank"]::after {
+	content: "↗";
+	margin-left: 0.15em;
+	font-size: 0.8em;
+	color: var(--text-muted);
+}
+
+/* Task lists (- [ ] / - [x]) — rendered by JS into real checkboxes */
+.content ul.task-list { list-style: none; padding-left: 0.2rem; }
+.content .task-list-item { display: flex; align-items: flex-start; gap: 0.5rem; }
+.content .task-list-item input[type="checkbox"] { margin-top: 0.35em; flex: 0 0 auto; }
+
+/* Footnotes (when the parser emits them) */
+.content .footnotes {
+	margin-top: var(--space-lg);
+	padding-top: var(--space-md);
+	border-top: 1px solid var(--border-subtle);
+	font-size: var(--font-size-sm);
+	color: var(--text-secondary);
+}
+
+/* Definition lists */
+.content dt { font-weight: 700; }
+.content dd { margin: 0 0 0.6rem; color: var(--text-secondary); }
 
 /* ========================================
    RESPONSIVE

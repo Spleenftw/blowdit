@@ -23,7 +23,10 @@
 		prevImage:   I18N.prevImage   || 'Previous image',
 		nextImage:   I18N.nextImage   || 'Next image',
 		imageViewer: I18N.imageViewer || 'Image viewer',
-		onThisPage:  I18N.onThisPage  || 'On this page'
+		onThisPage:  I18N.onThisPage  || 'On this page',
+		search:           I18N.search           || 'Search',
+		searchPlaceholder: I18N.searchPlaceholder || 'Search posts…',
+		noResults:        I18N.noResults        || 'No results'
 	};
 
 	// Clipboard helper (Clipboard API with a legacy fallback).
@@ -1141,6 +1144,154 @@
 		});
 		document.addEventListener('keydown', function (e) {
 			if ((e.key === 'Escape' || e.key === 'Esc') && drawer.classList.contains('is-open')) close();
+		});
+	})();
+
+	/* --------------------------------------------------------
+	   Task lists — turn "- [ ] / - [x]" list items into real checkboxes.
+	   -------------------------------------------------------- */
+	(function () {
+		var content = document.querySelector('.content');
+		if (!content) return;
+		Array.prototype.forEach.call(content.querySelectorAll('li'), function (li) {
+			var m = li.innerHTML.match(/^\s*\[([ xX])\]\s+/);
+			if (!m) return;
+			var checked = m[1].toLowerCase() === 'x';
+			li.innerHTML = li.innerHTML.replace(m[0], '');
+			li.classList.add('task-list-item');
+			if (li.parentNode && li.parentNode.tagName === 'UL') {
+				li.parentNode.classList.add('task-list');
+			}
+			var box = document.createElement('input');
+			box.type = 'checkbox';
+			box.disabled = true;
+			box.checked = checked;
+			li.insertBefore(box, li.firstChild);
+		});
+	})();
+
+	/* --------------------------------------------------------
+	   Search overlay — client-side fuzzy search over a JSON index of posts
+	   (embedded in the footer). Opened by the navbar button or the "/" key.
+	   -------------------------------------------------------- */
+	(function () {
+		var data = [];
+		var el = document.getElementById('blowdit-search-index');
+		if (el) { try { data = JSON.parse(el.textContent) || []; } catch (e) { data = []; } }
+
+		var overlay = document.createElement('div');
+		overlay.className = 'search-overlay';
+		overlay.innerHTML =
+			'<div class="search-box" role="dialog" aria-modal="true" aria-label="' + T.search + '">' +
+				'<input type="text" class="search-input" autocomplete="off" spellcheck="false" placeholder="' + T.searchPlaceholder + '" aria-label="' + T.search + '">' +
+				'<ul class="search-results"></ul>' +
+				'<div class="search-empty" hidden>' + T.noResults + '</div>' +
+			'</div>';
+		document.body.appendChild(overlay);
+
+		var input   = overlay.querySelector('.search-input');
+		var results = overlay.querySelector('.search-results');
+		var empty   = overlay.querySelector('.search-empty');
+		var active  = -1;
+		var current = [];
+
+		function open() {
+			overlay.classList.add('is-open');
+			document.body.style.overflow = 'hidden';
+			input.value = '';
+			render([]);
+			setTimeout(function () { input.focus(); }, 30);
+		}
+		function close() {
+			overlay.classList.remove('is-open');
+			document.body.style.overflow = '';
+		}
+		function isOpen() { return overlay.classList.contains('is-open'); }
+
+		function score(item, q) {
+			var hay = (item.t + ' ' + (item.c || '') + ' ' + (item.g || []).join(' ') + ' ' + (item.d || '')).toLowerCase();
+			return hay.indexOf(q) !== -1;
+		}
+
+		function render(list) {
+			current = list;
+			active = list.length ? 0 : -1;
+			results.innerHTML = '';
+			empty.hidden = !(input.value.trim() && list.length === 0);
+			list.forEach(function (item, i) {
+				var li = document.createElement('li');
+				li.className = 'search-result' + (i === 0 ? ' is-active' : '');
+				li.innerHTML = '<a href="' + item.u + '"><span class="search-result-title"></span>' +
+					(item.c ? '<span class="search-result-meta"></span>' : '') + '</a>';
+				li.querySelector('.search-result-title').textContent = item.t;
+				if (item.c) li.querySelector('.search-result-meta').textContent = item.c;
+				results.appendChild(li);
+			});
+		}
+
+		function update() {
+			var q = input.value.trim().toLowerCase();
+			if (!q) { render([]); return; }
+			render(data.filter(function (item) { return score(item, q); }).slice(0, 8));
+		}
+
+		function move(delta) {
+			var items = results.querySelectorAll('.search-result');
+			if (!items.length) return;
+			items[active] && items[active].classList.remove('is-active');
+			active = (active + delta + items.length) % items.length;
+			items[active].classList.add('is-active');
+			items[active].scrollIntoView({ block: 'nearest' });
+		}
+
+		function go() {
+			var items = results.querySelectorAll('.search-result');
+			if (items[active]) { var a = items[active].querySelector('a'); if (a) window.location.href = a.href; }
+		}
+
+		input.addEventListener('input', update);
+		input.addEventListener('keydown', function (e) {
+			if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
+			else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+			else if (e.key === 'Enter') { e.preventDefault(); go(); }
+		});
+		overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+
+		Array.prototype.forEach.call(document.querySelectorAll('.js-search-open'), function (b) {
+			b.addEventListener('click', function (e) { e.preventDefault(); open(); });
+		});
+
+		// Expose for the keyboard-shortcuts handler.
+		window.BLOWDIT_SEARCH = { open: open, close: close, isOpen: isOpen };
+	})();
+
+	/* --------------------------------------------------------
+	   Keyboard shortcuts:  /  search · g h home · t top · Esc close.
+	   -------------------------------------------------------- */
+	(function () {
+		var lastG = 0;
+		function typing(t) {
+			return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+		}
+		document.addEventListener('keydown', function (e) {
+			var s = window.BLOWDIT_SEARCH;
+			if (e.key === 'Escape' || e.key === 'Esc') {
+				if (s && s.isOpen()) s.close();
+				return;
+			}
+			if (typing(e.target) || e.metaKey || e.ctrlKey || e.altKey) return;
+
+			if (e.key === '/') { e.preventDefault(); if (s) s.open(); return; }
+			if (e.key === 't' || e.key === 'T') {
+				var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+				window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+				return;
+			}
+			// "g" then "h" -> home
+			if (e.key === 'g' || e.key === 'G') { lastG = Date.now(); return; }
+			if ((e.key === 'h' || e.key === 'H') && Date.now() - lastG < 600) {
+				window.location.href = (window.BLOWDIT_HOME || '/');
+			}
 		});
 	})();
 

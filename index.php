@@ -191,6 +191,7 @@
 		// Theme directory URL, so the deferred bundle can load self-hosted assets
 		// (highlight.js + its theme CSS) relative to the theme.
 		window.BLOWDIT_THEME_URL = <?php echo json_encode(DOMAIN_THEME); ?>;
+		window.BLOWDIT_HOME = <?php echo json_encode(Theme::siteUrl()); ?>;
 		// Localised UI strings for the deferred bundle. $L->get() falls back to
 		// the key itself when a translation is missing, so this is safe in any language.
 		window.BLOWDIT_I18N = {
@@ -203,7 +204,11 @@
 			goToSlide:   <?php echo json_encode($L->get('Go to slide')); ?>,
 			prevImage:   <?php echo json_encode($L->get('Previous image')); ?>,
 			nextImage:   <?php echo json_encode($L->get('Next image')); ?>,
-			imageViewer: <?php echo json_encode($L->get('Image viewer')); ?>
+			imageViewer: <?php echo json_encode($L->get('Image viewer')); ?>,
+			onThisPage:  <?php echo json_encode($L->get('On this page')); ?>,
+			search:            <?php echo json_encode($L->get('Search')); ?>,
+			searchPlaceholder: <?php echo json_encode($L->get('Search posts…')); ?>,
+			noResults:         <?php echo json_encode($L->get('No results')); ?>
 		};
 	</script>
 	<?php

@@ -18,3 +18,28 @@
         </div>
     </div>
 </footer>
+
+<?php
+	// Client-side search index (all published posts) for the search overlay.
+	// Guarded so any Pages-API difference degrades to an empty index, not an error.
+	try {
+		global $pages;
+		$bdSearchIndex = array();
+		if (isset($pages) && method_exists($pages, 'getList')) {
+			foreach ($pages->getList(1, 1000, true) as $bdSk) {
+				$bdSp = new Page($bdSk);
+				if ($bdSp->isStatic()) { continue; } // posts only
+				$bdSearchIndex[] = array(
+					't' => blowdit_plain($bdSp->title()),
+					'u' => $bdSp->permalink(),
+					'd' => blowdit_plain($bdSp->description()),
+					'c' => blowdit_plain($bdSp->category()),
+					'g' => array_values(array_map('blowdit_plain', $bdSp->tags(true))),
+				);
+			}
+		}
+		echo '<script type="application/json" id="blowdit-search-index">'
+			. json_encode($bdSearchIndex, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+			. '</script>';
+	} catch (\Throwable $e) {}
+?>

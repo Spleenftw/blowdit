@@ -54,6 +54,43 @@
 		</div>
 		<?php endif ?>
 
+		<!-- Series box: posts sharing a tag whose key starts with "series-"
+		     (e.g. tag "Series: Homelab" -> key "series-homelab"), ordered oldest-first. -->
+		<?php if (!$page->isStatic() && !$url->notFound()) :
+			$bdSeriesTag = ''; $bdSeriesName = '';
+			foreach ($page->tags(true) as $bdTk => $bdTn) {
+				if (preg_match('/^series[-_]/i', $bdTk)) { $bdSeriesTag = $bdTk; $bdSeriesName = $bdTn; break; }
+			}
+			$bdSeriesPosts = array();
+			if ($bdSeriesTag) {
+				try {
+					global $pages;
+					if (isset($pages) && method_exists($pages, 'getList')) {
+						foreach ($pages->getList(1, 1000, true) as $bdSk) {
+							$bdSp = new Page($bdSk);
+							if (in_array($bdSeriesTag, array_keys($bdSp->tags(true)), true)) { $bdSeriesPosts[] = $bdSp; }
+						}
+						usort($bdSeriesPosts, function ($a, $b) { return strcmp($a->getValue('date'), $b->getValue('date')); });
+					}
+				} catch (\Throwable $e) { $bdSeriesPosts = array(); }
+			}
+			$bdSeriesLabel = trim(preg_replace('/^series\s*[:\-_]?\s*/i', '', blowdit_plain($bdSeriesName)));
+		?>
+		<?php if (count($bdSeriesPosts) > 1) : ?>
+		<aside class="series-box">
+			<div class="series-box-title"><?php echo blowdit_icon('folder'); ?><span><?php echo $L->get('Part of a series'); ?><?php echo $bdSeriesLabel !== '' ? ': ' . htmlspecialchars($bdSeriesLabel, ENT_QUOTES, 'UTF-8') : ''; ?></span></div>
+			<ol class="series-list">
+				<?php foreach ($bdSeriesPosts as $bdSp) : $bdIsCur = ($bdSp->key() === $page->key()); ?>
+				<li class="series-item<?php echo $bdIsCur ? ' is-current' : ''; ?>">
+					<?php if ($bdIsCur) : ?><span><?php echo blowdit_text($bdSp->title()); ?></span>
+					<?php else : ?><a href="<?php echo $bdSp->permalink(); ?>"><?php echo blowdit_text($bdSp->title()); ?></a><?php endif ?>
+				</li>
+				<?php endforeach ?>
+			</ol>
+		</aside>
+		<?php endif ?>
+		<?php endif ?>
+
 		<!-- Full content -->
 		<div class="content">
 			<?php

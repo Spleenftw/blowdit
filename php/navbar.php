@@ -59,6 +59,13 @@
 					<?php endif; ?>
 				<?php endif; ?>
 
+				<!-- Search (opens the overlay; also bound to the "/" key) -->
+				<li class="nav-item ml-md-2 mt-2 mt-md-0">
+					<button type="button" class="theme-toggle js-search-open" aria-label="<?php echo $L->get('Search'); ?>" title="<?php echo $L->get('Search'); ?> (/)">
+						<?php echo blowdit_icon('search'); ?>
+					</button>
+				</li>
+
 				<!-- Theme picker -->
 				<li class="nav-item ml-md-2 mt-2 mt-md-0 theme-picker-wrap">
 					<button type="button" id="theme-toggle" class="theme-toggle" aria-label="<?php echo $L->get('Toggle theme') ?>" title="<?php echo $L->get('Toggle theme') ?>" aria-haspopup="true" aria-expanded="false">

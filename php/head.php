@@ -244,12 +244,9 @@
 <link rel="manifest" href="<?php echo DOMAIN_THEME . 'manifest.webmanifest'; ?>">
 <link rel="apple-touch-icon" href="<?php echo DOMAIN_THEME . 'img/favicon.png'; ?>">
 
-<!-- Inter typeface (Blowfish-like typography) — loaded non-render-blocking:
-     fetched as print media, then flipped to all once it arrives. -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
+<!-- Inter typeface — self-hosted (see @font-face in style.css). No third-party
+     request; preload the body weight for a faster first text paint. -->
+<link rel="preload" as="font" type="font/woff2" href="<?php echo DOMAIN_THEME . 'fonts/inter-400.woff2'; ?>" crossorigin>
 
 <!-- Include Bootstrap CSS file bootstrap.css -->
 <?php echo Theme::cssBootstrap(); ?>
