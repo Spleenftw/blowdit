@@ -1869,8 +1869,8 @@ pre code.hljs {
 }
 
 /* Line numbers (highlightjs-line-numbers plugin builds a table inside <code>) */
-.hljs-ln { border-collapse: collapse; }
-.hljs-ln td { padding: 0; border: 0; vertical-align: top; }
+.hljs-ln { border-collapse: collapse; line-height: 1.5; }
+.hljs-ln td { padding: 0; border: 0; vertical-align: top; line-height: 1.5; }
 .hljs-ln-numbers {
 	width: 1%;
 	white-space: nowrap;
