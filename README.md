@@ -3,7 +3,7 @@
 A clean, minimal theme for [Bludit](https://www.bludit.com) inspired by the
 [Blowfish](https://blowfish.page/) Hugo theme.
 
-![Bludit](https://img.shields.io/badge/Bludit-3.9+-informational) ![License](https://img.shields.io/badge/license-MIT-green) ![Version](https://img.shields.io/badge/version-1.2.0-blue)
+![Bludit](https://img.shields.io/badge/Bludit-3.9+-informational) ![License](https://img.shields.io/badge/license-MIT-green) ![Version](https://img.shields.io/badge/version-1.6.0-blue)
 
 ## Features
 
