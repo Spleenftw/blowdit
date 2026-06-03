@@ -1411,7 +1411,6 @@ footer.footer-modern a:hover {
 	margin: 0;
 	border: none;
 	border-radius: 0;
-	border-left: 3px solid var(--accent);
 	padding: 0.7rem var(--space-md);
 }
 
