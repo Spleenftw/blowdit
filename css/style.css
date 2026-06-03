@@ -1867,22 +1867,6 @@ pre code.hljs {
 	background: transparent !important;
 }
 
-/* Line numbers (highlightjs-line-numbers plugin builds a table inside <code>) */
-.hljs-ln { border-collapse: collapse; line-height: 1.5; }
-.hljs-ln td { padding: 0; border: 0; vertical-align: top; line-height: 1.5; }
-.hljs-ln-numbers {
-	width: 1%;
-	white-space: nowrap;
-	text-align: right;
-	padding-right: 0.9em !important;
-	color: var(--text-muted);
-	border-right: 1px solid var(--border-color);
-	user-select: none;
-	-webkit-user-select: none;
-}
-.hljs-ln-code { padding-left: 0.9em !important; }
-.hljs-ln-n::before { content: attr(data-line-number); }
-
 /* ========================================
    ANCHOR OFFSET — clear the fixed navbar on ToC / hash jumps
    Without this, jumping to a heading lands it at y=0, hidden behind the
