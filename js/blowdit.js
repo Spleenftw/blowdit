@@ -814,6 +814,27 @@
 					code.innerHTML = code.innerHTML.replace(/\n+$/, '');
 					try { window.hljs.lineNumbersBlock(code, { singleLine: false }); } catch (e) {}
 				});
+				// The plugin builds the table on a 0ms timer; clean up afterwards:
+				// remove any trailing empty row and trailing whitespace nodes that
+				// would leave a blank "phantom" line at the bottom of the block.
+				setTimeout(function () {
+					Array.prototype.forEach.call(codes, function (code) {
+						var rows = code.querySelectorAll('.hljs-ln tr');
+						if (rows.length) {
+							var last = rows[rows.length - 1];
+							var cell = last.querySelector('.hljs-ln-code');
+							if (cell && cell.textContent.replace(/\s+/g, '') === '') {
+								last.parentNode.removeChild(last);
+							}
+						}
+						var n = code.lastChild;
+						while (n && n.nodeType === 3 && !n.textContent.trim()) {
+							var prev = n.previousSibling;
+							code.removeChild(n);
+							n = prev;
+						}
+					});
+				}, 60);
 			};
 			document.head.appendChild(ln);
 		};
