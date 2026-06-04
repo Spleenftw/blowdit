@@ -1,4 +1,4 @@
-<footer class="footer footer-modern">
+﻿<footer class="footer footer-modern">
     <div class="container">
         <div class="row align-items-center">
             <?php if (defined('BLUDIT_PRO')): ?>
@@ -30,15 +30,15 @@
 				$bdSp = new Page($bdSk);
 				if ($bdSp->isStatic()) { continue; } // posts only
 				$bdSearchIndex[] = array(
-					't' => blowdit_plain($bdSp->title()),
+					't' => blowfish_plain($bdSp->title()),
 					'u' => $bdSp->permalink(),
-					'd' => blowdit_plain($bdSp->description()),
-					'c' => blowdit_plain($bdSp->category()),
-					'g' => array_values(array_map('blowdit_plain', $bdSp->tags(true))),
+					'd' => blowfish_plain($bdSp->description()),
+					'c' => blowfish_plain($bdSp->category()),
+					'g' => array_values(array_map('blowfish_plain', $bdSp->tags(true))),
 				);
 			}
 		}
-		echo '<script type="application/json" id="blowdit-search-index">'
+		echo '<script type="application/json" id="blowfish-search-index">'
 			. json_encode($bdSearchIndex, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
 			. '</script>';
 	} catch (\Throwable $e) {}

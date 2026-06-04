@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Inline SVG icons — replaces the Bootstrap Icons webfont (~120 KB font +
  * ~80 KB CSS) that was loaded just to render a handful of glyphs.
@@ -7,10 +7,10 @@
  * font-size rules (.navbar .nav-link .bd-icon, .metadata .bd-icon, …) scale it.
  *
  * Theme-picker icons (sun/moon/snow/droplet/cup/half) are duplicated in
- * blowdit.js so the toggle can swap them client-side; keep the two in sync.
+ * blowfish.js so the toggle can swap them client-side; keep the two in sync.
  */
-if (!function_exists('blowdit_icon')) {
-	function blowdit_icon($name) {
+if (!function_exists('blowfish_icon')) {
+	function blowfish_icon($name) {
 		static $paths = array(
 			// --- UI ---
 			'calendar'      => '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
@@ -23,7 +23,7 @@ if (!function_exists('blowdit_icon')) {
 			'link'          => '<path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><path d="M8 12h8"/>',
 			'search'        => '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
 			'share'         => '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',
-			// --- Theme picker (mirror in blowdit.js) ---
+			// --- Theme picker (mirror in blowfish.js) ---
 			'sun'           => '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
 			'moon'          => '<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>',
 			'snow'          => '<path d="M12 2v20M2 12h20M5 5l14 14M19 5 5 19"/>',
@@ -39,24 +39,24 @@ if (!function_exists('blowdit_icon')) {
 
 	// Bludit already HTML-escapes titles/names on save (Sanitize::html), so a
 	// plain htmlspecialchars() in the theme double-encodes ("&" -> "&amp;amp;",
-	// shown as "&amp;"). blowdit_text() decodes any existing entities first, then
+	// shown as "&amp;"). blowfish_text() decodes any existing entities first, then
 	// encodes exactly once — correct whether the value is pre-encoded or raw, and
-	// always output-safe. blowdit_plain() returns decoded text (for JSON-LD etc.).
-	function blowdit_plain($s) {
+	// always output-safe. blowfish_plain() returns decoded text (for JSON-LD etc.).
+	function blowfish_plain($s) {
 		return html_entity_decode((string) $s, ENT_QUOTES, 'UTF-8');
 	}
-	function blowdit_text($s) {
-		return htmlspecialchars(blowdit_plain($s), ENT_QUOTES, 'UTF-8');
+	function blowfish_text($s) {
+		return htmlspecialchars(blowfish_plain($s), ENT_QUOTES, 'UTF-8');
 	}
 
 	// Theme asset URL with an mtime cache-buster (so edited images/SVGs refetch).
-	function blowdit_asset($rel) {
+	function blowfish_asset($rel) {
 		$v = @filemtime(THEME_DIR . $rel);
 		return DOMAIN_THEME . $rel . ($v ? '?v=' . $v : '');
 	}
 
 	// Map a theme key to its toggle icon name.
-	function blowdit_theme_icon($theme) {
+	function blowfish_theme_icon($theme) {
 		$map = array(
 			'light'      => 'sun',
 			'dark'       => 'moon',

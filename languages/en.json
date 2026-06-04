@@ -1,7 +1,7 @@
-{
+﻿{
 	"theme-data":
 	{
-		"name": "Blowdit",
+		"name": "Blowfish",
 		"description": "A Bludit theme inspired by the Blowfish Hugo theme. Right sidebar, reading time, a light/dark mode toggle and a navbar with social icons and static pages."
 	},
 	"Toggle theme": "Toggle theme",

@@ -1,4 +1,4 @@
-<aside class="sidebar-container">
+﻿<aside class="sidebar-container">
 
 	<?php
 		// Compact profile card — shown only while reading an article
@@ -10,16 +10,16 @@
 			<span class="sidebar-author-label">Author</span>
 			<div class="sidebar-author-identity">
 				<a href="<?php echo Theme::siteUrl() ?>">
-					<img class="sidebar-author-avatar" src="<?php echo DOMAIN_THEME . 'img/spleenftw.jpeg' ?>" alt="<?php echo blowdit_text($page->username()) ?>" />
+					<img class="sidebar-author-avatar" src="<?php echo DOMAIN_THEME . 'img/spleenftw.jpeg' ?>" alt="<?php echo blowfish_text($page->username()) ?>" />
 				</a>
-				<div class="sidebar-author-name"><?php echo blowdit_text($page->username()) ?></div>
+				<div class="sidebar-author-name"><?php echo blowfish_text($page->username()) ?></div>
 				<?php
 					// Bio: set in Bludit Admin → Settings → General → Description
 					// Falls back to Slogan if Description is empty.
 					$_authorBio = $site->description() ?: $site->slogan();
 				?>
 				<?php if ($_authorBio) : ?>
-					<p class="sidebar-author-bio"><?php echo blowdit_text($_authorBio) ?></p>
+					<p class="sidebar-author-bio"><?php echo blowfish_text($_authorBio) ?></p>
 				<?php endif ?>
 			</div>
 		</div>
