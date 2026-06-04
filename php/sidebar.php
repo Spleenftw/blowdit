@@ -1,4 +1,4 @@
-﻿<aside class="sidebar-container">
+<aside class="sidebar-container">
 
 	<?php
 		// Compact profile card — shown only while reading an article

@@ -1,4 +1,4 @@
-﻿<?php if ($url->notFound()) : ?>
+<?php if ($url->notFound()) : ?>
 
 <!-- Custom 404 -->
 <article class="card card-modern my-5 page-404">

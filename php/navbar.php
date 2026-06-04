@@ -1,4 +1,4 @@
-﻿<nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-modern">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-modern">
 	<div class="container">
 		<a class="navbar-brand" href="<?php echo Theme::siteUrl() ?>">
 			<span class="text-white"><?php echo blowfish_text($site->title()) ?></span>

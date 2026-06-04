@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    BLOWFISH — theme behaviour
    Deferred, cacheable bundle of all client-side enhancements.
    Loaded with <script defer> from index.php, so the DOM is fully

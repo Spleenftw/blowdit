@@ -1,4 +1,4 @@
-﻿<?php
+<?php
   // ---- Profile hero (Blowfish-style) -------------------------------------
   // Shown only on the blog front page (first paginated page).
   // Drop your avatar at img/spleenftw.jpeg (change the filename below to reuse).

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	// Inline-SVG icon helper (replaces the Bootstrap Icons webfont). Included
 	// first so blowfish_icon() is available to head.php and every body template.
 	include(THEME_DIR_PHP.'icons.php');

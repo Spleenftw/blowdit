@@ -1,4 +1,4 @@
-﻿<footer class="footer footer-modern">
+<footer class="footer footer-modern">
     <div class="container">
         <div class="row align-items-center">
             <?php if (defined('BLUDIT_PRO')): ?>

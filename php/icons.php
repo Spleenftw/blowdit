@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Inline SVG icons — replaces the Bootstrap Icons webfont (~120 KB font +
  * ~80 KB CSS) that was loaded just to render a handful of glyphs.
