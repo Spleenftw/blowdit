@@ -70,7 +70,12 @@
 							$bdSp = new Page($bdSk);
 							if (in_array($bdSeriesTag, array_keys($bdSp->tags(true)), true)) { $bdSeriesPosts[] = $bdSp; }
 						}
-						usort($bdSeriesPosts, function ($a, $b) { return strcmp($a->getValue('date'), $b->getValue('date')); });
+						// Oldest first (Part 1 → N); when posts share a date, fall back to
+					// natural title order so "WIMH #1" precedes "WIMH #2".
+					usort($bdSeriesPosts, function ($a, $b) {
+						$d = strcmp((string) $a->getValue('date'), (string) $b->getValue('date'));
+						return $d !== 0 ? $d : strnatcasecmp($a->title(), $b->title());
+					});
 					}
 				} catch (\Throwable $e) { $bdSeriesPosts = array(); }
 			}
