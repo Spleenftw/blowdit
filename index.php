@@ -1,54 +1,54 @@
 <?php
 	// Inline-SVG icon helper (replaces the Bootstrap Icons webfont). Included
-	// first so blowdit_icon() is available to head.php and every body template.
+	// first so blowfish_icon() is available to head.php and every body template.
 	include(THEME_DIR_PHP.'icons.php');
 
 	// ---- Theme contact / social config ----
 	// The mailto icon uses Bludit's "Sender email" (Settings -> Advanced ->
-	// Email account settings). Leave it to auto-detect, or hard-set $blowditEmail
+	// Email account settings). Leave it to auto-detect, or hard-set $blowfishEmail
 	// below to override. Empty -> the icon is hidden.
-	$blowditEmail = '';
+	$blowfishEmail = '';
 	if (isset($site)) {
 		// Try Bludit's site settings (accessor is getValue(); getField() as backup).
 		$bdGet = method_exists($site, 'getValue') ? 'getValue'
 		       : (method_exists($site, 'getField') ? 'getField' : null);
 		if ($bdGet) {
-			$blowditEmail = $site->$bdGet('emailFromAddress');     // Bludit's "Sender email"
-			if (empty($blowditEmail)) { $blowditEmail = $site->$bdGet('email'); }
+			$blowfishEmail = $site->$bdGet('emailFromAddress');     // Bludit's "Sender email"
+			if (empty($blowfishEmail)) { $blowfishEmail = $site->$bdGet('email'); }
 		}
 	}
 	// Bludit's sender email isn't always exposed to themes (it's an SMTP/plugin
 	// setting), so fall back to a fixed address. Set to '' to hide the icon.
-	if (empty($blowditEmail)) { $blowditEmail = 'contact@interlope.xyz'; }
-	$blowditTwitterHandle = '@spleenftw'; // twitter:site / twitter:creator; '' to omit
+	if (empty($blowfishEmail)) { $blowfishEmail = 'contact@interlope.xyz'; }
+	$blowfishTwitterHandle = '@spleenftw'; // twitter:site / twitter:creator; '' to omit
 
 	// Read the theme from a cookie so the root element can be rendered
 	// pre-coloured. This paints the page in the theme colour from the first
 	// byte of every response, eliminating the white flash between navigations.
-	$blowditThemeBg = array(
+	$blowfishThemeBg = array(
 		'light'      => '#ffffff',
 		'dark'       => '#171717',
 		'nord'       => '#2e3440',
 		'dracula'    => '#282a36',
 		'catppuccin' => '#1e1e2e',
 	);
-	$blowditTheme = (isset($_COOKIE['blowdit-theme']) && isset($blowditThemeBg[$_COOKIE['blowdit-theme']]))
-		? $_COOKIE['blowdit-theme']
+	$blowfishTheme = (isset($_COOKIE['blowfish-theme']) && isset($blowfishThemeBg[$_COOKIE['blowfish-theme']]))
+		? $_COOKIE['blowfish-theme']
 		: 'light';
-	$blowditBg     = $blowditThemeBg[$blowditTheme];
-	$blowditScheme = ($blowditTheme === 'light') ? 'light' : 'dark';
+	$blowfishBg     = $blowfishThemeBg[$blowfishTheme];
+	$blowfishScheme = ($blowfishTheme === 'light') ? 'light' : 'dark';
 
 	// Pre-compute before <body> so we can stamp the has-toc class on it,
 	// which lets CSS align the navbar container with the wider article container.
-	$blowditIsArticle  = ($WHERE_AM_I === 'page' && isset($page) && !$page->isStatic() && !$url->notFound());
-	$blowditHasHeadings = $blowditIsArticle && (bool) preg_match('/<h[234]/i', $page->content());
+	$blowfishIsArticle  = ($WHERE_AM_I === 'page' && isset($page) && !$page->isStatic() && !$url->notFound());
+	$blowfishHasHeadings = $blowfishIsArticle && (bool) preg_match('/<h[234]/i', $page->content());
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo Theme::lang() ?>" data-theme="<?php echo $blowditTheme ?>" style="background-color: <?php echo $blowditBg ?>; color-scheme: <?php echo $blowditScheme ?>;">
+<html lang="<?php echo Theme::lang() ?>" data-theme="<?php echo $blowfishTheme ?>" style="background-color: <?php echo $blowfishBg ?>; color-scheme: <?php echo $blowfishScheme ?>;">
 <head>
 <?php include(THEME_DIR_PHP.'head.php'); ?>
 </head>
-<body<?php echo $blowditHasHeadings ? ' class="has-toc"' : ''; ?>>
+<body<?php echo $blowfishHasHeadings ? ' class="has-toc"' : ''; ?>>
 
 	<!-- Skip to content (keyboard / screen-reader navigation) -->
 	<a class="skip-link" href="#main-content"><?php echo $L->get('Skip to content'); ?></a>
@@ -126,8 +126,8 @@
 		// The hero (and the relocated search) appear on every paginated home page.
 		$heroVisible   = ($WHERE_AM_I === 'home');
 		// Reuse the values pre-computed before <body> (avoids calling $page->content() twice).
-		$isArticlePage = $blowditIsArticle;
-		$hasHeadings   = $blowditHasHeadings;
+		$isArticlePage = $blowfishIsArticle;
+		$hasHeadings   = $blowfishHasHeadings;
 	?>
 
 	<!-- Content -->
@@ -179,7 +179,7 @@
 		// jQuery and Bootstrap's JS bundle are intentionally NOT loaded: every
 		// interactive piece in this theme is vanilla JS (theme picker, tabs,
 		// carousel, lightbox), and the only Bootstrap-JS feature used — the
-		// mobile navbar collapse — is reimplemented in blowdit.js. This drops
+		// mobile navbar collapse — is reimplemented in blowfish.js. This drops
 		// ~115 KB. Re-add Theme::jquery() / Theme::jsBootstrap() here if you
 		// install a plugin that depends on them.
 	?>
@@ -190,11 +190,11 @@
 	<script>
 		// Theme directory URL, so the deferred bundle can load self-hosted assets
 		// (highlight.js + its theme CSS) relative to the theme.
-		window.BLOWDIT_THEME_URL = <?php echo json_encode(DOMAIN_THEME); ?>;
-		window.BLOWDIT_HOME = <?php echo json_encode(Theme::siteUrl()); ?>;
+		window.BLOWFISH_THEME_URL = <?php echo json_encode(DOMAIN_THEME); ?>;
+		window.BLOWFISH_HOME = <?php echo json_encode(Theme::siteUrl()); ?>;
 		// Localised UI strings for the deferred bundle. $L->get() falls back to
 		// the key itself when a translation is missing, so this is safe in any language.
-		window.BLOWDIT_I18N = {
+		window.BLOWFISH_I18N = {
 			copy:        <?php echo json_encode($L->get('Copy')); ?>,
 			copied:      <?php echo json_encode($L->get('Copied')); ?>,
 			copyCode:    <?php echo json_encode($L->get('Copy code')); ?>,
@@ -213,8 +213,8 @@
 	</script>
 	<?php
 		// Cache-busted by file mtime (mirrors the style.css approach in head.php).
-		$jsVersion = @filemtime(THEME_DIR_JS . 'blowdit.js');
-		$jsSrc = DOMAIN_THEME . 'js/blowdit.js' . ($jsVersion ? '?v=' . $jsVersion : '');
+		$jsVersion = @filemtime(THEME_DIR_JS . 'blowfish.js');
+		$jsSrc = DOMAIN_THEME . 'js/blowfish.js' . ($jsVersion ? '?v=' . $jsVersion : '');
 	?>
 	<script defer src="<?php echo $jsSrc; ?>"></script>
 

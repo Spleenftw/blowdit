@@ -1,5 +1,5 @@
 /* ============================================================
-   BLOWDIT — theme behaviour
+   BLOWFISH — theme behaviour
    Deferred, cacheable bundle of all client-side enhancements.
    Loaded with <script defer> from index.php, so the DOM is fully
    parsed before any of these IIFEs run (no DOMContentLoaded needed).
@@ -10,8 +10,8 @@
 (function () {
 	'use strict';
 
-	// Localised UI strings (overridable via window.BLOWDIT_I18N, set in index.php).
-	var I18N = window.BLOWDIT_I18N || {};
+	// Localised UI strings (overridable via window.BLOWFISH_I18N, set in index.php).
+	var I18N = window.BLOWFISH_I18N || {};
 	var T = {
 		copy:        I18N.copy        || 'Copy',
 		copied:      I18N.copied      || 'Copied',
@@ -80,7 +80,7 @@
 	   Theme picker
 	   -------------------------------------------------------- */
 	(function () {
-		var STORAGE_KEY = 'blowdit-theme';
+		var STORAGE_KEY = 'blowfish-theme';
 		var THEMES = ['light', 'dark', 'nord', 'dracula', 'catppuccin'];
 		// Inline-SVG icons — mirror of php/icons.php (keep the two in sync).
 		function svg(inner) {
@@ -115,8 +115,8 @@
 		function apply(theme) {
 			root.setAttribute('data-theme', theme);
 			try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) {}
-			document.cookie = 'blowdit-theme=' + theme + '; path=/; max-age=31536000; SameSite=Lax';
-			var bg = window.BLOWDIT_THEME_BG || {};
+			document.cookie = 'blowfish-theme=' + theme + '; path=/; max-age=31536000; SameSite=Lax';
+			var bg = window.BLOWFISH_THEME_BG || {};
 			if (bg[theme]) { root.style.backgroundColor = bg[theme]; }
 			root.style.colorScheme = (theme === 'light') ? 'light' : 'dark';
 			syncIcon(theme);
@@ -764,7 +764,7 @@
 		// loaded lazily (only the themes actually viewed) and toggled via
 		// link.disabled. style.css forces the code background to stay --code-bg,
 		// so only the palette's token colours are used.
-		var BASE = window.BLOWDIT_THEME_URL || '';
+		var BASE = window.BLOWFISH_THEME_URL || '';
 		var THEME_CSS = {
 			light:      'github',
 			dark:       'github-dark',
@@ -1181,7 +1181,7 @@
 	   -------------------------------------------------------- */
 	(function () {
 		var data = [];
-		var el = document.getElementById('blowdit-search-index');
+		var el = document.getElementById('blowfish-search-index');
 		if (el) { try { data = JSON.parse(el.textContent) || []; } catch (e) { data = []; } }
 
 		var ICON = '<svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" ' +
@@ -1291,7 +1291,7 @@
 		}
 
 		// Expose for the keyboard-shortcuts handler.
-		window.BLOWDIT_SEARCH = { open: open, close: close, isOpen: isOpen };
+		window.BLOWFISH_SEARCH = { open: open, close: close, isOpen: isOpen };
 	})();
 
 	/* --------------------------------------------------------
@@ -1303,7 +1303,7 @@
 			return t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
 		}
 		document.addEventListener('keydown', function (e) {
-			var s = window.BLOWDIT_SEARCH;
+			var s = window.BLOWFISH_SEARCH;
 			if (e.key === 'Escape' || e.key === 'Esc') {
 				if (s && s.isOpen()) s.close();
 				return;
@@ -1319,7 +1319,7 @@
 			// "g" then "h" -> home
 			if (e.key === 'g' || e.key === 'G') { lastG = Date.now(); return; }
 			if ((e.key === 'h' || e.key === 'H') && Date.now() - lastG < 600) {
-				window.location.href = (window.BLOWDIT_HOME || '/');
+				window.location.href = (window.BLOWFISH_HOME || '/');
 			}
 		});
 	})();

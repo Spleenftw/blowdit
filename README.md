@@ -1,93 +1,93 @@
-# Blowdit
+# Blowfish
 
 A clean, minimal theme for [Bludit](https://www.bludit.com) inspired by the
 [Blowfish](https://blowfish.page/) Hugo theme.
 
-![Bludit](https://img.shields.io/badge/Bludit-3.9+-informational) ![License](https://img.shields.io/badge/license-MIT-green) ![Version](https://img.shields.io/badge/version-1.6.0-blue)
+![Bludit](https://img.shields.io/badge/Bludit-3.22+-informational) ![License](https://img.shields.io/badge/license-MIT-green) ![Version](https://img.shields.io/badge/version-1.6.0-blue)
 
 ## Features
 
-- 🎨 **Five-theme swatch picker** — click the theme button to open a dropdown with coloured swatches for Light, Dark, Nord, Dracula and Catppuccin. Choice persists via `localStorage` + cookie (no flash on next load); falls back to OS preference.
-- 🧱 **Monochrome base design** — restrained grayscale palette with crisp Inter typography.
-- 👤 **Profile hero** — circular avatar, site title, slogan and social links on the homepage front page.
-- 📖 **Sticky Table of Contents** — articles that contain headings (`h2`/`h3`/`h4`) get a left sidebar ToC that sticks while scrolling and highlights the active section. Layout automatically switches to 3-column with a wider container.
-- 📚 **Smart right sidebar** — shows only About / Categories / Hit Counter on the homepage (navigation is redundant there); shows the full plugin set on article pages.
-- 🔀 **Randomized navigation** — the Navigation/Pages plugin list is shuffled on each load.
-- ⏱️ **Reading time & dates** shown on the post list and single posts.
-- 🔗 **Social icons** in the navbar and hero (SVG files in `img/`).
-- 🏷️ **Tags & categories** rendered as pill badges.
-- 🖼️ **Image lightbox** — clicking any article image opens it full-screen. A dark overlay with a magnifier icon appears on hover to hint at the interaction. Closes on click or Esc.
-- 🎠 **Image carousel** — use a ` ```carousel ` fenced block, one image per line (markdown image syntax or plain URL).
-- 📑 **Tabbed code blocks** — use a ` ```tabs ` fenced block with `[Tab Name]` or `@tab Name` headers to show content from multiple servers/environments side by side.
-- 📜 **Code block scrollbar** — always-visible horizontal scrollbar on `<pre>` blocks with a custom slim style that respects the active theme.
-- 📱 Fully responsive; no flash of the wrong theme on load.
+- **Five-theme swatch picker** — Light, Dark, Nord, Dracula, Catppuccin. Choice persists via `localStorage` + cookie (no flash on next load); falls back to OS preference.
+- **Monochrome base design** — restrained grayscale palette with crisp Inter typography (self-hosted, no Google Fonts).
+- **Profile hero** — circular avatar, site title, slogan and social links on the homepage.
+- **Sticky Table of Contents** — articles with `h2`/`h3`/`h4` headings get a left sidebar ToC that sticks while scrolling and highlights the active section. Layout switches to 3-column with a wider container. A floating button opens a drawer on mobile.
+- **Smart right sidebar** — shows only About / Categories / Hit Counter on the homepage; full plugin set on article pages.
+- **Client-side search overlay** — `/` key or navbar button; searches titles, descriptions and tags client-side.
+- **Keyboard shortcuts** — `/` (search), `g h` (go home), `t` (back to top), `Esc` (close overlay).
+- **Randomized navigation** — the Navigation/Pages plugin list is shuffled on every load.
+- **Reading time & dates** shown on the post list and single posts.
+- **Social icons** in the navbar and hero (SVG files in `img/`).
+- **Tags & categories** rendered as pill badges.
+- **Image lightbox** — clicking any article image opens it full-screen with a dark overlay and zoom hint.
+- **Image carousel** — ` ```carousel ` fenced block, one image per line (markdown syntax or bare URL with optional `| caption`).
+- **Tabbed code blocks** — ` ```tabs ` fenced block with `[Tab Name]` or `@tab Name` headers.
+- **Code block header bar** — language label + copy-to-clipboard button on every code block.
+- **Callout/admonition boxes** — `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, `> [!DANGER]`, `> [!IMPORTANT]`.
+- **Series navigation** — posts tagged `series-*` display an ordered series box.
+- **SEO** — Open Graph, Twitter Card, JSON-LD (WebSite, Article, BreadcrumbList, sameAs), canonical URL, theme-color meta, cover-image preload.
+- **Accessibility** — skip link, ARIA labels, `:focus-visible`, heading anchor links, print stylesheet.
+- **PWA** — web app manifest included.
+- Fully responsive; no jQuery, no Bootstrap JS, no webfont requests.
 
 ## Installation
 
-1. Download or clone this repository into your Bludit `bl-themes` directory:
+1. Clone or copy this repository into your Bludit `bl-themes/` directory:
 
    ```
-   /usr/share/nginx/html/bl-themes/
+   bl-themes/bludit-blowfish/
    ```
 
-2. In the Bludit admin panel go to **Settings → Themes** and activate **Blowdit**.
+2. In the Bludit admin panel go to **Settings → Themes** and activate **Blowfish**.
 
-3. Add your assets to `blowdit/img/`:
-   - Your avatar as `spleenftw.jpeg` — used in the homepage hero and the article sidebar compact card.
+3. Add your assets to `img/`:
+   - Your avatar as `spleenftw.jpeg` — used in the homepage hero and the article sidebar card.  
      To change the filename, update `php/sidebar.php` and `php/home.php`.
 
 ## Layout
 
 ```
-blowdit/
-├── index.php          Main template (layout, all inline JS)
+bludit-blowfish/
+├── index.php          Main template (layout, sidebar logic, JS config)
 ├── metadata.json      Theme metadata
+├── manifest.webmanifest
 ├── css/
 │   └── style.css      All styles (CSS custom properties, 5 themes)
+├── js/
+│   └── blowfish.js    Deferred JS bundle (ToC, lightbox, carousel, search, …)
 ├── php/
 │   ├── head.php       <head>, fonts, favicon, anti-FOUC theme script
-│   ├── navbar.php     Navbar, social SVG icons, theme-picker dropdown
+│   ├── navbar.php     Navbar, social icons, theme-picker dropdown
 │   ├── home.php       Profile hero + post listing
-│   ├── page.php       Single page / post
+│   ├── page.php       Single page/post
 │   ├── sidebar.php    Right sidebar plugin container
 │   ├── toc.php        Left ToC sidebar (article pages with headings)
-│   └── footer.php     Footer
+│   ├── footer.php     Footer + search-index JSON
+│   └── icons.php      Inline-SVG icon helper + shared PHP functions
 ├── img/               Social SVG icons + avatar
 └── languages/         Translations (10 languages)
 ```
 
 ## Themes
 
-Each theme is a set of CSS custom properties. Light lives in `:root`; the others
-override it under `[data-theme="dark"]`, `[data-theme="nord"]`,
-`[data-theme="dracula"]` and `[data-theme="catppuccin"]`.
+Each colour theme is a block of CSS custom properties. Light lives in `:root`; the others override it under `[data-theme="dark"]`, `[data-theme="nord"]`, `[data-theme="dracula"]` and `[data-theme="catppuccin"]`.
 
-The attribute is set on `<html>` before the first paint (in `php/head.php`) to
-avoid a flash. The navbar swatch picker updates it at runtime and persists the
-choice to both `localStorage` and a cookie.
+The `data-theme` attribute is set on `<html>` before the first paint (in `php/head.php`) to avoid a flash. The navbar swatch picker updates it at runtime and persists the choice to `localStorage` and a cookie.
 
-To add a new theme, add a variable block in `css/style.css` and add the theme
-name + swatch colours to the picker in `php/navbar.php` and the `THEMES` array
-in `index.php`.
+To add a new theme: add a variable block in `css/style.css`, register the theme name + background colour in `index.php` (`$blowfishThemeBg`), and add a swatch entry in `php/navbar.php`.
 
 ## Table of Contents
 
-When an article's rendered HTML contains any `h2`, `h3` or `h4` headings, the
-layout automatically switches from 2-column to 3-column:
+When an article's rendered HTML contains any `h2`, `h3` or `h4` headings, the layout automatically switches from 2-column to 3-column:
 
 ```
 [ Left ToC (col-md-3) ] [ Article (col-md-6) ] [ Right sidebar (col-md-3) ]
 ```
 
-The ToC is hidden on mobile. The left column has no `align-self-start` so it
-stretches to the full article height, which is what `position: sticky` needs to
-function. The container switches to `.container-wide` (1400 px max-width) and
-the navbar inner container widens to match via `body.has-toc .navbar .container`.
+The sidebar ToC is hidden on mobile; a floating button opens a slide-up drawer instead. The container switches to `.container-wide` (1400 px max-width) and the navbar widens to match via `body.has-toc .navbar .container`.
 
 ## Tabbed code blocks
 
-Use a ` ```tabs ` fenced block. Delimit tabs with `[Tab Name]` (brackets) or
-`@tab Tab Name` (@ prefix):
+Use a ` ```tabs ` fenced block. Delimit tabs with `[Tab Name]` (brackets) or `@tab Tab Name` (@ prefix):
 
 ````
 ```tabs
@@ -101,8 +101,7 @@ root@pgs02:~# psql -c "SELECT …"
 
 ## Image carousel
 
-Use a ` ```carousel ` fenced block. Each non-empty line is one slide. Accepts
-standard markdown image syntax or a bare URL with an optional `| caption`:
+Use a ` ```carousel ` fenced block. Each non-empty line is one slide. Accepts standard markdown image syntax or a bare URL with an optional `| caption`:
 
 ````
 ```carousel
@@ -111,13 +110,19 @@ standard markdown image syntax or a bare URL with an optional `| caption`:
 ```
 ````
 
-Use `![]()` (empty alt) to show no caption. Supports swipe on touch devices.
+Supports swipe on touch devices.
 
-## Randomized navigation
+## Callout boxes
 
-If the **Navigation** (or **Pages**) plugin is in the sidebar, its list is
-shuffled on every page load. The plugin output is wrapped in `.js-random-nav`;
-adjust the detection in `index.php` if your plugin uses a different class.
+```markdown
+> [!NOTE]
+> Useful information.
+
+> [!WARNING]
+> Something to watch out for.
+```
+
+Supported types: `NOTE`, `TIP`, `WARNING`, `DANGER`, `IMPORTANT`.
 
 ## License
 

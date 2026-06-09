@@ -7,29 +7,29 @@
 ?>
 <?php if ($showProfile) : ?>
   <header class="profile text-center">
-    <img class="profile-avatar" src="<?php echo $profileImage; ?>" alt="<?php echo blowdit_text($site->title()); ?>" />
-    <h1 class="profile-name"><?php echo blowdit_text($site->title()); ?></h1>
+    <img class="profile-avatar" src="<?php echo $profileImage; ?>" alt="<?php echo blowfish_text($site->title()); ?>" />
+    <h1 class="profile-name"><?php echo blowfish_text($site->title()); ?></h1>
     <?php if ($site->slogan()) : ?>
-      <p class="profile-bio"><?php echo blowdit_text($site->slogan()); ?></p>
+      <p class="profile-bio"><?php echo blowfish_text($site->slogan()); ?></p>
     <?php elseif ($site->description()) : ?>
-      <p class="profile-bio"><?php echo blowdit_text($site->description()); ?></p>
+      <p class="profile-bio"><?php echo blowfish_text($site->description()); ?></p>
     <?php endif ?>
 
     <?php $networks = Theme::socialNetworks(); ?>
     <div class="profile-social">
       <?php foreach ($networks as $key => $label) : ?>
-        <a href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo blowdit_text($label) ?>">
-          <img class="profile-social-icon" src="<?php echo blowdit_asset('img/' . $key . '.svg') ?>" alt="<?php echo blowdit_text($label) ?>" />
+        <a href="<?php echo $site->{$key}(); ?>" target="_blank" rel="noopener" title="<?php echo blowfish_text($label) ?>">
+          <img class="profile-social-icon" src="<?php echo blowfish_asset('img/' . $key . '.svg') ?>" alt="<?php echo blowfish_text($label) ?>" />
         </a>
       <?php endforeach ?>
       <!-- RSS feed (served by the RSS plugin at /rss.xml) -->
       <a href="<?php echo rtrim(Theme::siteUrl(), '/') . '/rss.xml'; ?>" target="_blank" rel="noopener" title="<?php echo $L->get('RSS'); ?>">
-        <img class="profile-social-icon" src="<?php echo blowdit_asset('img/rss.svg') ?>" alt="<?php echo $L->get('RSS'); ?>" />
+        <img class="profile-social-icon" src="<?php echo blowfish_asset('img/rss.svg') ?>" alt="<?php echo $L->get('RSS'); ?>" />
       </a>
       <!-- Email (mailto) -->
-      <?php if (!empty($blowditEmail)) : ?>
-      <a href="mailto:<?php echo htmlspecialchars($blowditEmail, ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo $L->get('Email'); ?>">
-        <img class="profile-social-icon" src="<?php echo blowdit_asset('img/mail.svg') ?>" alt="<?php echo $L->get('Email'); ?>" />
+      <?php if (!empty($blowfishEmail)) : ?>
+      <a href="mailto:<?php echo htmlspecialchars($blowfishEmail, ENT_QUOTES, 'UTF-8'); ?>" title="<?php echo $L->get('Email'); ?>">
+        <img class="profile-social-icon" src="<?php echo blowfish_asset('img/mail.svg') ?>" alt="<?php echo $L->get('Email'); ?>" />
       </a>
       <?php endif ?>
     </div>
@@ -59,12 +59,12 @@
 
       <div class="post-list-head">
         <a href="<?php echo $page->permalink(); ?>">
-          <h2 class="post-list-title"><?php echo blowdit_text($page->title()); ?></h2>
+          <h2 class="post-list-title"><?php echo blowfish_text($page->title()); ?></h2>
         </a>
         <div class="post-list-meta">
-          <span><?php echo blowdit_icon('calendar'); ?><?php echo $page->date(); ?></span>
+          <span><?php echo blowfish_icon('calendar'); ?><?php echo $page->date(); ?></span>
           <?php if (!$page->isStatic()) : ?>
-          <span><?php echo blowdit_icon('clock'); ?><?php echo $page->readingTime(); ?></span>
+          <span><?php echo blowfish_icon('clock'); ?><?php echo $page->readingTime(); ?></span>
           <?php endif ?>
         </div>
       </div>
@@ -75,11 +75,11 @@
         <div class="post-taxonomy">
           <?php if ($categoryKey) : ?>
             <a class="taxonomy-badge" href="<?php echo $page->categoryPermalink(); ?>">
-              <?php echo blowdit_icon('folder'); ?><?php echo blowdit_text($page->category()); ?>
+              <?php echo blowfish_icon('folder'); ?><?php echo blowfish_text($page->category()); ?>
             </a>
           <?php endif ?>
           <?php foreach ($tagsList as $tagKey => $tagName) : ?>
-            <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><?php echo blowdit_icon('tag'); ?><?php echo blowdit_text($tagName); ?></a>
+            <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><?php echo blowfish_icon('tag'); ?><?php echo blowfish_text($tagName); ?></a>
           <?php endforeach ?>
         </div>
       <?php endif ?>
@@ -120,7 +120,7 @@
       <?php if (Paginator::showPrev()) : ?>
         <li class="page-item">
           <a class="page-link is-arrow" href="<?php echo Paginator::previousPageUrl() ?>" aria-label="<?php echo $L->get('Previous'); ?>">
-            <?php echo blowdit_icon('chevron-left'); ?>
+            <?php echo blowfish_icon('chevron-left'); ?>
           </a>
         </li>
       <?php endif; ?>
@@ -140,7 +140,7 @@
       <?php if (Paginator::showNext()) : ?>
         <li class="page-item">
           <a class="page-link is-arrow" href="<?php echo Paginator::nextPageUrl() ?>" aria-label="<?php echo $L->get('Next'); ?>">
-            <?php echo blowdit_icon('chevron-right'); ?>
+            <?php echo blowfish_icon('chevron-right'); ?>
           </a>
         </li>
       <?php endif; ?>
