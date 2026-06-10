@@ -355,6 +355,13 @@ h2.title {
 	margin-bottom: var(--space-md);
 }
 
+/* Justify body paragraphs; hyphenate so the inter-word gaps stay tidy */
+.content p {
+	text-align: justify;
+	hyphens: auto;
+	-webkit-hyphens: auto;
+}
+
 .content img {
 	border-radius: var(--radius-md);
 	margin: var(--space-md) 0;
