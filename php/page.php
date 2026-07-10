@@ -102,11 +102,15 @@
 				// Lazy-load + async-decode in-content images that don't already
 				// set a loading attribute. Operates on the rendered HTML, so
 				// carousel/tabs fences (still raw text inside <pre>) are untouched.
-				echo preg_replace(
+				$bdContent = preg_replace(
 					'/<img(?![^>]*\bloading=)/i',
 					'<img loading="lazy" decoding="async"',
 					$page->content()
 				);
+				// Add width/height to local-upload images so the layout doesn't
+				// shift as they load (CLS). CSS `img { height: auto }` keeps the
+				// aspect ratio responsive.
+				echo blowfish_img_dimensions($bdContent);
 			?>
 		</div>
 

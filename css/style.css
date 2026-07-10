@@ -245,6 +245,24 @@
 }
 
 /* ========================================
+   VIEW TRANSITIONS (cross-document)
+   Smooth fade between page navigations on supporting browsers
+   (Chrome/Edge 126+); silently ignored elsewhere. Disabled for
+   users who prefer reduced motion.
+   ======================================== */
+@view-transition {
+	navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
+	}
+}
+
+/* ========================================
    BASE
    ======================================== */
 html {
@@ -894,6 +912,44 @@ img.nav-svg-icon {
 
 .post-list-item .post-taxonomy {
 	margin-top: var(--space-sm);
+}
+
+/* Cover thumbnail: text left, image right (Blowfish-style) */
+.post-list-row {
+	display: flex;
+	gap: var(--space-md);
+	align-items: flex-start;
+}
+
+.post-list-main {
+	flex: 1 1 auto;
+	min-width: 0; /* allow long titles/URLs to wrap instead of pushing the thumb */
+}
+
+.post-list-thumb {
+	flex: 0 0 auto;
+	display: block;
+}
+
+.post-list-thumb img {
+	width: 168px;
+	height: 112px;
+	object-fit: cover;
+	border-radius: var(--radius-md);
+	border: 1px solid var(--border-subtle);
+	background: var(--bg-subtle);
+	transition: transform 0.2s ease;
+}
+
+.post-list-thumb:hover img {
+	transform: scale(1.03);
+}
+
+@media (max-width: 575.98px) {
+	.post-list-thumb img {
+		width: 96px;
+		height: 72px;
+	}
 }
 
 /* "+N" overflow badge — muted, links to the post (where all tags are shown) */

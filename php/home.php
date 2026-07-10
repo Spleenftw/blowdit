@@ -52,10 +52,15 @@
 <!-- Post list (titles only) -->
 <div class="post-list">
   <?php foreach ($content as $page) : ?>
-    <article class="post-list-item">
+    <?php $bdCover = $page->coverImage(); ?>
+    <article class="post-list-item<?php echo $bdCover ? ' has-thumb' : ''; ?>">
 
       <!-- Load Bludit Plugins: Page Begin -->
       <?php Theme::plugins('pageBegin'); ?>
+
+      <div class="post-list-row">
+
+      <div class="post-list-main">
 
       <div class="post-list-head">
         <a href="<?php echo $page->permalink(); ?>">
@@ -100,6 +105,17 @@
           <?php endif ?>
         </div>
       <?php endif ?>
+
+      </div><!-- /.post-list-main -->
+
+      <!-- Cover thumbnail -->
+      <?php if ($bdCover) : ?>
+        <a class="post-list-thumb" href="<?php echo $page->permalink(); ?>" tabindex="-1" aria-hidden="true">
+          <img src="<?php echo htmlspecialchars($bdCover, ENT_QUOTES, 'UTF-8'); ?>" alt="" loading="lazy" decoding="async" />
+        </a>
+      <?php endif ?>
+
+      </div><!-- /.post-list-row -->
 
       <!-- Load Bludit Plugins: Page End -->
       <?php Theme::plugins('pageEnd'); ?>

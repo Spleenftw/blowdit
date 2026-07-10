@@ -16,7 +16,7 @@ A clean, minimal theme for [Bludit](https://www.bludit.com) inspired by the
 - **Keyboard shortcuts** — `/` (search), `g h` (go home), `t` (back to top), `Esc` (close overlay).
 - **Randomized navigation** — the Navigation/Pages plugin list is shuffled on every load.
 - **Reading time & dates** shown on the post list and single posts.
-- **Post-list excerpts** — the page description renders as a 2-line excerpt; tags are capped at 5 with a `+N` badge.
+- **Post-list excerpts & thumbnails** — the page description renders as a 2-line excerpt with the cover image as a right-side thumbnail; tags are capped at 5 with a `+N` badge.
 - **Older / newer post navigation** — chronological links under every article, above the related posts.
 - **Social icons** in the navbar and hero (SVG files in `img/`).
 - **Tags & categories** rendered as pill badges.
@@ -29,6 +29,8 @@ A clean, minimal theme for [Bludit](https://www.bludit.com) inspired by the
 - **SEO** — Open Graph, Twitter Card, JSON-LD (WebSite, Article, BreadcrumbList, sameAs), canonical URL, theme-color meta, cover-image preload. Duplicate OG/Twitter/canonical tags emitted by Bludit plugins are stripped automatically.
 - **Accessibility** — skip link, ARIA labels, `:focus-visible`, heading anchor links, print stylesheet.
 - **PWA** — web app manifest included.
+- **CLS-free images** — `width`/`height` are injected server-side into local-upload images (plus lazy-loading and async decode).
+- **View transitions** — smooth cross-document fade on supporting browsers; respects `prefers-reduced-motion`.
 - Fully responsive; no jQuery, no Bootstrap JS, no webfont requests.
 
 ## Installation
