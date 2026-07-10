@@ -69,8 +69,18 @@
         </div>
       </div>
 
-      <!-- Tags and Category -->
-      <?php $tagsList = $page->tags(true); $categoryKey = $page->categoryKey(); ?>
+      <!-- Excerpt (the page description, set in the admin's SEO tab) -->
+      <?php $bdExcerpt = blowfish_plain($page->description()); ?>
+      <?php if ($bdExcerpt !== '') : ?>
+        <p class="post-list-excerpt"><?php echo htmlspecialchars($bdExcerpt, ENT_QUOTES, 'UTF-8'); ?></p>
+      <?php endif ?>
+
+      <!-- Tags and Category — capped so the list stays scannable -->
+      <?php
+        $tagsList = $page->tags(true);
+        $categoryKey = $page->categoryKey();
+        $bdMaxTags = 5; // tags shown per post on the list; the rest collapse into "+N"
+      ?>
       <?php if (!empty($tagsList) || $categoryKey) : ?>
         <div class="post-taxonomy">
           <?php if ($categoryKey) : ?>
@@ -78,9 +88,16 @@
               <?php echo blowfish_icon('folder'); ?><?php echo blowfish_text($page->category()); ?>
             </a>
           <?php endif ?>
+          <?php $bdTagCount = 0; $bdTagOverflow = 0; ?>
           <?php foreach ($tagsList as $tagKey => $tagName) : ?>
-            <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><?php echo blowfish_icon('tag'); ?><?php echo blowfish_text($tagName); ?></a>
+            <?php if ($bdTagCount < $bdMaxTags) : $bdTagCount++; ?>
+              <a class="taxonomy-badge" href="<?php echo DOMAIN_TAGS . $tagKey; ?>"><?php echo blowfish_icon('tag'); ?><?php echo blowfish_text($tagName); ?></a>
+            <?php else : $bdTagOverflow++; ?>
+            <?php endif ?>
           <?php endforeach ?>
+          <?php if ($bdTagOverflow > 0) : ?>
+            <a class="taxonomy-badge taxonomy-badge-more" href="<?php echo $page->permalink(); ?>" title="<?php echo $L->get('All tags'); ?>">+<?php echo $bdTagOverflow; ?></a>
+          <?php endif ?>
         </div>
       <?php endif ?>
 

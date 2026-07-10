@@ -145,6 +145,48 @@
 </article>
 
 <?php
+	// ---- Previous / next post navigation ----
+	// Chronological neighbours (Bludit's list is newest-first). Guarded like
+	// the related-posts block so an API difference degrades to nothing.
+	if (!$page->isStatic() && !$url->notFound()) {
+		$bdOlder = null; $bdNewer = null;
+		try {
+			global $pages;
+			if (isset($pages) && method_exists($pages, 'getList')) {
+				$bdNavKeys = array();
+				foreach ($pages->getList(1, 10000, true) as $bdNk) {
+					$bdNp = new Page($bdNk);
+					if (!$bdNp->isStatic()) { $bdNavKeys[] = $bdNp; }
+				}
+				foreach ($bdNavKeys as $bdNi => $bdNp) {
+					if ($bdNp->key() === $page->key()) {
+						if ($bdNi > 0)                       { $bdNewer = $bdNavKeys[$bdNi - 1]; }
+						if ($bdNi < count($bdNavKeys) - 1)   { $bdOlder = $bdNavKeys[$bdNi + 1]; }
+						break;
+					}
+				}
+			}
+		} catch (\Throwable $e) { $bdOlder = null; $bdNewer = null; }
+?>
+	<?php if ($bdOlder || $bdNewer) : ?>
+	<nav class="post-nav" aria-label="<?php echo $L->get('Post navigation'); ?>">
+		<?php if ($bdOlder) : ?>
+		<a class="post-nav-item post-nav-older" href="<?php echo $bdOlder->permalink(); ?>" rel="prev">
+			<span class="post-nav-label"><?php echo blowfish_icon('chevron-left'); ?><?php echo $L->get('Older post'); ?></span>
+			<span class="post-nav-title"><?php echo blowfish_text($bdOlder->title()); ?></span>
+		</a>
+		<?php else : ?><span class="post-nav-item post-nav-empty" aria-hidden="true"></span><?php endif ?>
+		<?php if ($bdNewer) : ?>
+		<a class="post-nav-item post-nav-newer" href="<?php echo $bdNewer->permalink(); ?>" rel="next">
+			<span class="post-nav-label"><?php echo $L->get('Newer post'); ?><?php echo blowfish_icon('chevron-right'); ?></span>
+			<span class="post-nav-title"><?php echo blowfish_text($bdNewer->title()); ?></span>
+		</a>
+		<?php else : ?><span class="post-nav-item post-nav-empty" aria-hidden="true"></span><?php endif ?>
+	</nav>
+	<?php endif ?>
+<?php } ?>
+
+<?php
 	// ---- Related posts ----
 	// Best-effort via Bludit's Pages API; wrapped so any API difference degrades
 	// to nothing instead of erroring the page.

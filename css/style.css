@@ -355,11 +355,43 @@ h2.title {
 	margin-bottom: var(--space-md);
 }
 
-/* Justify body paragraphs; hyphenate so the inter-word gaps stay tidy */
+/* Justified body text on wide screens, where long lines keep the word gaps
+   tidy — helped by auto-hyphenation. Below 576px the lines are too short for
+   justification (rivers of whitespace), so mobile falls back to left-aligned. */
 .content p {
 	text-align: justify;
+	text-align-last: left; /* never stretch a paragraph's final line */
 	hyphens: auto;
 	-webkit-hyphens: auto;
+}
+
+@media (max-width: 575.98px) {
+	.content p {
+		text-align: left;
+		hyphens: none;
+		-webkit-hyphens: none;
+	}
+}
+
+/* In-content links: underlined so they're distinguishable from body text.
+   The palette is monochrome (accent ≈ text colour), so colour alone can't
+   signal a link — the underline does. Heading anchors and image links opt out. */
+.content a:not(.heading-anchor) {
+	text-decoration: underline;
+	text-decoration-color: var(--text-muted);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
+}
+
+.content a:not(.heading-anchor):hover {
+	color: var(--text-primary);
+	text-decoration-color: var(--accent);
+	text-decoration-thickness: 2px;
+}
+
+/* Links that wrap an image (lightbox) shouldn't draw an underline stub */
+.content a:has(> img) {
+	text-decoration: none;
 }
 
 .content img {
@@ -847,8 +879,27 @@ img.nav-svg-icon {
 	margin-right: 0.25rem;
 }
 
+/* Excerpt: 1-2 lines of the page description, clamped so long ones can't
+   push the list around */
+.post-list-excerpt {
+	margin: 0.6rem 0 0;
+	color: var(--text-secondary);
+	font-size: 0.95rem;
+	line-height: 1.55;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
 .post-list-item .post-taxonomy {
 	margin-top: var(--space-sm);
+}
+
+/* "+N" overflow badge — muted, links to the post (where all tags are shown) */
+.taxonomy-badge-more {
+	color: var(--text-muted);
+	border-style: dashed;
 }
 
 /* ========================================
@@ -2042,6 +2093,62 @@ button:focus:not(:focus-visible) {
 
 /* Separate the comments widget from the share row so it doesn't feel cramped. */
 .utterances { margin-top: var(--space-xl) !important; }
+
+/* ========================================
+   PREV / NEXT POST NAVIGATION
+   ======================================== */
+.post-nav {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var(--space-sm);
+	margin: var(--space-lg) 0 0;
+}
+
+.post-nav-item {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	padding: var(--space-sm) var(--space-md);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-md);
+	background: var(--bg-surface);
+	transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.post-nav-item:hover {
+	background: var(--bg-hover);
+	border-color: var(--text-muted);
+}
+
+.post-nav-newer { text-align: right; align-items: flex-end; }
+
+.post-nav-label {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	color: var(--text-muted);
+	font-size: var(--font-size-xs);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.post-nav-title {
+	color: var(--text-primary);
+	font-weight: 600;
+	font-size: 0.95rem;
+	line-height: 1.35;
+}
+
+.post-nav-empty {
+	border: none;
+	background: transparent;
+	pointer-events: none;
+}
+
+@media (max-width: 575.98px) {
+	.post-nav { grid-template-columns: 1fr; }
+	.post-nav-empty { display: none; }
+}
 
 /* ========================================
    RELATED POSTS
