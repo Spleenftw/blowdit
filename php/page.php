@@ -204,8 +204,12 @@
 					$bdCur  = $page->key();
 					$bdCat  = $page->categoryKey();
 					$bdTags = array_keys($page->tags(true));
+					// Skip the posts already shown in the older/newer nav just above.
+					$bdNavShown = array();
+					if (!empty($bdOlder)) { $bdNavShown[] = $bdOlder->key(); }
+					if (!empty($bdNewer)) { $bdNavShown[] = $bdNewer->key(); }
 					foreach ($bdKeys as $bdK) {
-						if ($bdK === $bdCur) { continue; }
+						if ($bdK === $bdCur || in_array($bdK, $bdNavShown, true)) { continue; }
 						if (count($bdRelated) >= 3) { break; }
 						$bdCand = new Page($bdK);
 						$bdMatch = ($bdCat && $bdCand->categoryKey() === $bdCat);
