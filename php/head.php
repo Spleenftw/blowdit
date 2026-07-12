@@ -261,5 +261,20 @@
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $styleHref; ?>">
 
-<!-- Load Bludit Plugins: Site head -->
-<?php Theme::plugins('siteHead'); ?>
+<!-- Load Bludit Plugins: Site head.
+     The theme already emits a complete, coherent set of Open Graph / Twitter
+     Card / canonical tags above. Bludit's Open Graph & Twitter Cards plugins
+     emit their own (conflicting) set — e.g. a post image as og:image on the
+     homepage and multiple og:locale values — so their duplicates are stripped
+     here. Best fixed at the source by deactivating those plugins in the admin;
+     this filter just makes the markup correct either way. -->
+<?php
+	ob_start();
+	Theme::plugins('siteHead');
+	$bdPluginHead = ob_get_clean();
+	// <meta property="og:…"> / <meta name="twitter:…"> / <meta property="article:…">
+	$bdPluginHead = preg_replace('/<meta\b[^>]*\b(?:property|name)=["\'](?:og:|twitter:|article:)[^"\']*["\'][^>]*>\s*/i', '', $bdPluginHead);
+	// duplicate <link rel="canonical">
+	$bdPluginHead = preg_replace('/<link\b[^>]*\brel=["\']canonical["\'][^>]*>\s*/i', '', $bdPluginHead);
+	echo $bdPluginHead;
+?>

@@ -55,6 +55,28 @@ if (!function_exists('blowfish_icon')) {
 		return DOMAIN_THEME . $rel . ($v ? '?v=' . $v : '');
 	}
 
+	// Inject width/height attributes into local-upload <img> tags that lack
+	// them, so the browser reserves the box before the image loads (no CLS).
+	// Only touches images served from this site's uploads folder; remote
+	// images and tags that already declare a width are left alone.
+	function blowfish_img_dimensions($html) {
+		if (!defined('DOMAIN_UPLOADS') || !defined('PATH_UPLOADS')) { return $html; }
+		return preg_replace_callback('/<img\b[^>]*>/i', function ($m) {
+			$tag = $m[0];
+			if (preg_match('/\b(?:width|height)\s*=/i', $tag)) { return $tag; }
+			if (!preg_match('/\bsrc=["\']([^"\']+)["\']/i', $tag, $src)) { return $tag; }
+			$url = html_entity_decode($src[1], ENT_QUOTES, 'UTF-8');
+			if (strpos($url, DOMAIN_UPLOADS) !== 0) { return $tag; }
+			$rel = rawurldecode(substr($url, strlen(DOMAIN_UPLOADS)));
+			if ($rel === '' || strpos($rel, '..') !== false) { return $tag; }
+			$file = PATH_UPLOADS . $rel;
+			if (!is_file($file)) { return $tag; }
+			$size = @getimagesize($file);
+			if (!$size || empty($size[0]) || empty($size[1])) { return $tag; }
+			return preg_replace('/<img\b/i', '<img width="' . (int) $size[0] . '" height="' . (int) $size[1] . '"', $tag, 1);
+		}, $html);
+	}
+
 	// Map a theme key to its toggle icon name.
 	function blowfish_theme_icon($theme) {
 		$map = array(
