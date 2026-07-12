@@ -11,7 +11,7 @@
                 </div>
                 <div class="col-md-6 text-center text-md-right">
                     <p class="m-0">
-                        Powered by <a href="https://www.bludit.com" target="_blank" rel="noopener"><strong>BLUDIT</strong></a>
+                        Powered by <a href="https://www.bludit.com" target="_blank" rel="noopener"><strong>BLUDIT</strong></a> and <a href="https://github.com/Spleenftw/bludit-blowfish" target="_blank" rel="noopener"><strong>BLOWFISH</strong></a>
                     </p>
                 </div>
             <?php endif; ?>
