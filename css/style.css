@@ -1979,6 +1979,11 @@ footer.footer-modern a:hover {
 pre code.hljs {
 	padding: 0 !important;
 	background: transparent !important;
+	/* Not every palette ships hljs's base block — catppuccin-mocha only carries
+	   token colours. Without overflow-x the inner code stops being a scroll
+	   container, pre scrolls instead, and the block's height changes on theme
+	   switch. Set it here so the layout can't depend on the palette. */
+	overflow-x: auto;
 }
 
 /* ========================================
