@@ -262,12 +262,16 @@
 				var top = h.getBoundingClientRect().top + scrollY;
 				if (top <= threshold) active = h;
 			});
-			var links = tocNav.querySelectorAll('.toc-link');
-			Array.prototype.forEach.call(links, function (a) { a.classList.remove('active'); });
-			if (active) {
-				var link = tocNav.querySelector('a[href="#' + active.id + '"]');
-				if (link) link.classList.add('active');
-			}
+			// Document-wide, not scoped to tocNav: the mobile drawer holds a clone
+			// of this list and needs the same highlight. Match on .toc-link so the
+			// heading "#" anchors, which share the href, aren't marked active; and
+			// compare the href rather than building a selector from the id, which
+			// would throw on a hand-written id containing a quote.
+			var links = document.querySelectorAll('.toc-link');
+			var href = active ? '#' + active.id : null;
+			Array.prototype.forEach.call(links, function (a) {
+				a.classList.toggle('active', a.getAttribute('href') === href);
+			});
 		}
 
 		window.addEventListener('scroll', updateActive, { passive: true });
