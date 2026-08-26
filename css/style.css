@@ -65,6 +65,11 @@
 	--chrome-bg: #1f1f1f;
 	--chrome-text: rgba(255, 255, 255, 0.92);
 	--chrome-text-hover: #ffffff;
+	/* The reading progress bar sits on the chrome, not the page, so it needs a
+	   colour that reads against --chrome-bg. Light's --accent is #1f1f1f, the
+	   same value as --chrome-bg, which left the bar invisible. Every theme
+	   below re-points this at its own --accent. */
+	--progress-accent: #ffffff;
 
 	/* Shadows */
 	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -125,6 +130,7 @@
 	--chrome-bg: #1f1f1f;
 	--chrome-text: rgba(255, 255, 255, 0.88);
 	--chrome-text-hover: #ffffff;
+	--progress-accent: var(--accent);
 
 	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
 	--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
@@ -161,6 +167,7 @@
 	--chrome-bg: #3b4252;
 	--chrome-text: rgba(236, 239, 244, 0.9);
 	--chrome-text-hover: #eceff4;
+	--progress-accent: var(--accent);
 
 	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
 	--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
@@ -197,6 +204,7 @@
 	--chrome-bg: #343746;
 	--chrome-text: rgba(248, 248, 242, 0.9);
 	--chrome-text-hover: #f8f8f2;
+	--progress-accent: var(--accent);
 
 	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
 	--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -233,6 +241,7 @@
 	--chrome-bg: #313244;
 	--chrome-text: rgba(205, 214, 244, 0.9);
 	--chrome-text-hover: #cdd6f4;
+	--progress-accent: var(--accent);
 
 	--shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
 	--shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -1844,7 +1853,7 @@ footer.footer-modern a:hover {
 .reading-progress-fill {
 	height: 100%;
 	width: 0;
-	background: var(--accent);
+	background: var(--progress-accent, var(--accent));
 	transition: width 0.05s linear;
 }
 
