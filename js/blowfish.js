@@ -74,6 +74,23 @@
 				if (target.classList.contains('show')) setOpen(false);
 			});
 		});
+
+		// Close on outside click (same shape as the theme picker's handler below).
+		// The toggler guard matters: its own click bubbles to here after opening.
+		document.addEventListener('click', function (e) {
+			if (!target.classList.contains('show')) return;
+			if (toggler.contains(e.target)) return;
+			if (target.contains(e.target)) return;
+			setOpen(false);
+		});
+
+		// Close on Escape, and hand focus back to the button that opened it
+		document.addEventListener('keydown', function (e) {
+			if (e.key !== 'Escape' && e.key !== 'Esc') return;
+			if (!target.classList.contains('show')) return;
+			setOpen(false);
+			toggler.focus();
+		});
 	})();
 
 	/* --------------------------------------------------------
@@ -158,6 +175,17 @@
 			if (!picker || !picker.classList.contains('is-open')) return;
 			if (btn && btn.contains(e.target)) return;
 			if (picker.contains(e.target)) return;
+			closePicker();
+		});
+
+		// Close on Escape too. The picker sits inside the collapsible menu, and
+		// the navbar's Escape handler collapses that menu around it — without
+		// this the picker stays is-open (and aria-expanded="true") behind a
+		// closed menu, then reappears already open. Clicking the toggler or
+		// outside already closes both via the handler above.
+		document.addEventListener('keydown', function (e) {
+			if (e.key !== 'Escape' && e.key !== 'Esc') return;
+			if (!picker || !picker.classList.contains('is-open')) return;
 			closePicker();
 		});
 
