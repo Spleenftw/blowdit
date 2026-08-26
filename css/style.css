@@ -1988,6 +1988,13 @@ footer.footer-modern a:hover {
 pre code.hljs {
 	padding: 0 !important;
 	background: transparent !important;
+	/* Each palette's base colour is paired with the palette's own background,
+	   which the rule above replaces — so take the block's base text from the
+	   theme instead, matching inline code. Token colours still come from the
+	   palette. No !important needed here, unlike the two above: those collide
+	   with the palettes' own `pre code.hljs` base block at equal specificity,
+	   whereas the colour is set by `.hljs` / `code.hljs`, which this outranks. */
+	color: var(--code-text);
 	/* Not every palette ships hljs's base block — catppuccin-mocha only carries
 	   token colours. Without overflow-x the inner code stops being a scroll
 	   container, pre scrolls instead, and the block's height changes on theme
