@@ -2415,8 +2415,15 @@ button:focus:not(:focus-visible) {
 }
 
 .toc-drawer .toc-list { list-style: none; padding: 0; margin: 0; }
+/* Resting colour keeps --text-secondary rather than the sidebar's --text-muted:
+   the panel sits on --bg-surface, where muted falls below WCAG AA in four of the
+   five themes. Hover and active match the sidebar so both lists agree on what
+   the states mean. The active rule sets colour only — font-weight stays with
+   .toc-link.active — and needs .toc-drawer's specificity to beat the resting
+   rule above it, which would otherwise win on source order. */
 .toc-drawer .toc-link { display: block; padding: 0.5rem 0; color: var(--text-secondary); }
-.toc-drawer .toc-link:hover { color: var(--accent); text-decoration: none; }
+.toc-drawer .toc-link:hover { color: var(--text-primary); text-decoration: none; }
+.toc-drawer .toc-link.active { color: var(--accent); }
 
 /* The sidebar ToC covers desktop, so the floating button is mobile-only */
 @media (min-width: 768px) {
