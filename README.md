@@ -3,7 +3,7 @@
 A clean, minimal theme for [Bludit](https://www.bludit.com) inspired by the
 [Blowfish](https://blowfish.page/) Hugo theme.
 
-![Bludit](https://img.shields.io/badge/Bludit-3.22+-informational) ![License](https://img.shields.io/badge/license-MIT-green) ![Version](https://img.shields.io/badge/version-1.7.0-blue)
+![Bludit](https://img.shields.io/badge/Bludit-3.22+-informational) ![License](https://img.shields.io/badge/license-MIT-green) ![Version](https://img.shields.io/badge/version-1.8.0-blue)
 
 ## Features
 
@@ -24,7 +24,8 @@ A clean, minimal theme for [Bludit](https://www.bludit.com) inspired by the
 - **Image carousel** — ` ```carousel ` fenced block, one image per line (markdown syntax or bare URL with optional `| caption`).
 - **Tabbed code blocks** — ` ```tabs ` fenced block with `[Tab Name]` or `@tab Name` headers.
 - **Code block header bar** — language label + copy-to-clipboard button on every code block.
-- **Callout/admonition boxes** — `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, `> [!DANGER]`, `> [!IMPORTANT]`.
+- **Callout/admonition boxes** — `> [!NOTE]`, `> [!TIP]`, `> [!WARNING]`, `> [!DANGER]`, `> [!IMPORTANT]`; optionally collapsible with a custom title.
+- **Mermaid diagrams** — ` ```mermaid ` fenced block. The library is self-hosted and loaded only on pages that contain a diagram; colours follow the active theme and re-render when it changes.
 - **Series navigation** — posts tagged `series-*` display an ordered series box.
 - **SEO** — Open Graph, Twitter Card, JSON-LD (WebSite, Article, BreadcrumbList, sameAs), canonical URL, theme-color meta, cover-image preload. Duplicate OG/Twitter/canonical tags emitted by Bludit plugins are stripped automatically.
 - **Accessibility** — skip link, ARIA labels, `:focus-visible`, heading anchor links, print stylesheet.
@@ -55,9 +56,12 @@ bludit-blowfish/
 ├── metadata.json      Theme metadata
 ├── manifest.webmanifest
 ├── css/
-│   └── style.css      All styles (CSS custom properties, 5 themes)
+│   ├── style.css      All styles (CSS custom properties, 5 themes)
+│   └── hljs/          Syntax-highlighting palettes, one per theme
 ├── js/
-│   └── blowfish.js    Deferred JS bundle (ToC, lightbox, carousel, search, …)
+│   ├── blowfish.js    Deferred JS bundle (ToC, lightbox, carousel, search, …)
+│   ├── highlight.min.js  Self-hosted highlight.js
+│   └── mermaid.min.js    Self-hosted mermaid, loaded only on pages with a diagram
 ├── php/
 │   ├── head.php       <head>, fonts, favicon, anti-FOUC theme script
 │   ├── navbar.php     Navbar, social icons, theme-picker dropdown
@@ -127,6 +131,47 @@ Supports swipe on touch devices.
 ```
 
 Supported types: `NOTE`, `TIP`, `WARNING`, `DANGER`, `IMPORTANT`.
+
+Text after the marker replaces the default title, and a `+` or `-` makes the box
+collapsible — `+` starts open, `-` starts closed:
+
+```markdown
+> [!TIP] A custom title, always open
+> Body text.
+
+> [!WARNING]+ Starts expanded
+> The reader can fold this away.
+
+> [!NOTE]- Starts collapsed
+> Hidden until the reader expands it.
+```
+
+Collapsible callouts are built on `<details>`/`<summary>`, so keyboard and
+screen-reader behaviour comes from the browser. Titles may contain formatting.
+
+> **Note on existing content:** a single-line `> [!NOTE] Some text` now renders
+> "Some text" as the *title* rather than the body. Put the marker on its own
+> line to keep the default label.
+
+## Mermaid diagrams
+
+Use a ` ```mermaid ` fenced block:
+
+````
+```mermaid
+graph LR
+  A[Proxmox node] --> B{linstor}
+  B --> C[(Ceph pool)]
+```
+````
+
+Diagram colours are mapped from the active theme's CSS custom properties and
+re-rendered when the swatch picker changes, so diagrams follow the site theme.
+
+`mermaid.min.js` is self-hosted and fetched **only** on pages that actually
+contain a diagram — other pages load nothing. It is a large file (~3.5 MB), so
+serving the theme with gzip or brotli compression is recommended. A diagram that
+fails to parse falls back to showing its source rather than an empty gap.
 
 ## License
 
