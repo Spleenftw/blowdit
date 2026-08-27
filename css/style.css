@@ -2306,6 +2306,91 @@ button:focus:not(:focus-visible) {
 .callout-warning   { --cl-color: #f59e0b; --cl-bg: rgba(245, 158, 11, 0.10); }
 .callout-caution   { --cl-color: #ef4444; --cl-bg: rgba(239, 68, 68, 0.09); }
 
+/* Collapsible callouts — "> [!TIP]+ Title". The summary IS the title row, so
+   it keeps .callout-title's styling and only adds the affordances. */
+.callout-details > .callout-title {
+	margin-bottom: 0;
+	cursor: pointer;
+	list-style: none; /* Firefox marker */
+}
+.callout-details > .callout-title::-webkit-details-marker { display: none; }
+.callout-details[open] > .callout-title { margin-bottom: 0.4rem; }
+.callout-details > .callout-title:focus-visible {
+	outline: 2px solid var(--cl-color, var(--accent));
+	outline-offset: 3px;
+	border-radius: var(--radius-sm);
+}
+/* Chevron: down when closed, up when open. margin-left:auto parks it right. */
+.callout-details > .callout-title::after {
+	content: '';
+	flex: 0 0 auto;
+	margin-left: auto;
+	width: 0.45rem;
+	height: 0.45rem;
+	border-right: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
+	transform: rotate(45deg) translate(-0.1em, -0.1em);
+	transition: transform 0.2s ease;
+}
+.callout-details[open] > .callout-title::after {
+	transform: rotate(-135deg) translate(-0.1em, -0.1em);
+}
+/* .callout > :last-child can't reach through <details> */
+.callout-details > :last-child { margin-bottom: 0; }
+
+/* ========================================
+   MERMAID DIAGRAMS (```mermaid fences)
+   ======================================== */
+.mermaid-block {
+	margin: var(--space-md) 0;
+	padding: var(--space-md);
+	background: var(--bg-subtle);
+	border: 1px solid var(--border-color);
+	border-radius: var(--radius-sm);
+	overflow-x: auto;
+	text-align: center;
+}
+
+.mermaid-block svg {
+	max-width: 100%;
+	height: auto;
+}
+
+/* The library is large and fetched on demand, so the wait is visible often
+   enough to deserve a placeholder rather than a collapsing gap. */
+.mermaid-block.is-loading {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 5rem;
+}
+
+.mermaid-block.is-loading::after {
+	content: '';
+	width: 1.25rem;
+	height: 1.25rem;
+	border: 2px solid var(--border-color);
+	border-top-color: var(--text-muted);
+	border-radius: 50%;
+	animation: bd-mermaid-spin 0.7s linear infinite;
+}
+
+@keyframes bd-mermaid-spin { to { transform: rotate(360deg); } }
+
+/* Failed render falls back to the source: let the normal <pre> framing show
+   instead of nesting one bordered box inside another. */
+.mermaid-block.is-error {
+	padding: 0;
+	background: none;
+	border: 0;
+	text-align: left;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.mermaid-block.is-loading::after { animation: none; }
+	.callout-details > .callout-title::after { transition: none; }
+}
+
 /* ========================================
    BREADCRUMBS
    ======================================== */

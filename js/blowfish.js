@@ -557,6 +557,134 @@
 	})();
 
 	/* --------------------------------------------------------
+	   Mermaid diagrams: renders ```mermaid fences as SVG.
+	   The library is large, so it is fetched only on pages that actually
+	   contain a diagram — everything else pays nothing. Colours are mapped
+	   from the theme's CSS custom properties and re-rendered on theme
+	   switch, so diagrams follow the swatch picker like everything else.
+	   -------------------------------------------------------- */
+	(function () {
+		var blocks = document.querySelectorAll(
+			'.content pre > code.language-mermaid, .content pre > code.mermaid');
+		if (!blocks.length) return;
+
+		// Swap each fence for a container synchronously, before anything else
+		// runs: the code-header and highlight.js passes further down execute in
+		// this same tick and would otherwise frame and colour the diagram source.
+		var items = [];
+		Array.prototype.forEach.call(blocks, function (code) {
+			var pre = code.parentNode;
+			if (!pre || !pre.parentNode) return;
+			var box = document.createElement('div');
+			box.className = 'mermaid-block is-loading';
+			items.push({ el: box, src: code.textContent || '' });
+			pre.parentNode.replaceChild(box, pre);
+		});
+		if (!items.length) return;
+
+		// Keep the source readable if anything goes wrong — a failed diagram
+		// should degrade to its code, not to an empty gap.
+		function fail(it, id) {
+			// A failed render leaves mermaid's temporary container behind, and it
+			// is visible: an unstyled block of raw CSS at the end of the article.
+			// It is named "d" + the id passed to render().
+			if (typeof id === 'string') {
+				var orphan = document.getElementById('d' + id);
+				if (orphan && orphan.parentNode) orphan.parentNode.removeChild(orphan);
+			}
+			var pre = document.createElement('pre');
+			var code = document.createElement('code');
+			code.textContent = it.src;
+			pre.appendChild(code);
+			it.el.className = 'mermaid-block is-error';
+			it.el.innerHTML = '';
+			it.el.appendChild(pre);
+		}
+
+		function themeVars() {
+			var cs = getComputedStyle(document.documentElement);
+			function v(name, fallback) {
+				return (cs.getPropertyValue(name) || '').trim() || fallback;
+			}
+			// The panel behind the diagram is --bg-subtle, so nodes must NOT use
+			// that same token or they disappear into it. Nodes take --bg-surface
+			// (the contrasting pair in every theme) and borders take --text-muted,
+			// since --border-color is too faint to read at diagram scale.
+			var panel  = v('--bg-subtle', '#f5f5f5');
+			var node   = v('--bg-surface', '#ffffff');
+			var text   = v('--text-primary', '#1f1f1f');
+			var stroke = v('--text-muted', '#8c8c8c');
+			return {
+				background:         panel,
+				primaryColor:       node,
+				primaryTextColor:   text,
+				primaryBorderColor: stroke,
+				secondaryColor:     v('--bg-hover', '#ededed'),
+				tertiaryColor:      v('--bg-hover', '#ededed'),
+				secondaryTextColor: text,
+				tertiaryTextColor:  text,
+				lineColor:          stroke,
+				textColor:          text,
+				mainBkg:            node,
+				nodeBorder:         stroke,
+				clusterBkg:         v('--bg-hover', '#ededed'),
+				clusterBorder:      stroke,
+				edgeLabelBackground: panel,
+				titleColor:         text,
+				fontFamily:         v('--font-sans', 'Inter, system-ui, sans-serif'),
+				fontSize:           '15px'
+			};
+		}
+
+		function failAll() { items.forEach(function (it) { fail(it); }); }
+
+		var seq = 0;
+		function renderAll() {
+			if (!window.mermaid) { failAll(); return; }
+			try {
+				window.mermaid.initialize({
+					startOnLoad: false,
+					securityLevel: 'strict',
+					theme: 'base',
+					themeVariables: themeVars()
+				});
+			} catch (e) { failAll(); return; }
+
+			items.forEach(function (it) {
+				if (it.el.classList.contains('is-error')) return;
+				var id = 'bd-mermaid-' + (seq++);
+				try {
+					var out = window.mermaid.render(id, it.src);
+					// v10+ returns a promise; older builds returned the SVG string.
+					if (out && typeof out.then === 'function') {
+						out.then(function (res) {
+							it.el.innerHTML = res.svg;
+							it.el.classList.remove('is-loading');
+						}, function () { fail(it, id); });
+					} else if (typeof out === 'string') {
+						it.el.innerHTML = out;
+						it.el.classList.remove('is-loading');
+					} else { fail(it, id); }
+				} catch (e) { fail(it, id); }
+			});
+		}
+
+		var s = document.createElement('script');
+		s.src = (window.BLOWFISH_THEME_URL || '') + 'js/mermaid.min.js';
+		s.onload  = renderAll;
+		s.onerror = failAll;
+		document.head.appendChild(s);
+
+		// Follow the swatch picker: re-render from the stored source so the
+		// diagram's colours change with the rest of the page.
+		new MutationObserver(function () {
+			if (window.mermaid) renderAll();
+		}).observe(document.documentElement, {
+			attributes: true, attributeFilter: ['data-theme']
+		});
+	})();
+
+	/* --------------------------------------------------------
 	   Lightbox: click any article image to zoom; carousel-aware prev/next
 	   -------------------------------------------------------- */
 	(function () {
@@ -719,7 +847,9 @@
 			var m = (code.className || '').match(/language-([\w-]+)/i);
 			if (!m) return '';
 			var key = m[1].toLowerCase();
-			if (key === 'tabs' || key === 'carousel') return ''; // theme fences, not languages
+			// Theme fences, not languages. A mermaid block is normally replaced
+			// before this runs; the guard covers the failed-render fallback.
+			if (key === 'tabs' || key === 'carousel' || key === 'mermaid') return '';
 			return LANG[key] || (key.charAt(0).toUpperCase() + key.slice(1));
 		}
 
@@ -1095,20 +1225,47 @@
 		Array.prototype.forEach.call(content.querySelectorAll('blockquote'), function (bq) {
 			var first = bq.querySelector('p');
 			if (!first) return;
-			var m = first.innerHTML.match(/^\s*\[!(\w+)\]\s*(<br\s*\/?>)?\s*/i);
+			var m = first.innerHTML.match(/^\s*\[!(\w+)\]([+-])?/i);
 			if (!m) return;
 			var type = m[1].toLowerCase();
 			if (ALIAS[type]) type = ALIAS[type];
 			if (!ICONS[type]) return;
 
-			first.innerHTML = first.innerHTML.replace(m[0], '');
+			// Anything after the marker up to the first line break is a custom
+			// title; the rest stays as the body. Split on the raw HTML rather
+			// than a single regex so a formatted title (**bold**, `code`, a
+			// link) survives — those become tags that a text-only match stops at.
+			var rest  = first.innerHTML.slice(m[0].length);
+			var brk   = rest.search(/<br\s*\/?>|\n/i);
+			var label = (brk === -1 ? rest : rest.slice(0, brk)).trim();
+			var body  = brk === -1 ? '' : rest.slice(brk).replace(/^(<br\s*\/?>|\n)/i, '');
+
+			first.innerHTML = body;
 			if (!first.innerHTML.trim()) { first.parentNode.removeChild(first); }
 
 			bq.classList.add('callout', 'callout-' + type);
-			var title = document.createElement('div');
-			title.className = 'callout-title';
-			title.innerHTML = ICONS[type] + '<span>' + LABELS[type] + '</span>';
-			bq.insertBefore(title, bq.firstChild);
+			var titleHtml = ICONS[type] + '<span>' + (label || LABELS[type]) + '</span>';
+
+			// A +/- after the marker makes the callout collapsible: "+" starts
+			// open, "-" starts closed. Built on <details>/<summary> so the
+			// keyboard, focus and screen-reader behaviour come from the browser.
+			if (m[2]) {
+				var det = document.createElement('details');
+				det.className = 'callout-details';
+				if (m[2] === '+') det.open = true;
+				var sum = document.createElement('summary');
+				sum.className = 'callout-title';
+				sum.innerHTML = titleHtml;
+				while (bq.firstChild) { det.appendChild(bq.firstChild); }
+				det.insertBefore(sum, det.firstChild);
+				bq.appendChild(det);
+				bq.classList.add('is-collapsible');
+			} else {
+				var title = document.createElement('div');
+				title.className = 'callout-title';
+				title.innerHTML = titleHtml;
+				bq.insertBefore(title, bq.firstChild);
+			}
 		});
 	})();
 
